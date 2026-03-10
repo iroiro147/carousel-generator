@@ -1,0 +1,399 @@
+{
+  "name": "Dark Museum",
+  "version": "1.0",
+  "canvas": {
+    "width": 1200,
+    "height": 1500,
+    "padding": 89
+  },
+  "colors": {
+    "bg": "#0A0A0A",
+    "bg_alt": "#111111",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#E0E0E0",
+    "accent_gold": "#C4A44A"
+  },
+  "typography": {
+    "headline": {
+      "font_family": "Playfair Display",
+      "weight": 900,
+      "line_height": 0.95,
+      "color": "#FFFFFF",
+      "source": "Google Fonts"
+    },
+    "body": {
+      "font_family": "DM Sans",
+      "weight": 400,
+      "line_height": 1.45,
+      "color": "#E0E0E0",
+      "source": "Google Fonts"
+    }
+  },
+  "image_prompt_template": "Photorealistic 3D render of {name}, {state} state, dramatic single-source museum spotlight lighting from upper-left, dark background ({bg}), high-detail {material} textures, slight 3/4 view with subtle downward camera angle, no ground plane, floating in space, subtle ambient occlusion, volumetric light haze, 8K detail, studio photography quality",
+  "state_map": {
+    "failing": "breaking",
+    "outdated": "decaying",
+    "broken": "shattered",
+    "problematic": "damaged",
+    "friction": "tangled",
+    "chaotic": "chaotic",
+    "slow": "corroded",
+    "declining": "crumbling",
+    "opportunity": "opening",
+    "new": "emerging",
+    "innovative": "pristine",
+    "aspirational": "pristine",
+    "growing": "blooming",
+    "process": "in-motion",
+    "sequential": "cascading",
+    "foundational": "load-bearing",
+    "connecting": "interlocking",
+    "securing": "fastening",
+    "proving": "imprinted",
+    "measuring": "calibrated",
+    "complex": "intricate"
+  },
+  "archetype_tone": {
+    "cover_hook": "aspirational",
+    "context_setter": "neutral",
+    "problem_setup": "failing",
+    "problem_escalation": "chaotic",
+    "turning_point": "opportunity",
+    "pivot_question": null,
+    "solution_introduction": "innovative",
+    "landscape_overview": "complex",
+    "technical_foundation": "foundational",
+    "how_it_works_setup": "connecting",
+    "how_it_works_flow": "sequential",
+    "how_it_works_security": "securing",
+    "company_positioning": "aspirational",
+    "cta_close": null
+  },
+  "archetypes": {
+    "cover_hook": {
+      "name": "Cover Hook",
+      "description": "Big title + hero object + brand logo",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": true,
+      "has_cta": true,
+      "cta_text": "SWIPE \u2192",
+      "text_position": "lower-left",
+      "object_position": "scattered",
+      "title_size": 140,
+      "body_size": 28
+    },
+    "context_setter": {
+      "name": "Context Setter",
+      "description": "Explains background concept + single thematic object",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-right",
+      "title_size": 110,
+      "body_size": 28
+    },
+    "problem_setup": {
+      "name": "Problem Setup",
+      "description": "Describes the old way + object showing decay/failure",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "lower-left",
+      "object_position": "upper-right",
+      "title_size": 100,
+      "body_size": 26
+    },
+    "problem_escalation": {
+      "name": "Problem Escalation",
+      "description": "Deepens the problem + object showing chaos/friction",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "center-right",
+      "title_size": 100,
+      "body_size": 26
+    },
+    "turning_point": {
+      "name": "Turning Point",
+      "description": "New development arrives + object showing opening/opportunity",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "lower-left",
+      "object_position": "upper-right",
+      "title_size": 110,
+      "body_size": 28
+    },
+    "pivot_question": {
+      "name": "Pivot Question",
+      "description": "Text-only dramatic pause \u2014 NO object",
+      "has_object": false,
+      "object_count": "none",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "center-left",
+      "object_position": null,
+      "title_size": 130,
+      "body_size": 28
+    },
+    "solution_introduction": {
+      "name": "Solution Introduction",
+      "description": "Defines the new concept + object showing the principle",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-right",
+      "title_size": 110,
+      "body_size": 28
+    },
+    "landscape_overview": {
+      "name": "Landscape Overview",
+      "description": "Maps the options + complex multi-part object",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "center-right",
+      "title_size": 100,
+      "body_size": 26
+    },
+    "technical_foundation": {
+      "name": "Technical Foundation",
+      "description": "Explains the underlying standard + infrastructure object",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "lower-left",
+      "object_position": "upper-right",
+      "title_size": 100,
+      "body_size": 26
+    },
+    "how_it_works_setup": {
+      "name": "How It Works (Setup)",
+      "description": "Registration/setup process + paired objects",
+      "has_object": true,
+      "object_count": "paired",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-right",
+      "title_size": 100,
+      "body_size": 26
+    },
+    "how_it_works_flow": {
+      "name": "How It Works (Flow)",
+      "description": "Execution process + sequential/kinetic object",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "lower-left",
+      "object_position": "upper-right",
+      "title_size": 100,
+      "body_size": 26
+    },
+    "how_it_works_security": {
+      "name": "How It Works (Security)",
+      "description": "Security mechanism + restraint/binding object",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "center-right",
+      "title_size": 100,
+      "body_size": 26
+    },
+    "company_positioning": {
+      "name": "Company Positioning",
+      "description": "Brand + value props + one object per benefit",
+      "has_object": true,
+      "object_count": "triple",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-row",
+      "title_size": 110,
+      "body_size": 28
+    },
+    "cta_close": {
+      "name": "CTA Close",
+      "description": "Brand logo + invitation text, no objects",
+      "has_object": false,
+      "object_count": "none",
+      "has_logo": true,
+      "has_cta": true,
+      "cta_text": null,
+      "text_position": "center-left",
+      "object_position": null,
+      "title_size": 130,
+      "body_size": 28
+    }
+  },
+  "metaphor_domains": {
+    "security_access": {
+      "name": "Security / Access",
+      "keywords": ["security", "authentication", "access", "protect", "safe", "lock",
+                    "unlock", "authorize", "credential", "key", "permission", "guard",
+                    "verify", "validate", "encrypt", "trust", "secure", "defense"],
+      "objects": [
+        {"name": "antique key ring with ornate keys", "material": "aged brass and iron", "state_default": "pristine"},
+        {"name": "heavy vault door", "material": "cast iron with brass fittings", "state_default": "closed"},
+        {"name": "wax seal on aged parchment", "material": "red wax with gold signet impression", "state_default": "pristine"},
+        {"name": "medieval padlock with skeleton key", "material": "blackened iron", "state_default": "locked"},
+        {"name": "bank safety deposit box", "material": "polished steel and brass", "state_default": "closed"}
+      ]
+    },
+    "time_decay": {
+      "name": "Time / Decay",
+      "keywords": ["time", "old", "legacy", "outdated", "slow", "delay", "wait",
+                    "expire", "aging", "obsolete", "breaking", "failing", "decline",
+                    "years", "relied", "traditional", "conventional", "past"],
+      "objects": [
+        {"name": "shattered hourglass with sand spilling", "material": "cracked glass and bronze frame", "state_default": "breaking"},
+        {"name": "antique pocket watch with cracked face", "material": "tarnished silver", "state_default": "damaged"},
+        {"name": "crumbling stone sundial", "material": "weathered limestone", "state_default": "decaying"},
+        {"name": "rusted mechanical clock gears", "material": "corroded iron and brass", "state_default": "degraded"},
+        {"name": "wilting flower in a cracked vase", "material": "ceramic with hairline fractures", "state_default": "decaying"}
+      ]
+    },
+    "friction_chaos": {
+      "name": "Friction / Chaos",
+      "keywords": ["friction", "problem", "concern", "complex", "tangled", "mess",
+                    "stack", "accumulate", "burden", "frustrat", "difficult", "pain",
+                    "struggle", "chaos", "overwhelming", "confus", "clutter"],
+      "objects": [
+        {"name": "tangled ball of measuring tape and wire", "material": "yellow measuring tape, copper wire, debris", "state_default": "tangled"},
+        {"name": "knotted rope with fraying ends", "material": "hemp and jute rope", "state_default": "tangled"},
+        {"name": "shattered compass with scattered parts", "material": "brass housing, broken glass", "state_default": "broken"},
+        {"name": "typewriter with jammed keys", "material": "cast iron and ivory keys", "state_default": "jammed"},
+        {"name": "overflowing filing cabinet with papers spilling", "material": "dented metal, aged paper", "state_default": "chaotic"}
+      ]
+    },
+    "opportunity_opening": {
+      "name": "Opportunity / Opening",
+      "keywords": ["new", "opportunity", "open", "arrive", "direction", "emerge",
+                    "change", "shift", "transform", "introduce", "launch", "regulation",
+                    "enable", "allow", "future", "next", "innovation", "breakthrough"],
+      "objects": [
+        {"name": "heavy warehouse door cracking open with light spilling through", "material": "weathered oak and iron hinges", "state_default": "opening"},
+        {"name": "treasure chest with lid lifting", "material": "aged wood with brass bindings", "state_default": "opening"},
+        {"name": "antique telescope extended", "material": "polished brass and leather grip", "state_default": "extended"},
+        {"name": "germinating seed splitting open", "material": "cracked seed hull, bronze cast", "state_default": "emerging"},
+        {"name": "drawbridge being lowered", "material": "oak planks with iron chains", "state_default": "opening"}
+      ]
+    },
+    "foundation_infrastructure": {
+      "name": "Foundation / Infrastructure",
+      "keywords": ["foundation", "standard", "protocol", "framework", "underlying",
+                    "base", "connect", "common", "shared", "platform", "infrastructure",
+                    "architecture", "core", "backbone", "bridge", "support"],
+      "objects": [
+        {"name": "concrete pipe T-junction connector", "material": "raw concrete with blue accent pipe", "state_default": "pristine"},
+        {"name": "stone keystone of an arch", "material": "carved granite", "state_default": "load-bearing"},
+        {"name": "industrial steel I-beam joint", "material": "brushed steel with rivets", "state_default": "pristine"},
+        {"name": "wooden mortise and tenon joint", "material": "aged oak, hand-cut joinery", "state_default": "interlocking"},
+        {"name": "cast iron bridge hinge mechanism", "material": "blackened cast iron, brass pins", "state_default": "pristine"}
+      ]
+    },
+    "process_sequence": {
+      "name": "Process / Sequence",
+      "keywords": ["flow", "step", "process", "sequence", "chain", "pipeline",
+                    "journey", "stage", "phase", "seamless", "smooth", "momentum",
+                    "trigger", "cascade", "progression", "workflow"],
+      "objects": [
+        {"name": "Newton's cradle with one ball in motion", "material": "polished chrome balls, brushed steel frame", "state_default": "in-motion"},
+        {"name": "row of dominoes mid-cascade", "material": "ivory and ebony domino tiles", "state_default": "cascading"},
+        {"name": "mechanical gear train", "material": "polished brass interlocking gears", "state_default": "turning"},
+        {"name": "Rube Goldberg marble run segment", "material": "brass tracks, glass marble", "state_default": "in-motion"},
+        {"name": "antique printing press rollers", "material": "cast iron frame, rubber rollers", "state_default": "rolling"}
+      ]
+    },
+    "identity_proof": {
+      "name": "Identity / Proof",
+      "keywords": ["identity", "biometric", "fingerprint", "verify", "authentic",
+                    "proof", "who", "personal", "unique", "recognize", "confirm",
+                    "factor", "what is", "relationship", "two-factor", "2fa"],
+      "objects": [
+        {"name": "wooden puzzle box with spiral fingerprint pattern carved into lid", "material": "dark walnut wood, brass inlay", "state_default": "pristine"},
+        {"name": "wax seal being pressed with signet ring", "material": "red wax, gold ring, parchment", "state_default": "pressing"},
+        {"name": "ornate hand mirror with frosted reflection", "material": "tarnished silver frame, clouded glass", "state_default": "reflective"},
+        {"name": "antique notary stamp and ink pad", "material": "brass stamp, leather-bound pad", "state_default": "pristine"},
+        {"name": "clay tablet with cuneiform impressions", "material": "fired clay, deep impressions", "state_default": "imprinted"}
+      ]
+    },
+    "balance_optimization": {
+      "name": "Balance / Optimization",
+      "keywords": ["balance", "optimize", "conversion", "performance", "improve",
+                    "better", "efficient", "trade-off", "weigh", "measure", "calibrate",
+                    "compare", "value", "benefit", "advantage", "proposition"],
+      "objects": [
+        {"name": "apothecary balance scale with brass weights", "material": "polished brass pans and arm, mahogany base", "state_default": "balanced"},
+        {"name": "precision mechanical caliper", "material": "brushed steel with etched markings", "state_default": "measuring"},
+        {"name": "antique barometer", "material": "mahogany case, brass dial", "state_default": "calibrated"},
+        {"name": "surveyor's theodolite", "material": "brass telescope, wooden tripod", "state_default": "aligned"},
+        {"name": "goldsmith's loupe and weights", "material": "brass loupe, tiny brass weights", "state_default": "measuring"}
+      ]
+    },
+    "complexity_technology": {
+      "name": "Complexity / Technology",
+      "keywords": ["technology", "landscape", "options", "system", "multiple",
+                    "approach", "method", "cryptograph", "digital", "advanced",
+                    "sophisticated", "modern", "device", "hardware", "software", "network"],
+      "objects": [
+        {"name": "retro-futuristic control panel with screens and dials", "material": "bakelite knobs, brass switches, cathode ray screens", "state_default": "active"},
+        {"name": "metallic polyhedron (icosahedron)", "material": "brushed titanium with chamfered edges", "state_default": "pristine"},
+        {"name": "antique orrery (mechanical solar system model)", "material": "brass arms and spheres, mahogany base", "state_default": "spinning"},
+        {"name": "Enigma-style cipher machine", "material": "oak case, brass rotors, bakelite keys", "state_default": "active"},
+        {"name": "Victorian difference engine fragment", "material": "polished brass gears and columns", "state_default": "intricate"}
+      ]
+    }
+  },
+  "layout_presets": {
+    "lower-left": {
+      "title": {"x": 89, "y": 911, "max_width": 833},
+      "subtext": {"x": 89, "y": null, "max_width": 778}
+    },
+    "upper-left": {
+      "title": {"x": 89, "y": 133, "max_width": 667},
+      "subtext": {"x": 89, "y": null, "max_width": 644}
+    },
+    "center-left": {
+      "title": {"x": 89, "y": 467, "max_width": 1022},
+      "subtext": {"x": 89, "y": null, "max_width": 867}
+    }
+  },
+  "object_positions": {
+    "scattered": [
+      {"x": 600, "y": 111, "width": 489, "height": 400},
+      {"x": 67,  "y": 144, "width": 356, "height": 311},
+      {"x": 711, "y": 533, "width": 378, "height": 311},
+      {"x": 89,  "y": 489, "width": 311, "height": 267}
+    ],
+    "lower-right": [{"x": 533, "y": 756, "width": 578, "height": 622}],
+    "upper-right": [{"x": 533, "y": 111, "width": 578, "height": 578}],
+    "center-right": [{"x": 556, "y": 422, "width": 556, "height": 578}],
+    "lower-row": [
+      {"x": 89,  "y": 978, "width": 311, "height": 378},
+      {"x": 444, "y": 978, "width": 311, "height": 378},
+      {"x": 800, "y": 978, "width": 311, "height": 378}
+    ]
+  },
+  "archetype_sequence": [
+    "cover_hook", "context_setter", "problem_setup", "problem_escalation",
+    "turning_point", "pivot_question", "solution_introduction", "landscape_overview",
+    "technical_foundation", "how_it_works_setup", "how_it_works_flow",
+    "how_it_works_security", "company_positioning", "cta_close"
+  ]
+}

@@ -1,0 +1,392 @@
+{
+  "feature": "Cover Variants",
+  "version": "1.0",
+  "description": "Three distinct cover slide interpretations generated before editor entry. User selects one; selection propagates creative angle into all 14 body slides.",
+  "generation_config": {
+    "variants_per_brief": 3,
+    "max_regenerations": 3,
+    "generation_mode": "parallel",
+    "target_generation_time_seconds": 8,
+    "failure_handling": "per_variant_retry — do not block other variants on single failure"
+  },
+  "themes": {
+    "dark_museum": {
+      "variants": {
+        "the_specimen": {
+          "angle_name": "The Specimen",
+          "angle_description": "Technical authority through the object itself — the most precise thing in the domain",
+          "composition_mode": "specimen",
+          "object_state_preference": "gleaming",
+          "object_selection_rule": "most_technically_precise — select the instrument or mechanism object from the matched domain, not the metaphorical or abstract object",
+          "headline_structure": "[Object name]. [Single declarative claim.]",
+          "headline_example": "Passkeys. The end of the stolen credential.",
+          "rhetorical_register": "technical_authority",
+          "propagation_metadata": {
+            "creative_angle": "technical_authority",
+            "narrative_frame": "examination_reveals_truth",
+            "body_slide_tone": "methodical_escalation",
+            "object_domain_lock": "match_cover_domain",
+            "headline_style": "declarative_technical",
+            "state_progression": ["failing", "outdated", "broken", "opportunity", "innovative", "foundational", "connecting", "securing", "aspirational"]
+          }
+        },
+        "the_contrast": {
+          "angle_name": "The Contrast",
+          "angle_description": "Before/after contrast as the argument — the old object and the new, side by side",
+          "composition_mode": "duo",
+          "object_state_preference": "degraded_left_gleaming_right",
+          "object_selection_rule": "paired_objects — one from legacy/failure domain in degraded state, one from solution domain in pristine state",
+          "headline_structure": "[Old state]. [New state].",
+          "headline_example": "OTPs corrode. Passkeys don't.",
+          "rhetorical_register": "comparative_argument",
+          "propagation_metadata": {
+            "creative_angle": "comparative_argument",
+            "narrative_frame": "before_after_at_every_level",
+            "body_slide_tone": "alternating_contrast",
+            "object_domain_lock": "alternate_between_legacy_and_solution_domains",
+            "headline_style": "contrast_pair",
+            "state_progression": ["failing", "outdated", "opportunity", "new", "innovative", "foundational", "connecting", "securing", "aspirational"]
+          }
+        },
+        "the_consequence": {
+          "angle_name": "The Consequence",
+          "angle_description": "Scale and reach — the argument is inevitability, not mechanism",
+          "composition_mode": "cascade",
+          "object_state_preference": "activated",
+          "object_selection_rule": "outcome_object — select the object that represents the result or deployment at scale, not the technical mechanism",
+          "headline_structure": "[Scope]. [Scope]. [Scope].",
+          "headline_example": "Every checkout. Every device. Every market.",
+          "rhetorical_register": "scale_inevitability",
+          "propagation_metadata": {
+            "creative_angle": "scale_inevitability",
+            "narrative_frame": "the_argument_is_quantity",
+            "body_slide_tone": "building_to_scale",
+            "object_domain_lock": "scale_and_distribution_objects",
+            "headline_style": "anaphoric_scope",
+            "state_progression": ["failing", "chaotic", "opportunity", "growing", "process", "sequential", "connecting", "securing", "aspirational"]
+          }
+        }
+      }
+    },
+    "product_elevation": {
+      "variants": {
+        "the_arrival": {
+          "angle_name": "The Arrival",
+          "angle_description": "The product as a new beginning — the freshness of what changes from this point",
+          "composition_mode": "specimen",
+          "object_state_preference": "unboxed",
+          "object_selection_rule": "primary_product — the hero product in its most visually present state",
+          "headline_structure": "Before [state]. After, [better state].",
+          "headline_example": "Before this, 3 steps. After, none.",
+          "rhetorical_register": "before_after_aspiration",
+          "propagation_metadata": {
+            "creative_angle": "before_after_aspiration",
+            "narrative_frame": "the_product_changes_the_before",
+            "body_slide_tone": "escalating_to_resolution",
+            "object_domain_lock": "match_cover_domain",
+            "headline_style": "before_after",
+            "state_progression": ["failing", "outdated", "broken", "opportunity", "new", "innovative", "foundational", "connecting", "securing", "aspirational"]
+          }
+        },
+        "the_detail": {
+          "angle_name": "The Detail",
+          "angle_description": "The mechanism revealed — precision earns trust before the claim is made",
+          "composition_mode": "macro",
+          "object_state_preference": "gleaming",
+          "object_selection_rule": "most_technically_detailed — circuit traces, connector pins, sensor surface — internal detail visible",
+          "headline_structure": "[Number/precision]. [Absence]. [Absence].",
+          "headline_example": "One sensor. No passwords. No OTPs.",
+          "rhetorical_register": "technical_premium",
+          "propagation_metadata": {
+            "creative_angle": "technical_premium",
+            "narrative_frame": "precision_as_authority",
+            "body_slide_tone": "building_specificity",
+            "object_domain_lock": "match_cover_domain",
+            "headline_style": "numeric_precision_then_negation",
+            "state_progression": ["failing", "outdated", "opportunity", "new", "innovative", "foundational", "connecting", "securing", "aspirational"]
+          }
+        },
+        "the_scale": {
+          "angle_name": "The Scale",
+          "angle_description": "The product is everywhere — the argument is reach, not mechanism",
+          "composition_mode": "cascade",
+          "object_state_preference": "activated",
+          "object_selection_rule": "deployment_object — the product as it exists in use context, not pristine studio state",
+          "headline_structure": "In [context]. On [context].",
+          "headline_example": "In every checkout. On every phone.",
+          "rhetorical_register": "deployment_scale",
+          "propagation_metadata": {
+            "creative_angle": "deployment_scale",
+            "narrative_frame": "ubiquity_as_proof",
+            "body_slide_tone": "scale_at_each_stage",
+            "object_domain_lock": "deployment_and_reach_objects",
+            "headline_style": "prepositional_scope",
+            "state_progression": ["failing", "chaotic", "opportunity", "growing", "process", "sequential", "connecting", "securing", "aspirational"]
+          }
+        }
+      }
+    },
+    "experience_capture": {
+      "variants": {
+        "the_friction_moment": {
+          "angle_name": "The Friction Moment",
+          "angle_description": "Recognition first — the reader has been here. This carousel starts with their experience.",
+          "scene_domain": "digital_friction",
+          "pov_preference": "over_shoulder_screen_visible",
+          "dialogue_pool": "friction_dialogue",
+          "overlay_pattern": "bottom_heavy",
+          "headline_structure": "[The moment named as the reader knows it.]",
+          "headline_example": "The checkout that almost didn't go through.",
+          "rhetorical_register": "recognition_first",
+          "propagation_metadata": {
+            "creative_angle": "recognition_first",
+            "narrative_frame": "from_friction_to_relief",
+            "body_slide_tone": "empathy_then_resolution",
+            "scene_domain_arc": ["digital_friction", "checkout_moment", "mobile_commerce", "speed_relief", "merchant_side"],
+            "headline_style": "recognition_naming",
+            "dialogue_register": "frustrated_then_relieved"
+          }
+        },
+        "the_relief_moment": {
+          "angle_name": "The Relief Moment",
+          "angle_description": "Aspiration first — this is what it could be. The carousel starts from the desired future.",
+          "scene_domain": "speed_relief",
+          "pov_preference": "hand_pulling_back_approved",
+          "dialogue_pool": "speed_relief_dialogue",
+          "overlay_pattern": "both",
+          "headline_structure": "[The unexpected speed of it.]",
+          "headline_example": "Faster than you expected it to be.",
+          "rhetorical_register": "aspiration_first",
+          "propagation_metadata": {
+            "creative_angle": "aspiration_first",
+            "narrative_frame": "from_aspiration_to_mechanism",
+            "body_slide_tone": "resolved_then_explaining",
+            "scene_domain_arc": ["speed_relief", "checkout_moment", "digital_friction", "authentication_experience", "merchant_side"],
+            "headline_style": "aspirational_understatement",
+            "dialogue_register": "relieved_then_curious"
+          }
+        },
+        "the_merchant_side": {
+          "angle_name": "The Merchant Side",
+          "angle_description": "The same story, told from the other side — B2B empathy through the operator's experience",
+          "scene_domain": "merchant_side",
+          "pov_preference": "tablet_on_counter_settlement_visible",
+          "dialogue_pool": "merchant_dialogue",
+          "overlay_pattern": "left_bleed",
+          "headline_structure": "[The same story, from the other side.]",
+          "headline_example": "What it looks like when settlement clears early.",
+          "rhetorical_register": "b2b_empathy",
+          "propagation_metadata": {
+            "creative_angle": "b2b_empathy",
+            "narrative_frame": "merchant_journey_mirrored",
+            "body_slide_tone": "operational_then_strategic",
+            "scene_domain_arc": ["merchant_side", "checkout_moment", "digital_friction", "speed_relief", "infrastructure_invisible"],
+            "headline_style": "operational_truth",
+            "dialogue_register": "merchant_voice_throughout"
+          }
+        }
+      }
+    },
+    "nyt_opinion": {
+      "variants": {
+        "the_metaphor": {
+          "angle_name": "The Metaphor",
+          "angle_description": "The lateral read — the visual metaphor surprises, the headline completes it",
+          "illustration_mode": "editorial_cartoon",
+          "illustration_rule": "avoid_the_obvious — the metaphor must require one beat of thought, not zero",
+          "headline_pattern": "provocative_reframe",
+          "headline_structure": "The [Unexpected Adj] of [Known Thing].",
+          "headline_example": "The Invisible Cost of the Familiar OTP.",
+          "rhetorical_register": "intellectual_provocation",
+          "propagation_metadata": {
+            "creative_angle": "intellectual_provocation",
+            "quote_structure_preference": ["counterintuitive", "hard_fact"],
+            "quote_progression": "thesis_evidence_landing",
+            "signature_color_register": "counterintuitive_or_financial_authority"
+          }
+        },
+        "the_figure": {
+          "angle_name": "The Figure",
+          "angle_description": "The human face of the argument — emotional authority through the lived experience of the claim",
+          "illustration_mode": "fine_art_expressive",
+          "illustration_rule": "human_presence_required — figure, face, or hand as compositional center",
+          "headline_pattern": "empathy_gap",
+          "headline_structure": "What We Don't Understand About [X].",
+          "headline_example": "What We Don't Understand About Password Fatigue.",
+          "rhetorical_register": "emotional_authority",
+          "propagation_metadata": {
+            "creative_angle": "emotional_authority",
+            "quote_structure_preference": ["process_as_experience", "escalation"],
+            "quote_progression": "thesis_evidence_landing",
+            "signature_color_register": "human_cost_or_urgent_crisis"
+          }
+        },
+        "the_scene": {
+          "angle_name": "The Scene",
+          "angle_description": "The uncomfortable image — something slightly difficult to look at directly, which earns the argument's credibility",
+          "illustration_mode": "conceptual_photography",
+          "illustration_rule": "staged_dramatic — one object or scenario with strong material reality and chiaroscuro lighting",
+          "headline_pattern": "direct_challenge",
+          "headline_structure": "[Question]? [Unexpected Answer].",
+          "headline_example": "Is Your Checkout Secure? Probably Not in the Way You Think.",
+          "rhetorical_register": "gothic_authority",
+          "propagation_metadata": {
+            "creative_angle": "gothic_authority",
+            "quote_structure_preference": ["hard_fact", "counterintuitive"],
+            "quote_progression": "thesis_evidence_landing",
+            "signature_color_register": "security_trust_or_urgent_crisis"
+          }
+        }
+      }
+    },
+    "sic_toile": {
+      "variants": {
+        "the_commerce_hall": {
+          "angle_name": "The Commerce Hall",
+          "angle_description": "Activity as the proof of scale — the busiest scene, the most populated environment",
+          "scene_domain": "commerce_exchange",
+          "scene_preference": "most_populated — counting house or quayside, seven or more figures",
+          "cartouche_style": "oval_foliage",
+          "headline_structure": "[Activity]. [Historical claim.]",
+          "headline_example": "Commerce. The oldest infrastructure.",
+          "rhetorical_register": "merchant_tradition",
+          "propagation_metadata": {
+            "creative_angle": "merchant_tradition",
+            "narrative_frame": "juspay_as_continuation",
+            "scene_domain_arc": ["commerce_exchange", "capital_treasury", "governance_institution", "architecture_infrastructure", "knowledge_scholarship"],
+            "headline_style": "activity_then_claim"
+          }
+        },
+        "the_institution": {
+          "angle_name": "The Institution",
+          "angle_description": "The founding moment as proof of permanence — the charter, the table, the document signed",
+          "scene_domain": "governance_institution",
+          "scene_preference": "charter_signing — document prominent, eight or more figures",
+          "cartouche_style": "rectangular_foliate",
+          "headline_structure": "Built to [purpose]. As [comparator] were.",
+          "headline_example": "Built to endure. As the great clearing houses were.",
+          "rhetorical_register": "institutional_charter",
+          "propagation_metadata": {
+            "creative_angle": "institutional_charter",
+            "narrative_frame": "juspay_as_constituted_body",
+            "scene_domain_arc": ["governance_institution", "capital_treasury", "commerce_exchange", "knowledge_scholarship", "architecture_infrastructure"],
+            "headline_style": "built_to_comparator"
+          }
+        },
+        "the_navigation": {
+          "angle_name": "The Navigation",
+          "angle_description": "The discovery register — Juspay as the navigator charting new payment corridors",
+          "scene_domain": "cartography_navigation",
+          "scene_preference": "surveying_or_navigator — open horizon visible",
+          "cartouche_style": "cartouche_cartographic",
+          "headline_structure": "The [routes/territory] are being [drawn/mapped] now.",
+          "headline_example": "The routes are being drawn now.",
+          "rhetorical_register": "discovery_register",
+          "propagation_metadata": {
+            "creative_angle": "discovery_register",
+            "narrative_frame": "juspay_as_navigator",
+            "scene_domain_arc": ["cartography_navigation", "commerce_exchange", "architecture_infrastructure", "natural_philosophy", "governance_institution"],
+            "headline_style": "present_continuous_claim"
+          }
+        }
+      }
+    },
+    "name_archaeology": {
+      "variants": {
+        "the_literal_hero": {
+          "angle_name": "The Literal Hero",
+          "angle_description": "The myth as it is most commonly known — direct, elevated, no translation required",
+          "wit_layer": "none",
+          "figure_type": "human_period_accurate",
+          "scene_rule": "defining_moment — the action that makes this hero who they are, in historically accurate costume and setting",
+          "headline_structure": "[Hero's act] as [brand's present claim].",
+          "headline_example": "The fire stolen from Olympus. The payment freed from friction.",
+          "rhetorical_register": "direct_mythological_authority",
+          "propagation_metadata": {
+            "creative_angle": "direct_mythological_authority",
+            "narrative_frame": "myth_as_parallel",
+            "wit_layer_consistency": "none_throughout",
+            "myth_chapter_arc": "full_hero_journey",
+            "headline_style": "parallel_claim"
+          }
+        },
+        "the_unexpected_vessel": {
+          "angle_name": "The Unexpected Vessel",
+          "angle_description": "The animal reading — the archetype truer than the figure, rewards a second look",
+          "wit_layer": "full_anthropomorphized_animal",
+          "figure_type": "animal_archetype_in_period_dress",
+          "animal_selection_rules": {
+            "fox": "cunning, subversive, finding-the-way-through — outlaw archetypes, Robin Hood",
+            "eagle": "sovereign power, aerial perspective, command — hero archetypes",
+            "owl": "accumulated wisdom, institutional knowledge, long memory — sage archetypes",
+            "wolf": "pack leadership, territory, collective strength — navigator and military archetypes",
+            "raven": "intelligence, observation, messenger — Odin archetypes, information/data companies",
+            "bear": "defensive power, resource-holding, endurance — treasury and institutional archetypes",
+            "hound": "loyal service, tracking, precision — identity and security archetypes"
+          },
+          "scene_rule": "defining_moment_with_animal — same action as the literal hero, but depicted through the animal archetype fully anthropomorphized",
+          "headline_structure": "The [animal archetype noun]. [What it always does in the myth.]",
+          "headline_example": "The fox always finds a way through.",
+          "rhetorical_register": "wit_and_recognition",
+          "propagation_metadata": {
+            "creative_angle": "wit_and_recognition",
+            "narrative_frame": "archetype_through_animal",
+            "wit_layer_consistency": "animal_appears_on_cover_and_company_positioning",
+            "myth_chapter_arc": "full_hero_journey_with_animal",
+            "headline_style": "archetype_truth"
+          }
+        },
+        "the_consequence": {
+          "angle_name": "The Consequence",
+          "angle_description": "The myth's beneficiaries, not its protagonist — the brand is the gift, not the giver",
+          "wit_layer": "partial_human_but_outcome_scene",
+          "figure_type": "beneficiary_figures — the people receiving the fire, the crowd witnessing the impossible",
+          "scene_rule": "outcome_scene — NOT the hero at peak action, but the world after the hero's gift was given",
+          "headline_structure": "Every [beneficiary]. Every [context].",
+          "headline_example": "Every hearth. Every home. Every payment.",
+          "rhetorical_register": "humility_and_scale",
+          "propagation_metadata": {
+            "creative_angle": "humility_and_scale",
+            "narrative_frame": "brand_as_consequence_not_cause",
+            "wit_layer_consistency": "none",
+            "myth_chapter_arc": "consequence_focused_arc",
+            "headline_style": "anaphoric_scope"
+          }
+        }
+      }
+    }
+  },
+  "variant_schema": {
+    "variant_id": "uuid",
+    "brief_id": "uuid — links back to the submitted brief",
+    "theme": "string — theme ID",
+    "angle_key": "string — angle ID within theme",
+    "angle_name": "string — display name",
+    "angle_description": "string — one-sentence description for UI",
+    "cover_slide": {
+      "composition_mode": "string",
+      "object_domain": "string",
+      "object_name": "string",
+      "object_state": "string",
+      "headline": "string — generated headline copy",
+      "headline_size": "number",
+      "text_position": "string",
+      "object_position": "string",
+      "image_prompt": "string — full image generation prompt",
+      "thumbnail_url": "string — rendered thumbnail URL"
+    },
+    "propagation_metadata": "object — see propagation_metadata per theme/angle",
+    "generation_status": "pending | complete | failed",
+    "selected": "boolean",
+    "created_at": "ISO datetime"
+  },
+  "ui_states": {
+    "loading": "Skeleton thumbnails at correct aspect ratio, animated pulse. Text: 'Generating your cover variants...'",
+    "partial_load": "Show completed variants immediately. Loading state for pending variant. Do not wait for all three.",
+    "ready": "All three variants visible. Angle name + one-sentence description + Select button per variant.",
+    "selected": "Selected variant: strong border, 'Selected ✓' on button. Other two: 60% opacity.",
+    "confirmed": "'Build Carousel →' button appears. Active only when selection made.",
+    "variant_failed": "Error card in place of failed variant: 'This one didn't work. [Retry ↻]'. Does not block other two.",
+    "regenerating": "All three return to skeleton state. Previous selection cleared. Counter shown: 'Regeneration 2 of 3.'"
+  }
+}

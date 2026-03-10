@@ -1,0 +1,330 @@
+{
+  "name": "Theme Suggestion Rubric",
+  "version": "1.0",
+  "description": "Scoring system for routing any carousel brief to the most appropriate visual theme. Run all scoring passes in order. Highest cumulative score wins. Apply tie-break rules if top two themes are within 3 points.",
+  "themes": ["dark_museum", "product_elevation", "experience_capture", "nyt_opinion", "sic_toile", "name_archaeology"],
+  "scoring_passes": {
+    "order": [
+      "pass_0_topic_gates",
+      "pass_1_brief_goal",
+      "pass_2_audience",
+      "pass_3_tone",
+      "pass_4_content_category",
+      "pass_5_keyword_signals",
+      "pass_6_brand_name_check",
+      "pass_7_negative_signals"
+    ],
+    "pass_0_topic_gates": {
+      "description": "Binary pre-filters. Run BEFORE scoring. If a gate check FAILS, the theme is eliminated from consideration regardless of score.",
+      "gates": {
+        "name_archaeology_gate": {
+          "question": "Does the brand name or carousel topic map to a recognized myth, folk hero, legendary figure, historical archetype, or mythologically resonant place?",
+          "test": "Does it appear in mythology_routing keywords OR pass the cultural world mapping test (1B from Name Archaeology process)?",
+          "if_fails": "Eliminate name_archaeology from scoring",
+          "if_passes": "name_archaeology remains eligible, add +4 bonus to name_archaeology score",
+          "false_positive_check": "Brand name coincidentally shares a word with mythology but topic has no thematic link → FAILS gate. Example: brand named 'Arrow' making tax software has no archer narrative → fails."
+        },
+        "nyt_opinion_gate": {
+          "question": "Does this carousel have a genuine argument to make — a claim that requires persuasion, that not everyone already agrees with?",
+          "test": "Is the goal to shift belief, provoke thought, or challenge an assumption? Does the content have an uncomfortable truth or counterintuitive position?",
+          "if_fails": "Eliminate nyt_opinion from scoring",
+          "if_passes": "nyt_opinion remains eligible",
+          "soft_fail": "If the goal is informational or product-demonstrative but not argumentative, nyt_opinion may remain eligible at −3 penalty"
+        }
+      }
+    },
+    "pass_1_brief_goal": {
+      "description": "What is this carousel supposed to achieve? Score each theme by how well its format serves the goal.",
+      "weight": "High — 0 to 8 points per theme",
+      "goals": {
+        "shift_belief_or_provoke": {
+          "description": "Change the reader's mind about something. Challenge an assumption. Make an uncomfortable argument.",
+          "scores": {"nyt_opinion": 8, "name_archaeology": 5, "dark_museum": 3, "sic_toile": 3, "product_elevation": 1, "experience_capture": 2}
+        },
+        "build_authority_or_credibility": {
+          "description": "Establish the brand as a thought leader, expert, or institutional authority.",
+          "scores": {"sic_toile": 8, "dark_museum": 6, "name_archaeology": 6, "nyt_opinion": 5, "product_elevation": 3, "experience_capture": 2}
+        },
+        "educate_or_explain": {
+          "description": "Help the reader understand a complex topic, mechanism, or process. Information transfer.",
+          "scores": {"dark_museum": 8, "sic_toile": 6, "product_elevation": 5, "experience_capture": 4, "name_archaeology": 3, "nyt_opinion": 2}
+        },
+        "generate_product_awareness": {
+          "description": "Show what the product does. Make the reader understand its value proposition through demonstration.",
+          "scores": {"product_elevation": 8, "dark_museum": 6, "experience_capture": 5, "sic_toile": 3, "nyt_opinion": 2, "name_archaeology": 1}
+        },
+        "build_emotional_connection": {
+          "description": "Create empathy, recognition, or emotional resonance with the reader's lived experience.",
+          "scores": {"experience_capture": 8, "name_archaeology": 6, "nyt_opinion": 5, "dark_museum": 3, "sic_toile": 2, "product_elevation": 2}
+        },
+        "establish_strategic_narrative": {
+          "description": "Frame the company's position in a larger historical or civilizational story. Long-term positioning.",
+          "scores": {"name_archaeology": 8, "sic_toile": 8, "dark_museum": 4, "nyt_opinion": 4, "experience_capture": 2, "product_elevation": 1}
+        },
+        "drive_direct_response": {
+          "description": "Generate immediate action — demo requests, sign-ups, trials, inquiries.",
+          "scores": {"product_elevation": 7, "experience_capture": 6, "nyt_opinion": 5, "dark_museum": 5, "sic_toile": 2, "name_archaeology": 2}
+        }
+      }
+    },
+    "pass_2_audience": {
+      "description": "Who is reading this? Score each theme by how well its register matches the audience's sophistication, context, and decision-making mode.",
+      "weight": "High — 0 to 7 points per theme",
+      "audiences": {
+        "cold_consumer": {
+          "description": "Has not heard of the brand. Scrolling without intent. Needs to be stopped and shown value quickly.",
+          "scores": {"experience_capture": 7, "product_elevation": 6, "dark_museum": 5, "nyt_opinion": 2, "sic_toile": 1, "name_archaeology": 3}
+        },
+        "warm_consumer": {
+          "description": "Knows the brand or category. Has mild intent. Needs to be moved from awareness to consideration.",
+          "scores": {"product_elevation": 7, "experience_capture": 6, "dark_museum": 6, "nyt_opinion": 5, "name_archaeology": 4, "sic_toile": 2}
+        },
+        "cold_b2b": {
+          "description": "Decision-maker or influencer who doesn't know the brand. Evaluating category. High trust threshold.",
+          "scores": {"dark_museum": 7, "sic_toile": 7, "nyt_opinion": 5, "product_elevation": 5, "name_archaeology": 4, "experience_capture": 3}
+        },
+        "warm_b2b": {
+          "description": "Decision-maker who knows the brand and is in active evaluation. Needs differentiation and depth.",
+          "scores": {"dark_museum": 7, "nyt_opinion": 7, "product_elevation": 6, "sic_toile": 6, "name_archaeology": 5, "experience_capture": 4}
+        },
+        "industry_peers": {
+          "description": "Colleagues, competitors, media, analysts. Sophisticated readers who can parse nuance and will notice intellectual quality.",
+          "scores": {"nyt_opinion": 7, "sic_toile": 7, "name_archaeology": 7, "dark_museum": 5, "experience_capture": 4, "product_elevation": 3}
+        },
+        "institutional_investors": {
+          "description": "VCs, PE, sovereign wealth, strategic investors. Evaluating at civilizational and long-horizon scale.",
+          "scores": {"sic_toile": 7, "name_archaeology": 7, "nyt_opinion": 5, "dark_museum": 4, "product_elevation": 3, "experience_capture": 2}
+        },
+        "board_level_executive": {
+          "description": "C-suite, board members, senior policy audience. Evaluating strategic fit, not product features.",
+          "scores": {"sic_toile": 7, "name_archaeology": 6, "nyt_opinion": 6, "dark_museum": 5, "product_elevation": 3, "experience_capture": 2}
+        },
+        "product_or_technical": {
+          "description": "Engineers, product managers, technical evaluators. Want precision and mechanism, not narrative.",
+          "scores": {"dark_museum": 7, "product_elevation": 6, "sic_toile": 4, "experience_capture": 3, "nyt_opinion": 3, "name_archaeology": 2}
+        }
+      }
+    },
+    "pass_3_tone": {
+      "description": "What emotional and intellectual register should the carousel occupy? Score each theme by how naturally it inhabits the desired tone.",
+      "weight": "Medium — 0 to 6 points per theme",
+      "tones": {
+        "authoritative_confident": {
+          "description": "States things plainly and with conviction. Does not hedge. Institutional weight.",
+          "scores": {"sic_toile": 6, "nyt_opinion": 6, "dark_museum": 5, "name_archaeology": 5, "product_elevation": 3, "experience_capture": 2}
+        },
+        "provocative_challenging": {
+          "description": "Deliberately unsettling. Challenges assumptions. Comfortable making readers slightly uncomfortable.",
+          "scores": {"nyt_opinion": 6, "name_archaeology": 4, "dark_museum": 3, "sic_toile": 3, "experience_capture": 2, "product_elevation": 1}
+        },
+        "aspirational_elevated": {
+          "description": "Speaks to a better future. Inspires. Premium register without arrogance.",
+          "scores": {"product_elevation": 6, "name_archaeology": 6, "dark_museum": 5, "sic_toile": 4, "experience_capture": 3, "nyt_opinion": 3}
+        },
+        "empathetic_human": {
+          "description": "Meets the reader in their actual experience. Recognition over inspiration.",
+          "scores": {"experience_capture": 6, "nyt_opinion": 4, "name_archaeology": 3, "dark_museum": 2, "sic_toile": 1, "product_elevation": 2}
+        },
+        "technical_precise": {
+          "description": "Values accuracy and mechanism. Trust built through specificity, not narrative.",
+          "scores": {"dark_museum": 6, "product_elevation": 5, "sic_toile": 4, "nyt_opinion": 2, "experience_capture": 2, "name_archaeology": 1}
+        },
+        "heritage_institutional": {
+          "description": "Implies longevity, permanence, and the weight of history. Speaks to what endures.",
+          "scores": {"sic_toile": 6, "name_archaeology": 6, "dark_museum": 3, "nyt_opinion": 3, "product_elevation": 2, "experience_capture": 1}
+        },
+        "mythological_epic": {
+          "description": "Civilizational scale. The brand as protagonist in a story humanity has been telling for centuries.",
+          "scores": {"name_archaeology": 6, "sic_toile": 4, "dark_museum": 3, "nyt_opinion": 2, "product_elevation": 1, "experience_capture": 1}
+        },
+        "documentary_real": {
+          "description": "Authentic, unfiltered, first-person. Anti-aspirational. Values truth over polish.",
+          "scores": {"experience_capture": 6, "nyt_opinion": 4, "dark_museum": 2, "sic_toile": 1, "product_elevation": 1, "name_archaeology": 1}
+        }
+      }
+    },
+    "pass_4_content_category": {
+      "description": "What kind of content is this, structurally? Score by how well each theme's visual and narrative format serves this content type.",
+      "weight": "Medium — 0 to 6 points per theme",
+      "categories": {
+        "product_feature_or_capability": {
+          "description": "Showing what a specific product or feature does.",
+          "scores": {"product_elevation": 6, "dark_museum": 6, "experience_capture": 5, "nyt_opinion": 2, "sic_toile": 2, "name_archaeology": 1}
+        },
+        "market_or_competitive_analysis": {
+          "description": "Mapping the landscape, comparing options, positioning against alternatives.",
+          "scores": {"dark_museum": 6, "sic_toile": 5, "nyt_opinion": 5, "product_elevation": 4, "name_archaeology": 3, "experience_capture": 2}
+        },
+        "customer_or_user_story": {
+          "description": "A real or representative person's experience with the product or problem.",
+          "scores": {"experience_capture": 6, "nyt_opinion": 5, "dark_museum": 3, "product_elevation": 3, "name_archaeology": 2, "sic_toile": 1}
+        },
+        "institutional_narrative": {
+          "description": "Company origin, mission, values, long-term vision, heritage.",
+          "scores": {"sic_toile": 6, "name_archaeology": 6, "dark_museum": 4, "nyt_opinion": 4, "experience_capture": 3, "product_elevation": 2}
+        },
+        "technical_explanation": {
+          "description": "How a technology, protocol, or mechanism actually works.",
+          "scores": {"dark_museum": 6, "product_elevation": 5, "sic_toile": 4, "nyt_opinion": 3, "experience_capture": 2, "name_archaeology": 1}
+        },
+        "opinion_or_argument": {
+          "description": "A position that requires persuasion. Claims that some believe and others don't.",
+          "scores": {"nyt_opinion": 6, "name_archaeology": 4, "sic_toile": 4, "dark_museum": 3, "experience_capture": 3, "product_elevation": 1}
+        },
+        "industry_trend_or_insight": {
+          "description": "What is changing in the market, and why it matters.",
+          "scores": {"nyt_opinion": 6, "dark_museum": 5, "sic_toile": 5, "product_elevation": 4, "experience_capture": 3, "name_archaeology": 2}
+        },
+        "event_or_milestone": {
+          "description": "A launch, announcement, achievement, or moment in the company's life.",
+          "scores": {"product_elevation": 5, "name_archaeology": 5, "dark_museum": 5, "experience_capture": 4, "sic_toile": 3, "nyt_opinion": 2}
+        },
+        "cross_border_or_global": {
+          "description": "International expansion, cross-border payments, multi-market presence, geographic scale.",
+          "scores": {"sic_toile": 6, "name_archaeology": 5, "dark_museum": 4, "nyt_opinion": 4, "experience_capture": 4, "product_elevation": 3}
+        },
+        "security_or_trust": {
+          "description": "Authentication, fraud prevention, compliance, data protection — the trust infrastructure.",
+          "scores": {"dark_museum": 6, "sic_toile": 5, "product_elevation": 5, "nyt_opinion": 4, "experience_capture": 3, "name_archaeology": 2}
+        }
+      }
+    },
+    "pass_5_keyword_signals": {
+      "description": "Topic and brief keyword matching. Each keyword cluster adds points to the matching theme(s). Cumulative — a brief may hit multiple clusters.",
+      "weight": "Medium — 0 to 2 points per matched cluster, up to 8 points total",
+      "clusters": {
+        "payment_infrastructure": {
+          "keywords": ["payment", "checkout", "transaction", "settlement", "gateway", "processing", "pos", "terminal", "acquiring", "issuing"],
+          "scores": {"dark_museum": 2, "product_elevation": 2, "experience_capture": 1}
+        },
+        "authentication_identity": {
+          "keywords": ["passkey", "biometric", "fingerprint", "authentication", "identity", "credential", "otp", "password", "2fa", "fido"],
+          "scores": {"dark_museum": 2, "product_elevation": 2, "nyt_opinion": 1}
+        },
+        "user_experience_friction": {
+          "keywords": ["friction", "checkout abandonment", "drop-off", "ux", "user experience", "customer journey", "tap", "decline", "wait", "loading"],
+          "scores": {"experience_capture": 2, "nyt_opinion": 1, "product_elevation": 1}
+        },
+        "fraud_security": {
+          "keywords": ["fraud", "breach", "phishing", "stolen", "attack", "risk", "threat", "protect", "secure", "vulnerability"],
+          "scores": {"dark_museum": 2, "nyt_opinion": 2, "sic_toile": 1}
+        },
+        "cross_border_global": {
+          "keywords": ["cross-border", "international", "corridor", "remittance", "forex", "fx", "global", "multi-currency", "swift", "wire"],
+          "scores": {"sic_toile": 2, "name_archaeology": 1, "dark_museum": 1}
+        },
+        "speed_performance": {
+          "keywords": ["speed", "instant", "real-time", "latency", "millisecond", "fast", "rapid", "immediate", "sub-second", "performance"],
+          "scores": {"product_elevation": 2, "experience_capture": 1, "dark_museum": 1}
+        },
+        "revenue_conversion": {
+          "keywords": ["conversion", "revenue", "gmv", "tpv", "roi", "growth", "increase", "optimize", "merchant", "success rate"],
+          "scores": {"product_elevation": 2, "nyt_opinion": 1, "dark_museum": 1}
+        },
+        "institutional_heritage": {
+          "keywords": ["institution", "heritage", "century", "established", "legacy", "proven", "sovereign", "endowment", "foundational"],
+          "scores": {"sic_toile": 2, "name_archaeology": 1}
+        },
+        "myth_archetype": {
+          "keywords": ["prometheus", "olympus", "atlas", "titan", "apollo", "robin", "odyssey", "navigator", "pioneer", "vanguard", "oracle"],
+          "scores": {"name_archaeology": 2}
+        },
+        "ai_intelligence": {
+          "keywords": ["ai", "machine learning", "intelligence", "model", "prediction", "automation", "smart", "adaptive", "neural"],
+          "scores": {"dark_museum": 2, "product_elevation": 1}
+        },
+        "humanizing_real": {
+          "keywords": ["real", "people", "customer", "human", "actual", "everyday", "ordinary", "lived", "experience", "feel"],
+          "scores": {"experience_capture": 2, "nyt_opinion": 1}
+        },
+        "systemic_argument": {
+          "keywords": ["actually", "wrong", "myth", "truth", "hidden", "despite", "contrary", "overlooked", "really", "counterintuitive"],
+          "scores": {"nyt_opinion": 2, "sic_toile": 1}
+        }
+      }
+    },
+    "pass_6_brand_name_check": {
+      "description": "A final check of the brand name independent of topic, for Name Archaeology eligibility.",
+      "process": [
+        "Strip the brand name to its root words",
+        "Check against mythology_routing keyword lists in name_archaeology.json",
+        "Check against known archetype categories: explorer, builder, outlaw, sage, hero, trickster, creator, sovereign",
+        "Check for mythologically resonant place names: Amazon, Olympus, Sahara, Patagonia, etc.",
+        "Check for legendary figure references: Prometheus, Atlas, Robin, Apollo, Mercury, Diana, etc."
+      ],
+      "if_strong_match": "Add +3 to name_archaeology",
+      "if_weak_match": "Add +1 to name_archaeology",
+      "if_no_match": "name_archaeology must pass topic gate from pass_0 or is eliminated"
+    },
+    "pass_7_negative_signals": {
+      "description": "Signals that actively penalize specific themes. Apply these as deductions after all positive scoring.",
+      "penalties": {
+        "cold_audience_plus_institutional_tone": {
+          "condition": "Audience is cold_consumer AND tone is heritage_institutional or mythological_epic",
+          "penalty": {"sic_toile": -4, "name_archaeology": -2},
+          "reason": "These themes require shared context and cultural fluency. Cold consumer audiences haven't built it."
+        },
+        "short_content_brief": {
+          "condition": "Brief goal is event announcement or simple product update with fewer than 5 distinct content points",
+          "penalty": {"sic_toile": -3, "name_archaeology": -3, "dark_museum": -2},
+          "reason": "These themes require narrative depth across 14 slides. Thin content creates empty slides."
+        },
+        "conversational_informal_brand": {
+          "condition": "Brand voice is described as playful, casual, friendly, or conversational",
+          "penalty": {"sic_toile": -4, "name_archaeology": -3, "nyt_opinion": -2},
+          "reason": "These themes do not do casual. Mismatched register creates dissonance."
+        },
+        "product_demo_primary": {
+          "condition": "Primary goal is showing UI, product screenshots, or step-by-step feature walkthrough",
+          "penalty": {"sic_toile": -4, "name_archaeology": -4, "nyt_opinion": -3, "experience_capture": -2},
+          "reason": "Product demo content is fundamentally incompatible with these themes' visual systems."
+        },
+        "no_visual_narrative": {
+          "condition": "Brief is purely factual (press release, announcement, data dump) with no narrative arc",
+          "penalty": {"name_archaeology": -5, "experience_capture": -3, "sic_toile": -2},
+          "reason": "These themes require narrative structure. Purely factual content has no arc to inhabit."
+        },
+        "nyt_broadly_agreeable": {
+          "condition": "The carousel's position is one most readers in the target audience would already agree with",
+          "penalty": {"nyt_opinion": -4},
+          "reason": "NYT Opinion only works when it's actually arguing something. Agreeable content doesn't persuade — it just decorates."
+        }
+      }
+    }
+  },
+  "tiebreak_rules": {
+    "description": "If top two themes are within 3 points after all passes:",
+    "rules": [
+      "1. Brief goal wins — the theme that scores higher on pass_1 takes priority",
+      "2. If still tied: audience specificity wins — the theme better matched to the specific audience description",
+      "3. If still tied: present both as options with explanation of the tradeoff",
+      "4. NYT Opinion always wins a tie with any 14-slide theme when the brief has a genuine argument — shorter, faster to produce, and cleaner execution"
+    ]
+  },
+  "output_format": {
+    "primary_recommendation": "Highest scoring theme after all passes",
+    "confidence": "HIGH if >5 point lead over second place, MEDIUM if 2-5 point lead, LOW if <2 point lead",
+    "alternatives": "If confidence is LOW or MEDIUM, present top 2 themes with tradeoff explanation",
+    "explain_gate_eliminations": "Always note if name_archaeology or nyt_opinion was eliminated by gate check and why"
+  },
+  "edge_cases": {
+    "nyt_opinion_vs_14slide": {
+      "description": "NYT Opinion's 3-4 slide format means it should only be recommended when brevity serves the argument. A complex technical carousel should stay in a 14-slide theme even if argumentative.",
+      "rule": "If brief has more than 6 distinct content points requiring explanation, penalize nyt_opinion -3 for format mismatch"
+    },
+    "multiple_themes_same_score": {
+      "description": "When two themes score identically, the engine presents both as a design choice with explicit tradeoff.",
+      "example": "Dark Museum vs Product Elevation tied: 'Dark Museum treats the technology as timeless artifact — high authority. Product Elevation treats it as aspirational product — high conversion. Choose based on whether you want the reader to think or to want.'"
+    },
+    "juspay_specific": {
+      "description": "Juspay topic routing patterns based on known content categories",
+      "checkout_ux": "experience_capture or product_elevation — UX content lives in first-person experience or aspirational product demo",
+      "passkey_auth": "dark_museum primary — authentication hardware and biometric objects in the Dark Museum register",
+      "cross_border": "sic_toile primary — the Encyclopédie plate of global trade routes and merchant corridors",
+      "fraud_prevention": "dark_museum or nyt_opinion — either 'the fraud object examined' or 'the uncomfortable argument about credential theft'",
+      "merchant_acquiring": "product_elevation or dark_museum — product capability or institutional authority",
+      "company_heritage": "sic_toile or name_archaeology — Juspay as institution (SIC) or Juspay's name archaeology (just + pay → justice of exchange → classical scales)",
+      "airline_travel_vertical": "name_archaeology (exploration/navigation myth) or experience_capture (the airport payment moment)"
+    }
+  }
+}

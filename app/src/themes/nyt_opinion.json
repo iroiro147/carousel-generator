@@ -1,0 +1,377 @@
+{
+  "name": "NYT Opinion",
+  "version": "2.0",
+  "canvas": {
+    "width": 1080,
+    "height": 1350,
+    "padding_left_pct": 7,
+    "padding_right_pct": 7,
+    "safe_zone_px": 75
+  },
+  "_format_note": "3–4 slides per carousel. NOT 14. This is a short-form editorial format. Every slide carries essential content — no padding, no rest slides.",
+  "slide_count_range": {"min": 3, "max": 4},
+  "color_system": {
+    "_philosophy": "Color is environmental, not typographic. Background IS the color. Text is always achromatic (black or white). All chromatic richness on Slide 1 comes from the illustration. All chromatic richness on Slides 2–4 comes from the flat color fill. Colored text never appears.",
+    "_source_rule": "Signature color is DERIVED from the Slide 1 illustration's dominant hue — not pre-assigned from a keyword routing table. The illustration is chosen first; the color follows.",
+    "constants": {
+      "text_on_color": "#1A1A1A",
+      "text_on_dark": "#FFFFFF",
+      "byline_on_color": "#1A1A1A",
+      "logo_on_color": "#1A1A1A",
+      "logo_on_dark": "#FFFFFF"
+    },
+    "signature_hue_examples": {
+      "_note": "These are observed examples from real NYT Opinion carousels — not a fixed routing table. Use as reference for what colors are appropriate.",
+      "economics_trade": {"color": "#00A86B", "name": "Saturated Emerald", "tonal_variant": "#8FD5A6"},
+      "mental_health_personal": {"color": "#D4B5A0", "name": "Muted Blush", "tonal_variant": "#E8D5C4"},
+      "literary_cultural": {"color": "#F0E6DC", "name": "Warm Cream", "slide1_accent": "#8B0000"},
+      "political_legacy": {"color": "#CD5C45", "name": "Terracotta", "tonal_variant": "#D4A59A"},
+      "public_health_urgency": {"color": "#7FFF00", "name": "Neon Lime", "tonal_variant": "#9AFF4F"}
+    },
+    "forbidden": [
+      "Colored text (always black or white — never a hue on text)",
+      "Gradients anywhere in the system",
+      "Two-color backgrounds (always a single flat fill)",
+      "Texture on quote card backgrounds",
+      "Multiple dominant colors per carousel"
+    ],
+    "contrast_requirement": "Black text (#1A1A1A) on signature color background must achieve minimum 4.5:1 contrast ratio (WCAG AA). If color is too dark, lighten. If dark Slide 1 is required, use light tonal variant for quote slides (Wuthering Heights pattern: dark crimson Slide 1 → warm cream Slides 2–4)."
+  },
+  "typography": {
+    "headline": {
+      "font_family": "Lora",
+      "weight": 700,
+      "line_height": "1.05–1.15em",
+      "letter_spacing": "0",
+      "size_range_px": "46–60",
+      "size_scales_with": "word count (fewer words = larger)",
+      "case": "Title Case",
+      "color": "white or black depending on Slide 1 illustration background",
+      "alignment": "left",
+      "max_width_pct": 90,
+      "source": "Google Fonts",
+      "fallback": "Noto Serif Display Bold → Georgia Bold → Times New Roman Bold",
+      "personality": "Institutional authority — 170 years of confident statement-making. Neither delicate (Didone) nor crude (slab). Sturdy, measured, unshowy."
+    },
+    "pull_quote": {
+      "font_family": "Lora",
+      "weight": 700,
+      "line_height": "1.15–1.25em",
+      "letter_spacing": "0",
+      "size_range_px": "40–50",
+      "size_scales_with": "word count (30–70 words at 48–50px, 60–80 words at 40–44px)",
+      "case": "Sentence case",
+      "color": "#1A1A1A",
+      "alignment": "left",
+      "max_width_pct": 86,
+      "opening_quote_mark": true,
+      "opening_quote_size_multiplier": 2.5,
+      "closing_quote_mark": true,
+      "source": "Google Fonts",
+      "note": "Curly typographic quote marks only — never straight/dumb quotes. Quote text is a monolithic block — no paragraph breaks, no bullet points, no sub-headers within the quote."
+    },
+    "byline": {
+      "font_family": "Libre Franklin",
+      "weight": 700,
+      "size_range_px": "16–20",
+      "line_height": "1.2em",
+      "letter_spacing": "0.1–0.2em",
+      "case": "ALL CAPS",
+      "color": "matches headline color",
+      "alignment": "left",
+      "max_width_pct": 60,
+      "source": "Google Fonts",
+      "fallback": "Trade Gothic → Helvetica Bold → Arial Bold",
+      "note": "Byline is metadata, not content. At 16–20px it is legible only if you look for it. Small size + caps + tracking = visual texture, not prose."
+    },
+    "size_ratios": {
+      "headline_to_pull_quote": "1.1:1 to 1.4:1",
+      "_note": "This is the defining typographic fact. In most systems, headline dwarfs body. Here, pull quotes are nearly headline-sized — because they ARE the content. Both need poster-scale legibility.",
+      "headline_to_byline": "2.5:1 to 3.5:1"
+    },
+    "rules": [
+      "Left-aligned always. Never centered, never justified.",
+      "No bold, italic, underline, color, or size-change emphasis within quote text. Emphasis comes from the writing, not the typography.",
+      "Only ONE serif family (Lora) and ONE sans family (Libre Franklin) across all slides.",
+      "Title Case for headlines only. Sentence case for quotes. ALL CAPS for bylines. These never swap."
+    ]
+  },
+  "slide_structure": {
+    "slide_1_title_card": {
+      "zones": {
+        "illustration_zone": {
+          "height_pct": "60–70",
+          "position": "top",
+          "fills": "full-bleed horizontal — edge to edge, no side margins",
+          "content": "Editorial illustration — see illustration_system",
+          "text_overlap": "NEVER — illustration and text zones do not overlap"
+        },
+        "headline_band": {
+          "height_pct": "25–35",
+          "position": "bottom",
+          "background": "SIGNATURE COLOR — flat, solid",
+          "content": ["headline", "byline"],
+          "headline_spec": {
+            "left_margin_pct": 7,
+            "top_padding_pct": 5,
+            "font": "Lora Bold 700",
+            "size_px": "46–60",
+            "case": "Title Case",
+            "color": "white or black (per illustration darkness)"
+          },
+          "byline_spec": {
+            "left_margin_pct": 7,
+            "gap_from_headline_px": 16
+          }
+        }
+      },
+      "logo": {
+        "position": "bottom-right",
+        "inset_pct": 5,
+        "size_px": "40–50",
+        "color": "monochrome — matches headline color"
+      },
+      "cta": {
+        "text": "SWIPE →",
+        "position": "lower-right of headline band",
+        "font": "Lora Bold",
+        "size_px": 22
+      }
+    },
+    "slide_2_4_quote_cards": {
+      "background": "SIGNATURE COLOR full-bleed — single flat solid fill, no texture",
+      "zones": {
+        "quote_zone": {
+          "position": "upper portion",
+          "left_margin_pct": 7,
+          "top_margin_pct": "8–10",
+          "max_width_pct": 86,
+          "fills": "60–80% of vertical space between top margin and byline",
+          "content": "pull quote — one unbroken passage, monolithic text block"
+        },
+        "byline_zone": {
+          "position": "bottom-left",
+          "left_margin_pct": 7,
+          "baseline_from_top_pct": "85–88"
+        },
+        "logo_zone": {
+          "position": "bottom-right",
+          "inset_pct": 5
+        }
+      },
+      "forbidden_elements": [
+        "ANY imagery, photos, or illustrations",
+        "Icons of any kind",
+        "Decorative elements",
+        "Swipe CTAs",
+        "Sub-headers within the quote",
+        "Bullet points",
+        "Multiple text blocks"
+      ],
+      "negative_space_rule": "Minimum 10% canvas height (135px) between quote block's last line and byline. Empty space filled with signature color — passive, generous, breathing room."
+    }
+  },
+  "narrative_arc": {
+    "_note": "3–4 slides only. Every slide is essential. No rest frames, no padding slides.",
+    "slide_1": {
+      "archetype": "The Hook",
+      "purpose": "Stop the scroll. State the claim. Establish voice and visual world.",
+      "visual_density": "Maximum — illustration + headline + color + brand",
+      "headline_rule": "4–10 words. Must contain a tension, claim, or provocation.",
+      "headline_patterns": [
+        "Declarative Return Report: 'I Just Returned From X. Y.'",
+        "Empathy Gap: 'What We Don't Understand About X'",
+        "Provocative Reframe: 'The [Unexpected Adj] of [Known Thing]'",
+        "Legacy Claim: '[Person] Was a [Surprising Label]'",
+        "Direct Challenge: '[Question]? [Unexpected Answer].'"
+      ]
+    },
+    "slide_2": {
+      "archetype": "The Thesis",
+      "purpose": "The most shareable, surprising, or provocative line from the argument.",
+      "visual_density": "Minimal — text and color only",
+      "quote_rule": "30–70 words. The line someone would screenshot. Contains the core reframe.",
+      "rhetorical_structure": "hard_fact or counterintuitive"
+    },
+    "slide_3": {
+      "archetype": "The Evidence",
+      "purpose": "The fact, analogy, or escalation that makes the thesis credible.",
+      "visual_density": "Minimal — same as slide 2",
+      "quote_rule": "40–80 words. A specific number, vivid comparison, or named entity.",
+      "rhetorical_structure": "escalation or process_as_experience"
+    },
+    "slide_4": {
+      "archetype": "The Landing",
+      "purpose": "Emotional or philosophical payoff. Or call to action.",
+      "visual_density": "Minimal — same as slides 2–3",
+      "quote_rule": "30–60 words. A contrast pair, CTA, or compassionate observation.",
+      "rhetorical_structure": "solution_declaration or cta_parenthetical"
+    }
+  },
+  "pull_quote_rhetorical_structures": {
+    "hard_fact": "[Devastating statistic or uncomfortable truth.] [Reframe that makes it concrete.] [Simple implication the reader cannot argue with.]",
+    "escalation": "[The first problem stated.] [How it compounds.] [The systemic consequence that results.]",
+    "counterintuitive": "[The common assumption.] [The actual reality.] [What this means for the reader.]",
+    "solution_declaration": "[The new reality stated plainly.] [Why it works.] [What it replaces or makes unnecessary.]",
+    "process_as_experience": "[What happens first — second person.] [What happens next — instant, simple.] [What the reader feels — or does not have to feel.]",
+    "cta_parenthetical": "[The stakes of not acting.] [The specific action.] [(You can [specific action] through [brand name].) — parenthetical, not a button]"
+  },
+  "density_rhythm": {
+    "pattern": "High → Sustained Low",
+    "slide_1": "████████████ MAXIMUM — illustration + headline + color + brand",
+    "slide_2": "████ LOW — quote + byline + logo only",
+    "slide_3": "████ LOW — same",
+    "slide_4": "████ LOW — same",
+    "_note": "The carousel front-loads all visual richness into Slide 1 then maintains a steady typographic plateau. Inverse of Dark Museum (which builds and releases). Here, the single visual shift is Slide 1 → Slide 2: split-zone illustrated card to full-bleed typographic card."
+  },
+  "illustration_system": {
+    "_philosophy": "The Slide 1 illustration is a visual argument, not a visual description. It embodies the article's THESIS — not its topic — as a single, instantly readable image. The metaphor must work in under 2 seconds at phone-scroll speed.",
+    "_note": "Images appear ONLY on Slide 1. Slides 2–4 are image-free.",
+    "modes": {
+      "mode_1_editorial_cartoon": {
+        "name": "Editorial Cartoon",
+        "medium": "Flat vector / digital illustration",
+        "used_for": "Policy, economics, geopolitics, systemic arguments",
+        "fidelity": "Stylized, not realistic",
+        "characteristics": "Bold saturated colors, clean vector rendering, sharp edges, no gradients within shapes. Political cartoon meets mid-century editorial illustration (Ben Shahn, Push Pin Studios).",
+        "example": "Golfer putting through a brick wall = tariffs aren't blocking trade (China trade piece)",
+        "prompt_template": "Editorial illustration, flat graphic style. {scene_embodying_thesis}. Bold saturated colors: {primary_color} and {secondary_color}. Clean vector rendering, sharp edges, no gradients within shapes. Political cartoon meets mid-century editorial illustration. Stylized, not photorealistic. Strong geometric composition. No text, no labels, no border. 4:5 portrait."
+      },
+      "mode_2_fine_art": {
+        "name": "Fine Art / Expressive",
+        "medium": "Drypoint, charcoal, monoprint, watercolor",
+        "used_for": "Profiles, mental health, personal essays, human-interest pieces",
+        "fidelity": "Raw, textured, hand-rendered",
+        "characteristics": "Heavy texture — paper grain, printmaking plate marks, charcoal dust, watercolor bleeds. Texture = emotional truth. Muted palette.",
+        "example": "Overlapping etched faces = fractured self-perception (mental health piece)",
+        "prompt_template": "Fine art editorial illustration, {medium: drypoint etching / charcoal monoprint / watercolor wash} style. {subject_description}. {emotion: raw / ghostly / tender / unsettling}. Muted palette: {base_tones} with accents of {accent_color}. Textured, hand-rendered, visible mark-making. Traditional printmaking aesthetic. No text, no border. 4:5 portrait."
+      },
+      "mode_3_conceptual_photography": {
+        "name": "Conceptual Photography",
+        "medium": "Studio photography, chiaroscuro",
+        "used_for": "Literary criticism, cultural essays, gothic or dramatic topics",
+        "fidelity": "Photorealistic but staged and symbolic",
+        "characteristics": "Dramatic single-source lighting, deep shadows, rich material reality. Objects feel alive and present.",
+        "example": "Hand holding glowing snake = dangerous allure of Wuthering Heights",
+        "prompt_template": "Dramatic conceptual photograph, studio shot. {subject_description}. {lighting: chiaroscuro / rim-lit / single spotlight}. Color palette: {dominant} to {secondary}. {mood: gothic / sensual / clinical / reverent}. High production editorial photography. Sharp focus, dramatic shadow fall-off. No text, no border. 4:5 portrait."
+      },
+      "mode_4_documentary": {
+        "name": "Documentary Photography",
+        "medium": "Archival / photojournalistic",
+        "used_for": "Obituaries, political legacy pieces, historical events",
+        "fidelity": "Photographic — real, unmanipulated",
+        "characteristics": "Film grain, archival patina, environmental lighting. As-captured. Historical authenticity.",
+        "example": "Jesse Jackson at the 1988 Democratic Convention (political legacy piece)",
+        "prompt_template": "N/A — use archival photography source, not AI generation."
+      }
+    },
+    "metaphor_selection_rubric": {
+      "step_1": "Extract the THESIS, not the topic. 'We are losing the trade war' is the thesis; 'US-China relations' is the topic.",
+      "step_2": "Find a physical scenario that embodies this tension — a real-world scene, not just an object.",
+      "step_3": "Layer the metaphor: primary read (obvious), secondary (cultural connotation), tertiary (ironic detail).",
+      "step_4": "Ensure instant legibility — test: does someone understand the FEELING in 1 second without the headline?",
+      "step_5": "Check color inheritance — the illustration must have one dominant hue that can sustain 3 flat-color quote slides."
+    },
+    "metaphor_domains": {
+      "competition_losing": {
+        "approach": "Games with obstacles, races with handicaps, sports against immovable forces",
+        "scenarios": ["Golfer vs. brick wall", "Runner on treadmill going nowhere", "Chess game with missing pieces"]
+      },
+      "broken_systems": {
+        "approach": "Machines malfunctioning, structures crumbling, tools that don't fit",
+        "scenarios": ["Engine with missing gears", "Bridge with a gap", "Key that doesn't fit the lock"]
+      },
+      "mental_health_inner_struggle": {
+        "approach": "Fractured or doubled selves, distorted perception, invisible barriers",
+        "scenarios": ["Overlapping faces", "Hall of mirrors", "Figure behind frosted glass"]
+      },
+      "dangerous_beauty": {
+        "approach": "Creatures beautiful and harmful, flames, thorned flowers",
+        "scenarios": ["Glowing snake", "Moth near fire", "Roses with visible thorns"]
+      },
+      "legacy_impact": {
+        "approach": "Ripples, footprints, shadows, crowds shaped by one figure",
+        "scenarios": ["Footprint filling with water", "Single tree with enormous shadow", "Empty podium with echoing crowd"]
+      },
+      "moral_urgency": {
+        "approach": "Seeds, sprouts, simple generous acts, hands reaching",
+        "scenarios": ["Kidney-sprout growing from darkness", "Hand extending a single object", "One candle lighting many"]
+      },
+      "hypocrisy_gap": {
+        "approach": "Masks, facades, optical illusions, Potemkin structures",
+        "scenarios": ["Painted facade with crumbling wall behind", "Mirror showing different reflection", "Door opening to a wall"]
+      },
+      "inequality_injustice": {
+        "approach": "Scales tipped, ladders missing rungs, divided landscapes",
+        "scenarios": ["Seesaw with one side anchored", "Landscape split by a wall", "Bridge that stops halfway"]
+      }
+    },
+    "anti_patterns": [
+      "The literal depiction — a chip for semiconductors, a brain for mental health, a book for literary criticism",
+      "The cliché — globe for global, handshake for diplomacy, broken chain for freedom",
+      "The multi-scene — more than one tension or scenario in one illustration",
+      "The chromatically confused — 5+ competing hues with no dominant color to inherit",
+      "The too-clever — requires insider knowledge to decode, fails the 2-second legibility test"
+    ]
+  },
+  "layout_presets": {
+    "title_card_text_zone": {
+      "headline": {"x_pct": 7, "y_from_illustration_bottom_pct": 5, "max_width_pct": 90},
+      "byline": {"x_pct": 7, "gap_from_headline_px": 16}
+    },
+    "quote_card_text_zone": {
+      "quote": {"x_pct": 7, "y_pct": "8–10", "max_width_pct": 86},
+      "byline": {"x_pct": 7, "y_from_top_pct": "85–88"},
+      "logo": {"position": "bottom-right", "inset_pct": 5}
+    }
+  },
+  "brand_integration": {
+    "logo": {
+      "position": "bottom-right, every slide",
+      "inset": "5% from right and bottom edges",
+      "size_px": "40–50",
+      "color": "monochrome — white on dark, black on light",
+      "function": "Colophon, not logo — like a publisher's mark on every page. Always present, never dominant."
+    },
+    "brand_color_rule": "Brand colors do NOT appear in this system. The per-carousel signature color overrides any brand palette. Brand identity comes from the typographic system, not from color.",
+    "voice_alignment": {
+      "authority": "Declarative sentences. No hedging. → Bold serif type. No decorative softening.",
+      "restraint": "No exclamation marks. Dry wit over punchlines. → No gradients, icons, embellishments.",
+      "directness": "'We are not winning.' Short, declarative. → Left-aligned. Large type. No compositional ambiguity.",
+      "inclusivity": "'We' and 'our' — implicates the reader. → Full-bleed color wraps around the viewer."
+    }
+  },
+  "quality_checklist": [
+    "Does the illustration embody the article's THESIS, not just its TOPIC?",
+    "Is the illustration legible as a metaphor in under 2 seconds?",
+    "Does the illustration's dominant color support 3 flat-color quote slides?",
+    "Is ALL text left-aligned (never centered, never justified)?",
+    "Are quotation marks curly/typographic (not straight)?",
+    "Is the headline in Title Case?",
+    "Are bylines in ALL CAPS with visible letter-spacing?",
+    "Is there only ONE serif family + ONE sans family across all slides?",
+    "Is the logo present on every slide, bottom-right, monochrome?",
+    "Are quote cards FREE of any imagery, icons, or decorative elements?",
+    "Does each quote stand alone (readable without the article)?",
+    "Is quote text black on the colored background (never colored text)?",
+    "Is there adequate breathing room (10%+ canvas height) between quote block and byline?",
+    "Do the quotes follow the Thesis → Evidence → Landing progression?",
+    "Does black text on signature color achieve minimum 4.5:1 contrast ratio?"
+  ],
+  "do_not_list": [
+    "Centered text — anywhere, ever",
+    "Colored text on quote cards — always black",
+    "Multiple fonts — only Lora + Libre Franklin",
+    "Imagery on quote cards — zero",
+    "Gradients — anywhere in the system",
+    "Two-color backgrounds — single flat fill only",
+    "Bullet points or sub-headers within quotes",
+    "Data visualizations, charts, or graphs",
+    "Stock photography of any kind",
+    "Headshots or corporate portraits",
+    "Screenshots or product UI within illustrations",
+    "Text within the illustration (no labels, signs, speech bubbles)",
+    "Multiple illustrations per carousel",
+    "14 slides — this is a 3–4 slide format"
+  ]
+}

@@ -1,0 +1,634 @@
+{
+  "name": "SIC Toile",
+  "version": "1.0",
+  "canvas": {
+    "width": 1200,
+    "height": 1500,
+    "padding": 89
+  },
+  "_design_note": "SIC — Latin editorial notation meaning 'thus it was written / thus it stands.' The name signals institutional permanence and archival authority. The aesthetic draws from Toile de Jouy: 18th-century French textile pattern, single-color copper-plate engravings of narrative pastoral and institutional scenes on cream ground. Every object in this theme is an engraving, not a render.",
+  "colors": {
+    "bg": "#F5F0E8",
+    "bg_vellum": "#EDE8DF",
+    "indigo_primary": "#2A2ECD",
+    "indigo_deep": "#1A1A6E",
+    "indigo_muted": "#4A4E9E",
+    "text_primary": "#1A1A6E",
+    "text_secondary": "#4A4E9E",
+    "text_on_indigo": "#F5F0E8",
+    "accent_line": "#2A2ECD",
+    "cartouche_fill": "#F5F0E8"
+  },
+  "_color_philosophy": "This is the only light-background theme. Warm cream (#F5F0E8) is the canvas — the ground on which everything is engraved. Indigo (#2A2ECD) is the ONLY color used for both illustrations AND text — they share an ink. There is no separation between 'image color' and 'text color.' Everything is printed in the same indigo on the same cream, like a copper-plate atlas page.",
+  "typography": {
+    "headline": {
+      "font_family": "Playfair Display",
+      "weight": 700,
+      "line_height": 1.05,
+      "letter_spacing": "0.04em",
+      "color": "#1A1A6E",
+      "text_transform": "uppercase",
+      "source": "Google Fonts",
+      "role": "Primary headline — uppercase, tracked. Institutional proclamation register. Feels like a cartouche title on an 18th-century map."
+    },
+    "body": {
+      "font_family": "DM Sans",
+      "weight": 400,
+      "line_height": 1.5,
+      "letter_spacing": "0.005em",
+      "color": "#4A4E9E",
+      "source": "Google Fonts",
+      "role": "Body and subtext — contemporary sans against the historical serif headline. The contrast is intentional: the thesis is timeless (serif), the argument is present-tense (sans)."
+    },
+    "annotation": {
+      "font_family": "DM Sans",
+      "weight": 500,
+      "size": 18,
+      "letter_spacing": "0.08em",
+      "text_transform": "uppercase",
+      "color": "#2A2ECD",
+      "role": "Small label annotations — engraving plate-number style. Used for domain labels, archetype markers."
+    },
+    "cartouche_title": {
+      "font_family": "Playfair Display",
+      "weight": 900,
+      "line_height": 0.95,
+      "letter_spacing": "0.06em",
+      "text_transform": "uppercase",
+      "color": "#1A1A6E",
+      "role": "Cover slide headline inside the cartouche frame. Largest, most formal text in the system."
+    }
+  },
+  "image_prompt_template": "Single-color copper-plate engraving illustration of {name} in {state} condition, rendered entirely in indigo (#2A2ECD) on transparent/white ground — NO color other than this single indigo, fine parallel hatching for mid-tones, cross-hatching for deep shadow areas, stippling for soft texture, clean confident contour lines, 18th-century French or English engraving aesthetic — Encyclopédie Diderot / Audubon Birds of America / Piranesi Vedute register, full narrative scene with ground plane and environmental detail, {figures_instruction}, elaborate but legible at carousel scale, no photography, no gradients, no fills — pure line and mark work only",
+  "state_map": {
+    "failing": "in ruins",
+    "outdated": "overgrown",
+    "broken": "collapsed",
+    "problematic": "burdened",
+    "friction": "obstructed",
+    "chaotic": "in disorder",
+    "slow": "becalmed",
+    "declining": "diminished",
+    "opportunity": "newly opened",
+    "new": "newly surveyed",
+    "innovative": "in discovery",
+    "aspirational": "in procession",
+    "growing": "flourishing",
+    "process": "in full operation",
+    "sequential": "in succession",
+    "foundational": "under construction",
+    "connecting": "in correspondence",
+    "securing": "sealed and witnessed",
+    "proving": "demonstrated",
+    "measuring": "under examination",
+    "complex": "in full detail"
+  },
+  "archetype_tone": {
+    "cover_hook": "aspirational",
+    "context_setter": "neutral",
+    "problem_setup": "failing",
+    "problem_escalation": "chaotic",
+    "turning_point": "opportunity",
+    "pivot_question": null,
+    "solution_introduction": "innovative",
+    "landscape_overview": "complex",
+    "technical_foundation": "foundational",
+    "how_it_works_setup": "connecting",
+    "how_it_works_flow": "sequential",
+    "how_it_works_security": "securing",
+    "company_positioning": "aspirational",
+    "cta_close": null
+  },
+  "archetypes": {
+    "cover_hook": {
+      "name": "Cover Hook",
+      "description": "Cartouche title frame — the map-maker's proclamation. Grand engraving scene above, ornate cartouche containing headline below.",
+      "composition": "cartouche-split",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": true,
+      "has_cta": true,
+      "cta_text": "SWIPE →",
+      "text_position": "cartouche-center",
+      "object_position": "upper-two-thirds",
+      "title_size": 88,
+      "body_size": 24,
+      "notes": "The cartouche is the structural signature of SIC Toile covers. Upper 65% is the engraving scene — full width, no margin. Lower 35% contains an engraved decorative cartouche frame (oval or rectangular with foliate border) inside which the headline sits in Playfair Display 900 uppercase. Logo appears as an engraved plate mark — small, bottom-right of cartouche. CTA 'SWIPE →' in annotation style, lower-right margin."
+    },
+    "context_setter": {
+      "name": "Context Setter",
+      "description": "Wide establishing scene — the world of the argument, depicted as landscape",
+      "composition": "landscape-scene",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-two-thirds",
+      "title_size": 80,
+      "body_size": 26,
+      "notes": "Headline in upper zone, engraving scene in lower two-thirds. Headline in Playfair uppercase, wide tracking. Scene is an establishing landscape — the environment of the argument. A thin engraved rule line separates headline zone from scene zone."
+    },
+    "problem_setup": {
+      "name": "Problem Setup",
+      "description": "A scene of institutional decay or obstruction — ruins, overgrowth, burdened figures",
+      "composition": "scene-right",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-right",
+      "title_size": 76,
+      "body_size": 24,
+      "notes": "Scene in lower-right quadrant, showing decay or obstruction state. Headline upper-left in Playfair uppercase. A single engraved annotation label marks the scene domain — top-right, in small tracking caps. State: in ruins, overgrown, or burdened."
+    },
+    "problem_escalation": {
+      "name": "Problem Escalation",
+      "description": "A scene of disorder — figures in chaos, structures collapsed, systems in failure",
+      "composition": "full-scene",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "center-right",
+      "title_size": 76,
+      "body_size": 24,
+      "notes": "Engraving fills most of slide with a scene of disorder. Text occupies upper-left zone, constrained to ~40% width. Engraving extends behind text at reduced opacity if needed — but indigo text on cream is always legible. State: in disorder or collapsed."
+    },
+    "turning_point": {
+      "name": "Turning Point",
+      "description": "A scene of discovery or newly opened territory — the horizon shifts",
+      "composition": "scene-right",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "lower-left",
+      "object_position": "upper-right",
+      "title_size": 80,
+      "body_size": 26,
+      "notes": "The engraving shifts register from the problem slides — newly surveyed territory, open horizons, ascending figures. Text below-left. The spatial openness in the engraving signals the narrative turn. State: newly opened or newly surveyed."
+    },
+    "pivot_question": {
+      "name": "Pivot Question",
+      "description": "Text-only — cream canvas, single question in Playfair uppercase, no engraving",
+      "composition": "text-only",
+      "has_object": false,
+      "object_count": "none",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "center-left",
+      "object_position": null,
+      "title_size": 100,
+      "body_size": 26,
+      "notes": "Pure cream canvas. Question in Playfair Display 700 uppercase at 100px, deep indigo. A thin single engraved rule line above and below the text block — the only decoration. No engraving scene. The cream silence is the visual statement. The engraved rules frame the question like a chapter title in an 18th-century treatise."
+    },
+    "solution_introduction": {
+      "name": "Solution Introduction",
+      "description": "A scene of discovery in progress — the new instrument, the new mechanism, revealed",
+      "composition": "scene-right",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-right",
+      "title_size": 80,
+      "body_size": 26,
+      "notes": "Scene depicts the solution concept in Enlightenment discovery register — a natural philosopher demonstrating, a navigator with new instruments, an architect presenting plans. State: in discovery or demonstrated. Headline upper-left. Clean, confident engraving — more open line work than the problem slides."
+    },
+    "landscape_overview": {
+      "name": "Landscape Overview",
+      "description": "Panoramic map view — territory surveyed, options charted, the full landscape visible",
+      "composition": "panoramic-map",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-full-width",
+      "title_size": 76,
+      "body_size": 24,
+      "notes": "The engraving is a bird's-eye or map-view scene — a wide panorama of the competitive landscape or solution space. The composition is deliberately wide and complex, like a cartographic plate. Headline upper-left. Three annotation labels in the engraving mark the key areas being discussed."
+    },
+    "technical_foundation": {
+      "name": "Technical Foundation",
+      "description": "Architectural cross-section or mechanical diagram — the infrastructure revealed",
+      "composition": "diagram",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "lower-left",
+      "object_position": "upper-right",
+      "title_size": 76,
+      "body_size": 24,
+      "notes": "The engraving is an architectural cross-section, engineering diagram, or mechanical exploded view — the kind found in Diderot's Encyclopédie. Multiple labeled components. Technical precision. State: under construction. The diagram aesthetic signals: this is how it actually works, not metaphor."
+    },
+    "how_it_works_setup": {
+      "name": "How It Works (Setup)",
+      "description": "Two figures in correspondence or preparation — the handshake before the work begins",
+      "composition": "scene-right",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-right",
+      "title_size": 76,
+      "body_size": 24,
+      "notes": "Scene depicts the initiation moment — merchant preparing goods, navigator setting coordinates, architect reviewing plans. Two or more figures in the scene, oriented toward the activity. State: in correspondence."
+    },
+    "how_it_works_flow": {
+      "name": "How It Works (Flow)",
+      "description": "Scene of process in full operation — the mechanism turning, the sequence in motion",
+      "composition": "scene-right",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "center-right",
+      "title_size": 76,
+      "body_size": 24,
+      "notes": "The engraving shows movement and operation — figures actively engaged, mechanical elements turning, goods flowing. Kinetic composition implied through figure poses and cascading arrangement. State: in full operation or in succession."
+    },
+    "how_it_works_security": {
+      "name": "How It Works (Security)",
+      "description": "Scene of official sealing, witnessing, or certification — institutional gravity",
+      "composition": "scene-right",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": false,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-right",
+      "title_size": 76,
+      "body_size": 24,
+      "notes": "Scene depicts the moment of official confirmation — a document being sealed, a ceremony of certification, figures in formal witness. Dignified composition. State: sealed and witnessed or demonstrated."
+    },
+    "company_positioning": {
+      "name": "Company Positioning",
+      "description": "Allegorical procession or assembly — figures in aspirational movement, the institution at its best",
+      "composition": "full-scene",
+      "has_object": true,
+      "object_count": "single",
+      "has_logo": true,
+      "has_cta": false,
+      "text_position": "upper-left",
+      "object_position": "lower-full-width",
+      "title_size": 80,
+      "body_size": 26,
+      "notes": "The grandest engraving in the carousel — a full-width scene depicting the company's mission in allegorical terms. A procession of merchants, navigators, architects, and scholars moving forward. Logo appears as an engraved plate mark. State: in procession or flourishing."
+    },
+    "cta_close": {
+      "name": "CTA Close",
+      "description": "Cream canvas with engraved rules and colophon — the book's final page",
+      "composition": "text-only",
+      "has_object": false,
+      "object_count": "none",
+      "has_logo": true,
+      "has_cta": true,
+      "cta_text": null,
+      "text_position": "center-left",
+      "object_position": null,
+      "title_size": 88,
+      "body_size": 26,
+      "notes": "Pure cream. Headline in Playfair uppercase. Two thin engraved rule lines frame the text block — one above, one below. Below the lower rule: the brand name as a plate mark (small, formal). Below that: a small engraved ornament (fleuron or printer's mark). Then the CTA text in DM Sans annotation style. The slide reads like the final page of an 18th-century treatise — colophon, author mark, closing."
+    }
+  },
+  "metaphor_domains": {
+    "cartography_navigation": {
+      "name": "Cartography / Navigation",
+      "keywords": ["global", "international", "routes", "corridors", "territory", "map", "reach",
+                   "cross-border", "expand", "direction", "navigate", "path", "journey",
+                   "network", "connect", "geography", "scale", "market", "landscape"],
+      "objects": [
+        {
+          "name": "cartouche from an 18th-century atlas with compass rose, sea monsters in the margins, and decorative scrollwork framing a blank map territory",
+          "material": "fine copper-plate line work, open sea areas with parallel hatch waves",
+          "figures_instruction": "two cartographers at the corners unrolling the map",
+          "state_default": "newly surveyed"
+        },
+        {
+          "name": "navigator with a sextant on the deck of a ship, celestial sphere visible to one side, coastline emerging from fog in the background",
+          "material": "fine cross-hatching for sea and sky, clean contour on instrument",
+          "figures_instruction": "single navigator figure, back to viewer, looking to horizon",
+          "state_default": "in discovery"
+        },
+        {
+          "name": "large celestial globe on an ornate mechanical stand in a library interior, maps and folios around the base",
+          "material": "stippled globe surface with engraved meridian lines, detailed library shelving behind",
+          "figures_instruction": "one scholar figure gesturing at the globe to two observers",
+          "state_default": "demonstrated"
+        },
+        {
+          "name": "surveying party on a hill crest with theodolite and measuring chains, wide open territory below being mapped, flags marking survey points in the distance",
+          "material": "open hatching for sky, detailed figure work for surveyors, distant landscape in fine line",
+          "figures_instruction": "three-figure surveying team actively at work",
+          "state_default": "in full operation"
+        },
+        {
+          "name": "bird's-eye plan view of a trade route network connecting ports and inland towns, ships at sea, caravans on roads, all labeled with distance annotations",
+          "material": "cartographic line work — clean roads, stylized sea hatching, tiny building icons for towns",
+          "figures_instruction": "no figures — cartographic diagram only",
+          "state_default": "in full detail"
+        }
+      ]
+    },
+    "commerce_exchange": {
+      "name": "Commerce / Exchange",
+      "keywords": ["payment", "merchant", "trade", "exchange", "settlement", "value",
+                   "commerce", "market", "transaction", "money", "flow", "revenue",
+                   "capital", "invoice", "ledger", "credit", "debit", "fee", "price"],
+      "objects": [
+        {
+          "name": "counting house interior with tall windows, merchants at slanted desks with ledger books, coin stacks and bills of exchange on the central table",
+          "material": "deep cross-hatching for shadow zones, clean line work on figures and furniture, stippled floor",
+          "figures_instruction": "four or five merchant figures at various stages of counting, writing, and consulting",
+          "state_default": "in full operation"
+        },
+        {
+          "name": "busy quayside scene with merchant ship being loaded, cranes swinging cargo, merchants gesturing at manifests, small boats ferrying goods",
+          "material": "fine rigging detail on ship, active figure poses, deep hatching on water",
+          "figures_instruction": "seven or eight figures in active loading and negotiation poses",
+          "state_default": "in full operation"
+        },
+        {
+          "name": "apothecary balance scale with stacked coin towers on one pan and a pile of goods receipts on the other, set on a counting table with scattered documents",
+          "material": "highly detailed scale mechanism, fine hatching on documents, polished brass rendered in clean line",
+          "figures_instruction": "two merchant hands visible at the edges adjusting weights",
+          "state_default": "under examination"
+        },
+        {
+          "name": "exchange floor interior — colonnaded hall crowded with merchants in animated discussion, notice boards with rates posted, clerks moving through the crowd",
+          "material": "architectural columns in deep shadow, crowd rendered in loose but legible groupings, light flooding from clerestory windows",
+          "figures_instruction": "dense crowd of fourteen or more figures in various states of transaction and conversation",
+          "state_default": "in disorder"
+        },
+        {
+          "name": "ornate bill of exchange document with engraved header, seals, and signatures — the document itself depicted as an engraving within the engraving",
+          "material": "extreme fine line work for document typography and border details, seals rendered in cross-hatch",
+          "figures_instruction": "no figures — document study only",
+          "state_default": "sealed and witnessed"
+        }
+      ]
+    },
+    "governance_institution": {
+      "name": "Governance / Institutional Authority",
+      "keywords": ["authority", "institution", "standard", "regulation", "policy", "rule",
+                   "mandate", "certified", "official", "trust", "compliance", "law",
+                   "framework", "directive", "government", "central bank", "rbi", "require"],
+      "objects": [
+        {
+          "name": "columned hall of governance — assembled delegates seated in a semicircular chamber, a speaker at the rostrum, light falling from high windows",
+          "material": "architectural detail in clean line, figure groupings in varied poses, deep column shadows in cross-hatch",
+          "figures_instruction": "thirty or more assembled delegates, speaker prominent at rostrum",
+          "state_default": "in procession"
+        },
+        {
+          "name": "ceremonial signing of a charter — large table with the document, dignitaries seated around it, a quill being passed, witnesses standing behind",
+          "material": "document given prominence in composition center, fine figure detail, candlelit interior suggested by hatching",
+          "figures_instruction": "eight to ten figures, one actively signing, others witnessing formally",
+          "state_default": "sealed and witnessed"
+        },
+        {
+          "name": "grand seal press with two officials operating it — the hot wax, the signet, the completed document waiting",
+          "material": "mechanical detail of the press, dramatic hatching for the wax pool, clean contour on seal face",
+          "figures_instruction": "two official figures operating the seal press with ceremonial gravity",
+          "state_default": "sealed and witnessed"
+        },
+        {
+          "name": "ruined arcade of a once-grand institutional building — columns fallen, weeds emerging from cracks, a single figure surveying the damage",
+          "material": "heavy cross-hatching for ruin shadows, fine botanical detail on encroaching vegetation, dramatic perspective",
+          "figures_instruction": "one solitary figure with back to viewer, contemplating the ruin",
+          "state_default": "in ruins"
+        },
+        {
+          "name": "a notice board outside an institution posting new regulations — crowd gathered reading it, some in animated discussion, others walking away",
+          "material": "notice board as composition center, crowd in varied reading and reaction poses",
+          "figures_instruction": "twelve figures in various states of reading, discussion, and reaction",
+          "state_default": "in full operation"
+        }
+      ]
+    },
+    "natural_philosophy": {
+      "name": "Natural Philosophy / Discovery",
+      "keywords": ["innovation", "discovery", "technology", "advanced", "science", "system",
+                   "mechanism", "understand", "reveal", "insight", "research", "data",
+                   "analysis", "intelligence", "experiment", "proof", "evidence", "test"],
+      "objects": [
+        {
+          "name": "public demonstration of the Leyden jar — sparks visible, audience of scholars leaning in, the demonstrator in theatrical pose with the apparatus",
+          "material": "dramatic spark rendering in fine line radiating from jar, audience faces lit from the apparatus glow suggested by hatching",
+          "figures_instruction": "eight observers in various states of wonder and attention, one demonstrator at center",
+          "state_default": "demonstrated"
+        },
+        {
+          "name": "naturalist's collection spread — specimens pinned and mounted, microscope to one side, detailed illustrations in progress, classification system visible on wall",
+          "material": "extreme fine line work on specimens, botanical and zoological detail, grid system visible in background",
+          "figures_instruction": "one naturalist figure examining specimen through magnifying glass",
+          "state_default": "under examination"
+        },
+        {
+          "name": "large reflecting telescope installed in an observatory dome — astronomer at the eyepiece, clockwork drive mechanism visible, star charts on the desk below",
+          "material": "dome architecture in deep shadow, instrument in careful detail, circular window showing star field in stipple",
+          "figures_instruction": "one astronomer and one assistant recording observations",
+          "state_default": "in discovery"
+        },
+        {
+          "name": "Encyclopédie-style plate: cross-section of a new industrial process with labeled parts A through K, workers operating at each stage",
+          "material": "technical diagram aesthetic — clean outlines, letter labels, numbered callouts in the style of Diderot's plates",
+          "figures_instruction": "five worker figures at labeled stations A through E",
+          "state_default": "in full detail"
+        },
+        {
+          "name": "laboratory of experimental philosophy — distillation apparatus, retort stands, air pumps, and a mechanical orrery, all on a long workbench",
+          "material": "complex but ordered arrangement, each instrument in fine detail, clean shadows",
+          "figures_instruction": "two philosophers in discussion with instruments between them",
+          "state_default": "in discovery"
+        }
+      ]
+    },
+    "architecture_infrastructure": {
+      "name": "Architecture / Infrastructure",
+      "keywords": ["foundation", "infrastructure", "platform", "architecture", "base",
+                   "build", "construct", "layer", "backbone", "scale", "bridge",
+                   "structure", "pipeline", "network", "system", "core", "protocol"],
+      "objects": [
+        {
+          "name": "grand stone arch bridge under construction — scaffolding and centring in place, workers with ropes and blocks raising keystones, river below with supply barges",
+          "material": "stone masonry in careful cross-hatch, scaffolding in fine line, water with parallel hatch, active construction energy",
+          "figures_instruction": "twelve workers at various stages of construction above and on the bridge",
+          "state_default": "under construction"
+        },
+        {
+          "name": "Piranesi-inspired cross-section through a multi-level underground infrastructure — vaults, pipes, and passages at different depths, labeled with scale bar",
+          "material": "dramatic Piranesi-style hatching for vault shadows, bold architectural geometry, figure for scale",
+          "figures_instruction": "two small figures in the lowest vault for scale reference",
+          "state_default": "in full detail"
+        },
+        {
+          "name": "architect presenting elevation drawing to patrons at a drafting table — full plan rolled out, elevation pinned to the wall, model visible to one side",
+          "material": "plan drawing in technical line work, patron figures in more fluid sketch style",
+          "figures_instruction": "one architect and three patron figures examining the plans",
+          "state_default": "demonstrated"
+        },
+        {
+          "name": "ruined aqueduct — one half still standing and functioning, the other half collapsed with vegetation, the break visible at center",
+          "material": "intact section in confident clean line, collapsed section in heavy shadow and ruin detail, botanical overgrowth in fine stipple",
+          "figures_instruction": "two figures examining the break point, one making notes",
+          "state_default": "collapsed"
+        },
+        {
+          "name": "grand canal lock system in operation — water levels adjusting, lock gates open and closing, boats waiting in queue, lock-keeper at the controls",
+          "material": "mechanical detail of lock gates, water level difference visible, boats in perspective queue",
+          "figures_instruction": "lock-keeper operating mechanism, three boats with crew waiting",
+          "state_default": "in full operation"
+        }
+      ]
+    },
+    "knowledge_scholarship": {
+      "name": "Knowledge / Scholarship",
+      "keywords": ["data", "insight", "analysis", "understand", "intelligence", "report",
+                   "research", "information", "learn", "document", "record", "archive",
+                   "library", "publish", "communicate", "digest", "brief", "summary"],
+      "objects": [
+        {
+          "name": "grand library interior — double-height shelving to the ceiling, reading tables with scholars bent over large folios, rolling ladders, globes on pedestals",
+          "material": "architectural grandeur in deep perspective, warm hatching for reading lamp zones, fine figure detail at tables",
+          "figures_instruction": "six scholars at various tables, two on ladders retrieving volumes, one consulting a globe",
+          "state_default": "in full operation"
+        },
+        {
+          "name": "printing press in full operation — compositor setting type at the case, pressmen inking and pulling the bar, freshly printed sheets hanging to dry",
+          "material": "mechanical press detail, active figure poses showing physical labor, hanging sheets in fine outline",
+          "figures_instruction": "four print workers at distinct stages of the presswork process",
+          "state_default": "in succession"
+        },
+        {
+          "name": "scholar's desk in a state of productive disorder — open volumes, manuscripts being cross-referenced, quill in hand, candles, wax, and seals to one side",
+          "material": "rich surface detail on desk objects, open book pages with visible text lines, candlelight zone in warm hatching",
+          "figures_instruction": "one scholar figure seen from above and behind, absorbed in work",
+          "state_default": "in full operation"
+        },
+        {
+          "name": "academy of sciences in session — members presenting a paper before an assembly, diagrams on the wall, secretary recording, members following in their own copies",
+          "material": "formal hall architecture, presentation diagram visible as inset element, assembled members in attentive poses",
+          "figures_instruction": "one presenter, one secretary, twenty attending members",
+          "state_default": "demonstrated"
+        },
+        {
+          "name": "a burning archive — figures rushing to save documents from smoke and flame, some volumes already lost, others being carried out",
+          "material": "dramatic flame rendered in fine upward line work, smoke in cross-hatch, figures in urgent poses",
+          "figures_instruction": "eight figures in urgent rescue, some carrying volumes, some overcome by smoke",
+          "state_default": "in disorder"
+        }
+      ]
+    },
+    "capital_treasury": {
+      "name": "Capital / Treasury",
+      "keywords": ["investment", "capital", "growth", "portfolio", "fund", "asset",
+                   "returns", "value", "wealth", "strategic", "resource", "accumulate",
+                   "stake", "equity", "institutional", "sovereign", "endowment", "reserve"],
+      "objects": [
+        {
+          "name": "treasury interior — vaulted room with clerks counting coin at long tables, sealed strongboxes stacked along the walls, guards at the entrance",
+          "material": "vaulted architecture in deep shadow, coin stacks in fine repetitive detail, strongbox ironwork in close cross-hatch",
+          "figures_instruction": "six counting clerks, two guards, one official inspector",
+          "state_default": "under examination"
+        },
+        {
+          "name": "exchange building exterior — grand colonnade with merchants ascending the steps, notice boards visible through the columns, city life around the base",
+          "material": "architectural grandeur in strong perspective, figure detail on steps, city background in diminishing detail",
+          "figures_instruction": "fifteen figures on steps and entrance — ascending, conversing, reading posted notices",
+          "state_default": "in procession"
+        },
+        {
+          "name": "estate map with the great house at center, grounds laid out in formal plan, tenant farms annotated around the edges, river and roads labeled",
+          "material": "cartographic plan style — house as elevation inset, grounds in plan view, fine annotation typography",
+          "figures_instruction": "no figures — cartographic map study",
+          "state_default": "in full detail"
+        },
+        {
+          "name": "the ruin of a great merchant house — empty counting rooms, overturned ledgers, a single creditor examining the wreckage of accounts",
+          "material": "overturned furniture in dramatic shadow, scattered documents with fine detail, desolate interior light",
+          "figures_instruction": "one figure alone among the ruin, holding a single document",
+          "state_default": "collapsed"
+        },
+        {
+          "name": "the founding moment — a group of merchants signing the original articles of a company, quill in hand, document prominent, candles and wine on the table",
+          "material": "intimate interior, candlelight zone in warm hatching, document as composition center",
+          "figures_instruction": "seven founding figures — one signing, others witnessing with varying expressions of gravity and hope",
+          "state_default": "sealed and witnessed"
+        }
+      ]
+    }
+  },
+  "layout_presets": {
+    "upper-left": {
+      "title": {"x": 89, "y": 89, "max_width": 667},
+      "subtext": {"x": 89, "y": null, "max_width": 622}
+    },
+    "lower-left": {
+      "title": {"x": 89, "y": 956, "max_width": 667},
+      "subtext": {"x": 89, "y": null, "max_width": 622}
+    },
+    "center-left": {
+      "title": {"x": 89, "y": 511, "max_width": 1022},
+      "subtext": {"x": 89, "y": null, "max_width": 867}
+    },
+    "cartouche-center": {
+      "title": {"x": 178, "y": 1022, "max_width": 844},
+      "subtext": {"x": 178, "y": null, "max_width": 844},
+      "_note": "Text is inside the cartouche frame — inset from the cartouche borders by ~89px on each side"
+    }
+  },
+  "object_positions": {
+    "upper-two-thirds": [{"x": 0, "y": 0, "width": 1200, "height": 975}],
+    "lower-two-thirds": [{"x": 0, "y": 500, "width": 1200, "height": 1000}],
+    "lower-right": [{"x": 489, "y": 711, "width": 622, "height": 700}],
+    "upper-right": [{"x": 489, "y": 89, "width": 622, "height": 622}],
+    "center-right": [{"x": 489, "y": 400, "width": 622, "height": 622}],
+    "lower-full-width": [{"x": 0, "y": 756, "width": 1200, "height": 744}],
+    "full-scene": [{"x": 0, "y": 0, "width": 1200, "height": 1500}]
+  },
+  "special_elements": {
+    "cartouche": {
+      "used_on": ["cover_hook", "cta_close"],
+      "description": "An engraved decorative border — foliate scrollwork, classical ribbon work, or architectural pediment — framing the headline text. Used on the cover as the map-maker's title device. Used on CTA as a colophon frame.",
+      "cover_dimensions": {"x": 89, "y": 956, "width": 1022, "height": 456},
+      "cta_dimensions": {"x": 133, "y": 356, "width": 934, "height": 789},
+      "prompt_note": "Engraved cartouche frame only — no fill, line work only, cream interior, indigo border detail"
+    },
+    "rule_lines": {
+      "used_on": ["pivot_question", "cta_close", "context_setter"],
+      "description": "Single thin engraved horizontal rules separating zones — like chapter dividers in an 18th-century printed volume",
+      "weight": "1–2px",
+      "color": "#2A2ECD",
+      "style": "single line, full width between margins"
+    },
+    "annotation_labels": {
+      "used_on": ["landscape_overview", "technical_foundation", "problem_setup"],
+      "description": "Small uppercase tracking labels identifying the depicted scene or domain — like plate descriptions in an atlas",
+      "font": "DM Sans 500 uppercase, tracked 0.08em",
+      "size": 18,
+      "color": "#2A2ECD",
+      "position": "top-right corner of slide, within safe zone"
+    },
+    "plate_number": {
+      "description": "Small roman numeral or arabic numeral in annotation style — like an atlas plate number",
+      "position": "bottom-left, below byline",
+      "format": "TAB. {n}.",
+      "size": 16
+    }
+  },
+  "archetype_sequence": [
+    "cover_hook", "context_setter", "problem_setup", "problem_escalation",
+    "turning_point", "pivot_question", "solution_introduction", "landscape_overview",
+    "technical_foundation", "how_it_works_setup", "how_it_works_flow",
+    "how_it_works_security", "company_positioning", "cta_close"
+  ]
+}
