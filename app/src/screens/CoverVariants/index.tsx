@@ -35,101 +35,156 @@ function AssemblyOverlay({ progress }: { progress: number }) {
   )
 }
 
+// ─── Animated dots ────────────────────────────────────────────────────────────
+function PulseDots() {
+  return (
+    <span className="dot-pulse inline-flex gap-[3px] ml-1">
+      <span className="w-[3px] h-[3px] rounded-full bg-current inline-block" />
+      <span className="w-[3px] h-[3px] rounded-full bg-current inline-block" />
+      <span className="w-[3px] h-[3px] rounded-full bg-current inline-block" />
+    </span>
+  )
+}
+
 // ─── Variant Card component ──────────────────────────────────────────────────
 function VariantCard({
   variant,
   isSelected,
   isDimmed,
+  errorMessage,
+  entryDelay,
   onSelect,
   onRetry,
 }: {
   variant: CoverVariant
   isSelected: boolean
   isDimmed: boolean
+  errorMessage: string | null
+  entryDelay: number
   onSelect: () => void
   onRetry: () => void
 }) {
   const isPending = variant.generation_status === 'pending'
   const isFailed = variant.generation_status === 'failed'
+  const isComplete = variant.generation_status === 'complete'
   const thumbnailUrl = variant.cover_slide.thumbnail_url
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  // Reset imageLoaded when variant changes status
+  useEffect(() => {
+    if (isPending || isFailed) setImageLoaded(false)
+  }, [isPending, isFailed])
 
   return (
-    <button
-      type="button"
-      onClick={isFailed ? undefined : onSelect}
-      className={`group relative flex flex-col sm:flex-row md:flex-col rounded-xl border overflow-hidden transition-all duration-200 text-left cursor-pointer ${
-        isSelected
-          ? 'border-accent border-2 shadow-sm'
-          : isFailed
-            ? 'border-border bg-zinc-50'
-            : 'border-border hover:border-accent/50'
-      } ${isDimmed && !isSelected ? 'opacity-60' : 'opacity-100'}`}
+    <div
+      className="animate-fade-in-up"
+      style={{ animationDelay: `${entryDelay}ms` }}
     >
-      {/* Thumbnail area — 16:20 ratio on desktop, fixed width on mobile */}
-      <div
-        className={`relative w-full sm:w-[140px] sm:shrink-0 md:w-full aspect-[16/20] sm:aspect-auto sm:h-full md:aspect-[16/20] md:h-auto overflow-hidden ${
-          isFailed ? 'bg-zinc-200' : 'bg-zinc-100'
-        }`}
+      <button
+        type="button"
+        onClick={isFailed ? undefined : onSelect}
+        className={`group relative flex flex-col sm:flex-row md:flex-col rounded-xl border overflow-hidden transition-all duration-300 text-left w-full ${
+          isSelected
+            ? 'border-accent border-2 shadow-sm'
+            : isFailed
+              ? 'border-border bg-zinc-50'
+              : 'border-border hover:border-zinc-300 cursor-pointer'
+        } ${isDimmed && !isSelected ? 'opacity-50 scale-[0.98]' : 'opacity-100'}`}
       >
-        {isPending ? (
-          // Skeleton loading
-          <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100" />
-        ) : isFailed ? (
-          // Failed state
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4">
-            <p className="text-xs text-zinc-400 text-center">This one didn't work</p>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                onRetry()
-              }}
-              className="text-xs font-medium text-accent hover:text-accent/80 transition-colors cursor-pointer"
-            >
-              Retry ↻
-            </button>
-          </div>
-        ) : thumbnailUrl ? (
-          // Real generated image
-          <img
-            src={thumbnailUrl}
-            alt={variant.angle_name}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.04]"
-          />
-        ) : (
-          // Placeholder thumbnail (no image yet)
-          <div className="absolute inset-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-[1.04]">
-            <span className="text-sm font-medium text-zinc-400 text-center px-4">
-              {variant.angle_name}
-            </span>
-          </div>
-        )}
-      </div>
+        {/* Thumbnail area */}
+        <div
+          className={`relative w-full sm:w-[140px] sm:shrink-0 md:w-full aspect-[16/20] sm:aspect-auto sm:h-full md:aspect-[16/20] md:h-auto overflow-hidden ${
+            isFailed ? 'bg-zinc-100' : 'bg-zinc-50'
+          }`}
+        >
+          {isPending ? (
+            // Shimmer loading state
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="absolute inset-0 shimmer-bg" />
+              <div className="relative z-10 flex flex-col items-center gap-2 px-6">
+                <div className="w-8 h-8 rounded-full border-2 border-zinc-300 border-t-zinc-500 animate-spin" />
+                <p className="text-[11px] font-medium text-zinc-400 flex items-center">
+                  Creating image<PulseDots />
+                </p>
+              </div>
+            </div>
+          ) : isFailed ? (
+            // Failed state with error context
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6">
+              <div className="w-10 h-10 rounded-full bg-zinc-200 flex items-center justify-center">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-zinc-400">
+                  <path d="M8 5v3.5M8 10.5h.007M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <p className="text-xs text-zinc-400 text-center">Generation failed</p>
+              {errorMessage && (
+                <p className="text-[10px] text-zinc-300 text-center line-clamp-2">{errorMessage}</p>
+              )}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onRetry()
+                }}
+                className="text-xs font-medium text-accent hover:text-accent/80 transition-colors cursor-pointer px-3 py-1.5 rounded-lg border border-accent/20 hover:border-accent/40"
+              >
+                Try again
+              </button>
+            </div>
+          ) : thumbnailUrl ? (
+            // Completed — image with fade-in reveal
+            <>
+              {!imageLoaded && <div className="absolute inset-0 shimmer-bg" />}
+              <img
+                src={thumbnailUrl}
+                alt={variant.angle_name}
+                onLoad={() => setImageLoaded(true)}
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ${
+                  imageLoaded
+                    ? 'opacity-100 scale-100'
+                    : 'opacity-0 scale-[1.02]'
+                } group-hover:scale-[1.03]`}
+              />
+            </>
+          ) : (
+            // Placeholder (no image)
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-sm font-medium text-zinc-300 text-center px-4">
+                {variant.angle_name}
+              </span>
+            </div>
+          )}
+        </div>
 
-      {/* Text area */}
-      <div className="flex flex-col gap-1.5 p-4 flex-1">
-        <h3 className="text-sm font-semibold text-zinc-900">
-          {variant.angle_name}
-        </h3>
-        <p className="text-xs text-muted leading-relaxed line-clamp-2">
-          {variant.angle_description}
-        </p>
-        {variant.cover_slide.headline && !isPending && !isFailed && (
-          <p className="text-xs text-zinc-500 italic line-clamp-1 mt-0.5">
-            &ldquo;{variant.cover_slide.headline}&rdquo;
+        {/* Text area — always shows angle name + description */}
+        <div className="flex flex-col gap-1.5 p-4 flex-1">
+          <h3 className="text-sm font-semibold text-zinc-900">
+            {variant.angle_name}
+          </h3>
+          <p className="text-xs text-muted leading-relaxed line-clamp-2">
+            {isPending ? (
+              <span className="text-zinc-400">{variant.angle_description}</span>
+            ) : (
+              variant.angle_description
+            )}
           </p>
-        )}
-        {!isFailed && (
-          <span
-            className={`mt-auto pt-2 text-xs font-medium ${
-              isSelected ? 'text-accent' : 'text-zinc-400 group-hover:text-accent'
-            } transition-colors`}
-          >
-            {isSelected ? '✓ Selected' : 'Select'}
-          </span>
-        )}
-      </div>
-    </button>
+          {isComplete && variant.cover_slide.headline && (
+            <p className="text-xs text-zinc-500 italic line-clamp-1 mt-0.5">
+              &ldquo;{variant.cover_slide.headline}&rdquo;
+            </p>
+          )}
+          {!isFailed && (
+            <span
+              className={`mt-auto pt-2 text-xs font-medium transition-colors ${
+                isSelected ? 'text-accent' : isPending ? 'text-zinc-300' : 'text-zinc-400 group-hover:text-accent'
+              }`}
+            >
+              {isSelected ? '✓ Selected' : isPending ? '' : 'Select'}
+            </span>
+          )}
+        </div>
+      </button>
+    </div>
   )
 }
 
@@ -151,25 +206,35 @@ export default function CoverVariants() {
   } = useCarouselStore()
 
   const generationFired = useRef(false)
+  const [errorMessages, setErrorMessages] = useState<Record<number, string>>({})
 
   const themeId = (selectedTheme ?? 'dark_museum') as ThemeId
+
+  // Track how many are still generating
+  const pendingCount = variants.filter((v) => v.generation_status === 'pending').length
+  const completeCount = variants.filter((v) => v.generation_status === 'complete').length
+  const allDone = variants.length > 0 && pendingCount === 0
 
   // ─── Fire generation on mount ──────────────────────────────────────────
   const fireGeneration = useCallback(() => {
     initVariantStubs(3)
+    setErrorMessages({})
 
     const { angles } = generateCoverVariants(brief, themeId, {
       onVariantComplete: (index: number, variant: CoverVariant) => {
         setVariantComplete(index, variant)
       },
-      onVariantFailed: (index: number) => {
+      onVariantFailed: (index: number, error: string) => {
         setVariantFailed(index)
+        setErrorMessages((prev) => ({ ...prev, [index]: error }))
       },
     })
 
-    // If we got no angles (unknown theme), show all as failed
     if (angles.length === 0) {
-      ;[0, 1, 2].forEach((i) => setVariantFailed(i))
+      ;[0, 1, 2].forEach((i) => {
+        setVariantFailed(i)
+        setErrorMessages((prev) => ({ ...prev, [i]: 'No angles available for this theme' }))
+      })
     }
   }, [brief, themeId, initVariantStubs, setVariantComplete, setVariantFailed])
 
@@ -183,14 +248,15 @@ export default function CoverVariants() {
   // ─── Regenerate handler ────────────────────────────────────────────────
   function handleRegenerate() {
     regenerateVariants()
-    // Fire new generation after store resets
+    setErrorMessages({})
     setTimeout(() => {
       generateCoverVariants(brief, themeId, {
         onVariantComplete: (index: number, variant: CoverVariant) => {
           setVariantComplete(index, variant)
         },
-        onVariantFailed: (index: number) => {
+        onVariantFailed: (index: number, error: string) => {
           setVariantFailed(index)
+          setErrorMessages((prev) => ({ ...prev, [index]: error }))
         },
       })
     }, 50)
@@ -198,14 +264,19 @@ export default function CoverVariants() {
 
   // ─── Retry single variant ─────────────────────────────────────────────
   async function handleRetry(index: number) {
-    // Set to pending
     useCarouselStore.getState().retryVariant(index)
+    setErrorMessages((prev) => {
+      const next = { ...prev }
+      delete next[index]
+      return next
+    })
 
     const result = await retrySingleVariant(brief, themeId, index)
     if (result) {
       setVariantComplete(index, result)
     } else {
       setVariantFailed(index)
+      setErrorMessages((prev) => ({ ...prev, [index]: 'Retry failed — try again or regenerate all' }))
     }
   }
 
@@ -217,7 +288,6 @@ export default function CoverVariants() {
   async function handleConfirm() {
     if (!hasSelection) return
 
-    // Find selected variant
     const selectedVariant = variants.find((v) => v.variant_id === selectedVariantId)
     if (!selectedVariant) return
 
@@ -225,11 +295,9 @@ export default function CoverVariants() {
     setAssembling(true)
     setAssemblyProgress(0)
 
-    // Decorative progress bar — 0→100% over ~25 seconds
     const progressInterval = setInterval(() => {
       setAssemblyProgress((prev) => {
         if (prev >= 95) return prev
-        // Slow down as we approach 90%
         const increment = prev < 30 ? 1.5 : prev < 80 ? 0.8 : 0.3
         return Math.min(prev + increment, 95)
       })
@@ -242,7 +310,6 @@ export default function CoverVariants() {
       clearInterval(progressInterval)
       setAssemblyProgress(100)
       setCarousel(carousel)
-      // Brief pause to show 100%
       setTimeout(() => navigate('/editor'), 300)
     } catch (err) {
       clearInterval(progressInterval)
@@ -251,6 +318,11 @@ export default function CoverVariants() {
       console.error('Carousel assembly failed:', err)
     }
   }
+
+  // ─── Dynamic header ────────────────────────────────────────────────────
+  const subtitle = allDone
+    ? 'Three directions. Choose the one that resonates.'
+    : `Interpreting your brief${completeCount > 0 ? ` — ${completeCount} of 3 ready` : ''}`
 
   return (
     <div className="min-h-screen bg-surface">
@@ -269,8 +341,8 @@ export default function CoverVariants() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-xl font-semibold text-zinc-900">Cover Variants</h1>
-            <p className="text-sm text-muted mt-1">
-              Three interpretations of your brief. Choose one.
+            <p className="text-sm text-muted mt-1 transition-all duration-300">
+              {subtitle}
             </p>
           </div>
 
@@ -306,21 +378,23 @@ export default function CoverVariants() {
                   variant={variant}
                   isSelected={selectedVariantId === variant.variant_id}
                   isDimmed={hasSelection && selectedVariantId !== variant.variant_id}
+                  errorMessage={errorMessages[index] ?? null}
+                  entryDelay={index * 150}
                   onSelect={() => selectVariant(variant.variant_id)}
                   onRetry={() => handleRetry(index)}
                 />
               ))
-            : // Empty skeleton state
-              [0, 1, 2].map((i) => (
+            : [0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="rounded-xl border border-border overflow-hidden"
+                  className="rounded-xl border border-border overflow-hidden animate-fade-in-up"
+                  style={{ animationDelay: `${i * 150}ms` }}
                 >
-                  <div className="aspect-[16/20] bg-zinc-100 animate-pulse" />
+                  <div className="aspect-[16/20] shimmer-bg" />
                   <div className="p-4 flex flex-col gap-2">
-                    <div className="h-4 bg-zinc-100 rounded animate-pulse w-2/3" />
-                    <div className="h-3 bg-zinc-100 rounded animate-pulse w-full" />
-                    <div className="h-3 bg-zinc-100 rounded animate-pulse w-4/5" />
+                    <div className="h-4 bg-zinc-100 rounded w-2/3" />
+                    <div className="h-3 bg-zinc-100 rounded w-full" />
+                    <div className="h-3 bg-zinc-100 rounded w-4/5" />
                   </div>
                 </div>
               ))}

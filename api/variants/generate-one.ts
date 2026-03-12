@@ -1,7 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'crypto'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
-import coverVariantsData from '../_lib/data/cover_variants_data.json' with { type: 'json' }
 
 interface AngleDefinition {
   angle_name: string
@@ -164,6 +163,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing required fields: brief, theme_id, angle' })
     }
 
+    console.log('[generate-one] theme:', theme_id, 'angle:', angle.angle_key)
     const prompt = buildCoverPrompt(angle, brief, theme_id)
     const headline = buildHeadline(angle, brief)
     const imageBuffer = await generateImage(prompt, theme_id)
