@@ -90,6 +90,7 @@ interface BriefStore {
 
 export const useBriefStore = create<BriefStore>((set, get) => ({
   brief: {
+    content_category: 'product_feature' as ContentCategoryKey,
     format_preference: 'engine_decides' as FormatPreferenceKey,
   },
   rubricResult: null,
