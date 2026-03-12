@@ -48,5 +48,7 @@ Fallback: if preferred provider key is missing, tries the other.
 
 - Frontend fetch calls use `/api/...` paths — works on both Vite dev (proxy) and Vercel (same origin)
 - `api/_lib/` underscore prefix prevents Vercel from exposing as routes
-- JSON data imports use `with { type: 'json' }` syntax
+- JSON data loaded via `readFileSync` + `JSON.parse` (NOT `import ... with { type: 'json' }` which is unsupported on Vercel)
+- Google provider is lazy-loaded via dynamic `import()` to prevent module crashes from blocking OpenAI paths
 - No sharp dependency — images returned at provider native resolution
+- Diagnostic endpoint: `GET /api/debug/providers` — shows provider module load status and env key availability

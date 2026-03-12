@@ -2,6 +2,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'crypto'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
 
+console.log('[generate-one] module loaded successfully')
+
 interface AngleDefinition {
   angle_name: string
   angle_description: string

@@ -1,7 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'crypto'
+import { readFileSync } from 'fs'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
-import coverVariantsData from '../_lib/data/cover_variants_data.json' with { type: 'json' }
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const coverVariantsData = JSON.parse(
+  readFileSync(join(__dirname, '../_lib/data/cover_variants_data.json'), 'utf-8')
+) as { themes: Record<string, { variants: Record<string, unknown> }> }
 
 interface AngleDefinition {
   angle_name: string
