@@ -108,14 +108,8 @@ export default function BriefIntake() {
           />
         </div>
 
-        {/* Submit button — revealed after Section 4 complete */}
-        <div
-          className={`transition-all duration-200 ${
-            section1Complete && section2Complete && section3Complete && section4Complete
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-2 pointer-events-none h-0 overflow-hidden'
-          }`}
-        >
+        {/* Submit button — always visible, disabled until form complete */}
+        <div className="transition-all duration-200">
           <button
             type="button"
             disabled={!allValid}
