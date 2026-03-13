@@ -37,9 +37,9 @@ interface BriefPayload {
 }
 
 function buildHeadline(angle: AngleDefinition, brief: BriefPayload): string {
-  const topic = brief.topic.trim()
-  const brandName = brief.brand_name.trim()
-  const claim = brief.claim.trim()
+  const topic = (brief.topic ?? '').trim() || 'Product'
+  const brandName = (brief.brand_name ?? '').trim() || 'Brand'
+  const claim = (brief.claim ?? '').trim() || 'A better solution.'
   const topicWords = topic.split(/\s+/).filter((w) => w.length > 3)
   const topicNoun = topicWords[0] ?? topic.split(/\s+/)[0] ?? 'Product'
   const shortClaim = claim.split(/[.!?]/)[0]?.trim() ?? claim.slice(0, 60)
@@ -122,7 +122,7 @@ function buildCoverPrompt(
   brief: BriefPayload,
   themeId: string,
 ): string {
-  const topic = brief.topic.trim()
+  const topic = (brief.topic ?? '').trim() || 'Product'
   const topicWords = topic.split(/\s+/).filter((w) => w.length > 3)
   const topicNoun = topicWords[0] ?? topic.split(/\s+/)[0] ?? 'object'
 
@@ -146,7 +146,7 @@ function buildCoverPrompt(
     case 'sic_toile':
       return `Single-color copper-plate engraving illustration of a ${angle.scene_domain ?? 'commerce exchange'} scene related to ${topicNoun} — rendered entirely in indigo (#2A2ECD) on white/transparent ground, fine parallel hatching for mid-tone areas, cross-hatching for deep shadows, stippling for soft textures, clean confident contour lines, 18th-century French engraving aesthetic — Encyclopédie Diderot plates register, full narrative scene with ground plane and architectural setting, ${angle.scene_preference ?? 'seven or more figures'}, elaborate but legible at carousel scale, no color other than this single indigo — no fills, no gradients, pure line and mark work`
     case 'name_archaeology':
-      return `19th century steel engraving of ${angle.figure_type ?? 'a mythological hero'} scene related to ${topicNoun} and ${brief.brand_name} — ${angle.wit_layer === 'full_anthropomorphized_animal' ? 'anthropomorphized animal in period clothing' : 'human figures in historically accurate costume'}, ${angle.scene_rule ?? 'defining moment'}, crosshatching technique for deep shadows, fine line work on figures, monochromatic sepia tint on aged parchment background, no color fills — pure line and mark work, high detail centered composition, encyclopedic plate aesthetic`
+      return `19th century steel engraving of ${angle.figure_type ?? 'a mythological hero'} scene related to ${topicNoun} and ${brief.brand_name ?? 'Brand'} — ${angle.wit_layer === 'full_anthropomorphized_animal' ? 'anthropomorphized animal in period clothing' : 'human figures in historically accurate costume'}, ${angle.scene_rule ?? 'defining moment'}, crosshatching technique for deep shadows, fine line work on figures, monochromatic sepia tint on aged parchment background, no color fills — pure line and mark work, high detail centered composition, encyclopedic plate aesthetic`
     default:
       return `Professional illustration of ${topicNoun} for ${themeId} theme, high quality, editorial aesthetic`
   }
@@ -165,6 +165,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (!brief || !theme_id || !angle) {
       return res.status(400).json({ error: 'Missing required fields: brief, theme_id, angle' })
+    }
+
+    if (!brief.topic || !brief.claim || !brief.brand_name) {
+      return res.status(400).json({ error: 'Brief must include topic, claim, and brand_name' })
     }
 
     const imageModel = model ?? 'gpt-image-1.5'
