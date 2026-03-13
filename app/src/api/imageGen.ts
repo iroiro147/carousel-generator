@@ -1,6 +1,6 @@
 import type { Brief } from '../types/brief'
 import type { ThemeId } from '../types/theme'
-import type { CoverVariant } from '../types/variant'
+import type { CoverVariant, ImageModel } from '../types/variant'
 import coverVariantsData from '../data/cover_variants_data.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -49,12 +49,13 @@ async function generateOneVariant(
   themeId: ThemeId,
   angle: AngleDefinition,
   index: number,
+  model: ImageModel = 'gpt-image-1.5',
 ): Promise<{ variant: CoverVariant; index: number } | { index: number; error: string }> {
   try {
     const response = await fetch('/api/variants/generate-one', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ brief, theme_id: themeId, angle }),
+      body: JSON.stringify({ brief, theme_id: themeId, angle, model }),
     })
 
     if (!response.ok) {
@@ -63,6 +64,8 @@ async function generateOneVariant(
     }
 
     const variant = (await response.json()) as CoverVariant
+    // Tag with the model used
+    variant.model = model
     return { variant, index }
   } catch (err) {
     return { index, error: err instanceof Error ? err.message : 'Network error' }
@@ -73,6 +76,7 @@ async function generateOneVariant(
 export function generateCoverVariants(
   brief: Partial<Brief>,
   themeId: ThemeId,
+  model: ImageModel,
   callbacks: {
     onVariantComplete: (index: number, variant: CoverVariant) => void
     onVariantFailed: (index: number, error: string) => void
@@ -81,7 +85,7 @@ export function generateCoverVariants(
   const angles = getCoverAngles(themeId)
 
   const promises = angles.map(async (angle, i) => {
-    const result = await generateOneVariant(brief, themeId, angle, i)
+    const result = await generateOneVariant(brief, themeId, angle, i, model)
     if ('variant' in result) {
       callbacks.onVariantComplete(result.index, result.variant)
     } else {
@@ -97,12 +101,13 @@ export async function retrySingleVariant(
   brief: Partial<Brief>,
   themeId: ThemeId,
   angleIndex: number,
+  model: ImageModel = 'gpt-image-1.5',
 ): Promise<CoverVariant | null> {
   const angles = getCoverAngles(themeId)
   const angle = angles[angleIndex]
   if (!angle) return null
 
-  const result = await generateOneVariant(brief, themeId, angle, angleIndex)
+  const result = await generateOneVariant(brief, themeId, angle, angleIndex, model)
   if ('variant' in result) return result.variant
   return null
 }

@@ -6,8 +6,20 @@ import { generateCoverVariants, retrySingleVariant } from '../../api/imageGen'
 import { assembleLongFormCarousel } from '../../api/carousel'
 import { assembleShortFormCarousel } from '../../api/carouselShortForm'
 import type { Brief } from '../../types/brief'
-import type { CoverVariant } from '../../types/variant'
+import type { CoverVariant, ImageModel } from '../../types/variant'
 import type { ThemeId } from '../../types/theme'
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface Run {
+  model: ImageModel
+  startIndex: number
+  count: number
+}
+
+const MODEL_LABELS: Record<ImageModel, string> = {
+  'gpt-image-1.5': 'GPT-Image-1.5',
+  'nano-banana-2': 'Nano Banana 2',
+}
 
 // ─── Assembly loading overlay ─────────────────────────────────────────────────
 function AssemblyOverlay({ progress }: { progress: number }) {
@@ -188,6 +200,73 @@ function VariantCard({
   )
 }
 
+// ─── Model Selector ───────────────────────────────────────────────────────────
+function ModelSelector({
+  selectedModel,
+  onSelect,
+  disabled,
+  runs,
+}: {
+  selectedModel: ImageModel
+  onSelect: (model: ImageModel) => void
+  disabled: boolean
+  runs: Run[]
+}) {
+  const models: ImageModel[] = ['gpt-image-1.5', 'nano-banana-2']
+  const runModels = new Set(runs.map((r) => r.model))
+
+  return (
+    <div className="flex items-center gap-1 rounded-lg border border-border p-0.5 bg-white">
+      {models.map((model) => {
+        const isActive = selectedModel === model
+        const alreadyRan = runModels.has(model)
+        return (
+          <button
+            key={model}
+            type="button"
+            disabled={disabled || alreadyRan}
+            onClick={() => onSelect(model)}
+            className={`relative px-3 py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${
+              isActive
+                ? 'bg-zinc-900 text-white shadow-sm'
+                : alreadyRan
+                  ? 'text-zinc-300 cursor-not-allowed'
+                  : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50'
+            } disabled:cursor-not-allowed`}
+            title={alreadyRan && !isActive ? `Already generated with ${MODEL_LABELS[model]}` : undefined}
+          >
+            {MODEL_LABELS[model]}
+            {alreadyRan && !isActive && (
+              <span className="ml-1 text-[10px]">✓</span>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Run Section Header ───────────────────────────────────────────────────────
+function RunHeader({ model, index }: { model: ImageModel; index: number }) {
+  return (
+    <div className="flex items-center gap-2 mt-2 mb-1">
+      <div className="flex items-center gap-1.5">
+        <div
+          className={`w-1.5 h-1.5 rounded-full ${
+            model === 'gpt-image-1.5' ? 'bg-emerald-400' : 'bg-violet-400'
+          }`}
+        />
+        <span className="text-xs font-medium text-zinc-500">
+          {MODEL_LABELS[model]}
+        </span>
+      </div>
+      {index > 0 && (
+        <div className="flex-1 h-px bg-zinc-100" />
+      )}
+    </div>
+  )
+}
+
 // ─── Main screen ─────────────────────────────────────────────────────────────
 export default function CoverVariants() {
   const navigate = useNavigate()
@@ -201,12 +280,15 @@ export default function CoverVariants() {
     setVariantComplete,
     setVariantFailed,
     initVariantStubs,
+    appendVariantStubs,
     regenerateVariants,
     confirmVariant,
   } = useCarouselStore()
 
   const generationFired = useRef(false)
   const [errorMessages, setErrorMessages] = useState<Record<number, string>>({})
+  const [runs, setRuns] = useState<Run[]>([])
+  const [activeModel, setActiveModel] = useState<ImageModel>('gpt-image-1.5')
 
   const themeId = (selectedTheme ?? 'dark_museum') as ThemeId
 
@@ -215,68 +297,99 @@ export default function CoverVariants() {
   const completeCount = variants.filter((v) => v.generation_status === 'complete').length
   const allDone = variants.length > 0 && pendingCount === 0
 
-  // ─── Fire generation on mount ──────────────────────────────────────────
-  const fireGeneration = useCallback(() => {
-    initVariantStubs(3)
-    setErrorMessages({})
+  // ─── Fire a generation run for a given model ─────────────────────────
+  const fireRun = useCallback(
+    (model: ImageModel, isInitial: boolean) => {
+      let startIndex = 0
 
-    const { angles } = generateCoverVariants(brief, themeId, {
-      onVariantComplete: (index: number, variant: CoverVariant) => {
-        setVariantComplete(index, variant)
-      },
-      onVariantFailed: (index: number, error: string) => {
-        setVariantFailed(index)
-        setErrorMessages((prev) => ({ ...prev, [index]: error }))
-      },
-    })
+      if (isInitial) {
+        initVariantStubs(3)
+        setErrorMessages({})
+        setRuns([{ model, startIndex: 0, count: 3 }])
+      } else {
+        startIndex = appendVariantStubs(3, model)
+        setRuns((prev) => [...prev, { model, startIndex, count: 3 }])
+      }
 
-    if (angles.length === 0) {
-      ;[0, 1, 2].forEach((i) => {
-        setVariantFailed(i)
-        setErrorMessages((prev) => ({ ...prev, [i]: 'No angles available for this theme' }))
+      const { angles } = generateCoverVariants(brief, themeId, model, {
+        onVariantComplete: (index: number, variant: CoverVariant) => {
+          const globalIndex = startIndex + index
+          setVariantComplete(globalIndex, variant)
+        },
+        onVariantFailed: (index: number, error: string) => {
+          const globalIndex = startIndex + index
+          setVariantFailed(globalIndex)
+          setErrorMessages((prev) => ({ ...prev, [globalIndex]: error }))
+        },
       })
-    }
-  }, [brief, themeId, initVariantStubs, setVariantComplete, setVariantFailed])
 
+      if (angles.length === 0) {
+        ;[0, 1, 2].forEach((i) => {
+          const globalIndex = startIndex + i
+          setVariantFailed(globalIndex)
+          setErrorMessages((prev) => ({
+            ...prev,
+            [globalIndex]: 'No angles available for this theme',
+          }))
+        })
+      }
+    },
+    [brief, themeId, initVariantStubs, appendVariantStubs, setVariantComplete, setVariantFailed],
+  )
+
+  // ─── Fire initial generation on mount ────────────────────────────────
   useEffect(() => {
     if (!generationFired.current) {
       generationFired.current = true
-      fireGeneration()
+      fireRun('gpt-image-1.5', true)
     }
-  }, [fireGeneration])
+  }, [fireRun])
 
-  // ─── Regenerate handler ────────────────────────────────────────────────
+  // ─── Model selector handler ─────────────────────────────────────────
+  function handleModelSelect(model: ImageModel) {
+    // Don't re-run a model we already ran
+    if (runs.some((r) => r.model === model)) return
+
+    setActiveModel(model)
+    fireRun(model, false)
+  }
+
+  // ─── Regenerate handler (resets all runs) ────────────────────────────
   function handleRegenerate() {
     regenerateVariants()
     setErrorMessages({})
+    setRuns([])
+    setActiveModel('gpt-image-1.5')
     setTimeout(() => {
-      generateCoverVariants(brief, themeId, {
-        onVariantComplete: (index: number, variant: CoverVariant) => {
-          setVariantComplete(index, variant)
-        },
-        onVariantFailed: (index: number, error: string) => {
-          setVariantFailed(index)
-          setErrorMessages((prev) => ({ ...prev, [index]: error }))
-        },
-      })
+      fireRun('gpt-image-1.5', true)
     }, 50)
   }
 
-  // ─── Retry single variant ─────────────────────────────────────────────
-  async function handleRetry(index: number) {
-    useCarouselStore.getState().retryVariant(index)
+  // ─── Retry single variant ───────────────────────────────────────────
+  async function handleRetry(globalIndex: number) {
+    // Find which run this variant belongs to
+    const run = runs.find(
+      (r) => globalIndex >= r.startIndex && globalIndex < r.startIndex + r.count,
+    )
+    const model = run?.model ?? 'gpt-image-1.5'
+    const angleIndex = run ? globalIndex - run.startIndex : globalIndex
+
+    useCarouselStore.getState().retryVariant(globalIndex)
     setErrorMessages((prev) => {
       const next = { ...prev }
-      delete next[index]
+      delete next[globalIndex]
       return next
     })
 
-    const result = await retrySingleVariant(brief, themeId, index)
+    const result = await retrySingleVariant(brief, themeId, angleIndex, model)
     if (result) {
-      setVariantComplete(index, result)
+      setVariantComplete(globalIndex, result)
     } else {
-      setVariantFailed(index)
-      setErrorMessages((prev) => ({ ...prev, [index]: 'Retry failed — try again or regenerate all' }))
+      setVariantFailed(globalIndex)
+      setErrorMessages((prev) => ({
+        ...prev,
+        [globalIndex]: 'Retry failed — try again or regenerate all',
+      }))
     }
   }
 
@@ -321,8 +434,8 @@ export default function CoverVariants() {
 
   // ─── Dynamic header ────────────────────────────────────────────────────
   const subtitle = allDone
-    ? 'Three directions. Choose the one that resonates.'
-    : `Interpreting your brief${completeCount > 0 ? ` — ${completeCount} of 3 ready` : ''}`
+    ? 'Choose the direction that resonates.'
+    : `Interpreting your brief${completeCount > 0 ? ` — ${completeCount} ready` : ''}`
 
   return (
     <div className="min-h-screen bg-surface">
@@ -338,7 +451,7 @@ export default function CoverVariants() {
         </button>
 
         {/* Header row */}
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-xl font-semibold text-zinc-900">Cover Variants</h1>
             <p className="text-sm text-muted mt-1 transition-all duration-300">
@@ -346,20 +459,30 @@ export default function CoverVariants() {
             </p>
           </div>
 
-          {/* Regenerate */}
-          {canRegenerate ? (
-            <button
-              onClick={handleRegenerate}
+          <div className="flex items-center gap-3">
+            {/* Model selector */}
+            <ModelSelector
+              selectedModel={activeModel}
+              onSelect={handleModelSelect}
               disabled={variantsLoading}
-              className="shrink-0 rounded-lg border border-border px-3 py-2 text-xs font-medium text-zinc-600 hover:border-accent/50 hover:text-accent transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {variantsLoading ? 'Generating...' : 'Regenerate'}
-            </button>
-          ) : (
-            <span className="shrink-0 text-xs text-zinc-400 py-2">
-              Max regenerations reached
-            </span>
-          )}
+              runs={runs}
+            />
+
+            {/* Regenerate */}
+            {canRegenerate ? (
+              <button
+                onClick={handleRegenerate}
+                disabled={variantsLoading}
+                className="shrink-0 rounded-lg border border-border px-3 py-2 text-xs font-medium text-zinc-600 hover:border-accent/50 hover:text-accent transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {variantsLoading ? 'Generating...' : 'Regenerate'}
+              </button>
+            ) : (
+              <span className="shrink-0 text-xs text-zinc-400 py-2">
+                Max regenerations reached
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Regeneration counter */}
@@ -369,36 +492,58 @@ export default function CoverVariants() {
           </p>
         )}
 
-        {/* Variant grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {variants.length > 0
-            ? variants.map((variant, index) => (
-                <VariantCard
-                  key={variant.variant_id}
-                  variant={variant}
-                  isSelected={selectedVariantId === variant.variant_id}
-                  isDimmed={hasSelection && selectedVariantId !== variant.variant_id}
-                  errorMessage={errorMessages[index] ?? null}
-                  entryDelay={index * 150}
-                  onSelect={() => selectVariant(variant.variant_id)}
-                  onRetry={() => handleRetry(index)}
-                />
-              ))
-            : [0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="rounded-xl border border-border overflow-hidden animate-fade-in-up"
-                  style={{ animationDelay: `${i * 150}ms` }}
-                >
-                  <div className="aspect-[16/20] shimmer-bg" />
-                  <div className="p-4 flex flex-col gap-2">
-                    <div className="h-4 bg-zinc-100 rounded w-2/3" />
-                    <div className="h-3 bg-zinc-100 rounded w-full" />
-                    <div className="h-3 bg-zinc-100 rounded w-4/5" />
+        {/* Variant grid — grouped by run */}
+        {runs.length > 0 ? (
+          <div className="flex flex-col gap-4">
+            {runs.map((run, runIndex) => {
+              const runVariants = variants.slice(run.startIndex, run.startIndex + run.count)
+              return (
+                <div key={`${run.model}-${run.startIndex}`}>
+                  {/* Run header — show model label for multi-run */}
+                  {(runs.length > 1 || runIndex > 0) && (
+                    <RunHeader model={run.model} index={runIndex} />
+                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {runVariants.map((variant, localIndex) => {
+                      const globalIndex = run.startIndex + localIndex
+                      return (
+                        <VariantCard
+                          key={variant.variant_id}
+                          variant={variant}
+                          isSelected={selectedVariantId === variant.variant_id}
+                          isDimmed={hasSelection && selectedVariantId !== variant.variant_id}
+                          errorMessage={errorMessages[globalIndex] ?? null}
+                          entryDelay={localIndex * 150}
+                          onSelect={() => selectVariant(variant.variant_id)}
+                          onRetry={() => handleRetry(globalIndex)}
+                        />
+                      )
+                    })}
                   </div>
                 </div>
-              ))}
-        </div>
+              )
+            })}
+          </div>
+        ) : (
+          // Initial loading skeleton
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-border overflow-hidden animate-fade-in-up"
+                style={{ animationDelay: `${i * 150}ms` }}
+              >
+                <div className="aspect-[16/20] shimmer-bg" />
+                <div className="p-4 flex flex-col gap-2">
+                  <div className="h-4 bg-zinc-100 rounded w-2/3" />
+                  <div className="h-3 bg-zinc-100 rounded w-full" />
+                  <div className="h-3 bg-zinc-100 rounded w-4/5" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Confirm button */}
         <div className="pt-2">

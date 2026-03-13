@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { CoverVariant, PropagationMetadata } from '../types/variant'
+import type { CoverVariant, PropagationMetadata, ImageModel } from '../types/variant'
 import type { Carousel, Slide } from '../types/carousel'
 
 // ─── Store interface ──────────────────────────────────────────────────────────
@@ -20,6 +20,7 @@ interface CarouselStore {
   setVariantFailed: (index: number) => void
   setVariantComplete: (index: number, variant: CoverVariant) => void
   initVariantStubs: (count: number) => void
+  appendVariantStubs: (count: number, model: ImageModel) => number // returns start index of new stubs
 
   // Confirm selection
   selectedPropagationMetadata: PropagationMetadata | null
@@ -152,6 +153,36 @@ export const useCarouselStore = create<CarouselStore>((set, get) => ({
       created_at: new Date().toISOString(),
     }))
     set({ variants: stubs, variantsLoading: true, selectedVariantId: null })
+  },
+
+  appendVariantStubs: (count, model) => {
+    const existing = get().variants
+    const startIndex = existing.length
+    const stubs: CoverVariant[] = Array.from({ length: count }, (_, i) => ({
+      variant_id: `stub-${startIndex + i}-${Date.now()}`,
+      brief_id: 'current',
+      theme: '',
+      angle_key: '',
+      angle_name: `Variant ${startIndex + i + 1}`,
+      angle_description: 'Generating...',
+      cover_slide: {
+        composition_mode: 'centered',
+        headline: '',
+        headline_size: 48,
+        text_position: 'center',
+        image_prompt: '',
+      },
+      propagation_metadata: {
+        creative_angle: '',
+        narrative_frame: '',
+      },
+      generation_status: 'pending' as const,
+      selected: false,
+      created_at: new Date().toISOString(),
+      model,
+    }))
+    set({ variants: [...existing, ...stubs], variantsLoading: true })
+    return startIndex
   },
 
   confirmVariant: () => {

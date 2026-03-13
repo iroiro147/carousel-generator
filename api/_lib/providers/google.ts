@@ -1,4 +1,4 @@
-import { GoogleGenAI, PersonGeneration, SafetyFilterLevel } from '@google/genai'
+import { GoogleGenAI } from '@google/genai'
 
 // Lazy-init: don't crash if GOOGLE_API_KEY is missing
 let ai: GoogleGenAI | null = null
@@ -18,37 +18,41 @@ export function isGoogleAvailable(): boolean {
 
 export interface GeneratedImage {
   buffer: Buffer
-  provider: 'google_imagen'
+  provider: 'google_nano_banana'
   model: string
 }
 
-export async function callImagen(
-  prompt: string,
-  personGeneration: PersonGeneration = PersonGeneration.ALLOW_ADULT,
-): Promise<GeneratedImage> {
-  const response = await getClient().models.generateImages({
-    model: 'imagen-3.0-generate-002',
-    prompt,
+/**
+ * Generate an image using Google Nano Banana 2 (Gemini 3.1 Flash Image).
+ * Uses the generateContent API (not the deprecated generateImages API).
+ */
+export async function callNanoBanana(prompt: string): Promise<GeneratedImage> {
+  const response = await getClient().models.generateContent({
+    model: 'gemini-3.1-flash-image-preview',
+    contents: prompt,
     config: {
-      numberOfImages: 1,
-      outputMimeType: 'image/png',
-      aspectRatio: '3:4',
-      personGeneration,
-      safetyFilterLevel: SafetyFilterLevel.BLOCK_ONLY_HIGH,
+      responseModalities: ['IMAGE'],
     },
   })
 
-  const generatedImages = response.generatedImages
-  if (!generatedImages || generatedImages.length === 0) {
-    throw new Error('Imagen returned no images')
+  // Extract image from response parts
+  const candidates = response.candidates
+  if (!candidates || candidates.length === 0) {
+    throw new Error('Nano Banana 2 returned no candidates')
   }
 
-  const imageData = generatedImages[0].image
-  if (!imageData || !imageData.imageBytes) {
-    throw new Error('Imagen returned no image bytes')
+  const parts = candidates[0].content?.parts
+  if (!parts) {
+    throw new Error('Nano Banana 2 returned no content parts')
   }
 
-  const buffer = Buffer.from(imageData.imageBytes, 'base64')
+  // Find the image part (inlineData with image mime type)
+  for (const part of parts) {
+    if (part.inlineData?.data) {
+      const buffer = Buffer.from(part.inlineData.data, 'base64')
+      return { buffer, provider: 'google_nano_banana', model: 'gemini-3.1-flash-image-preview' }
+    }
+  }
 
-  return { buffer, provider: 'google_imagen', model: 'imagen-3.0-generate-002' }
+  throw new Error('Nano Banana 2 returned no image data in response parts')
 }

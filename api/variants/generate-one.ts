@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'crypto'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
+import type { ImageModel } from '../_lib/providers/index.js'
 
 console.log('[generate-one] module loaded successfully')
 
@@ -155,20 +156,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   try {
-    const { brief, theme_id, angle } = req.body as {
+    const { brief, theme_id, angle, model } = req.body as {
       brief: BriefPayload
       theme_id: string
       angle: AngleDefinition & { angle_key: string }
+      model?: ImageModel
     }
 
     if (!brief || !theme_id || !angle) {
       return res.status(400).json({ error: 'Missing required fields: brief, theme_id, angle' })
     }
 
-    console.log('[generate-one] theme:', theme_id, 'angle:', angle.angle_key)
+    const imageModel = model ?? 'gpt-image-1.5'
+    console.log('[generate-one] theme:', theme_id, 'model:', imageModel, 'angle:', angle.angle_key)
     const prompt = buildCoverPrompt(angle, brief, theme_id)
     const headline = buildHeadline(angle, brief)
-    const imageBuffer = await generateImage(prompt, theme_id)
+    const imageBuffer = await generateImage(prompt, theme_id, imageModel)
     const thumbnailUrl = bufferToDataURI(imageBuffer)
 
     const variant = {

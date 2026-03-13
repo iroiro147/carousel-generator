@@ -24,7 +24,7 @@ export interface GeneratedImage {
 
 export async function callGPTImage(prompt: string): Promise<GeneratedImage> {
   const response = await getClient().images.generate({
-    model: 'gpt-image-1',
+    model: 'gpt-image-1.5',
     prompt,
     n: 1,
     size: '1024x1536',
@@ -38,5 +38,5 @@ export async function callGPTImage(prompt: string): Promise<GeneratedImage> {
   const b64 = response.data[0].b64_json!
   const buffer = Buffer.from(b64, 'base64')
 
-  return { buffer, provider: 'openai_gpt_image', model: 'gpt-image-1' }
+  return { buffer, provider: 'openai_gpt_image', model: 'gpt-image-1.5' }
 }

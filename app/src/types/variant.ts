@@ -1,3 +1,5 @@
+export type ImageModel = 'gpt-image-1.5' | 'nano-banana-2'
+
 export interface CoverVariant {
   variant_id: string
   brief_id: string
@@ -12,6 +14,7 @@ export interface CoverVariant {
   generation_status: 'pending' | 'complete' | 'failed'
   selected: boolean
   created_at: string
+  model?: ImageModel
 }
 
 export interface VariantCoverSlide {
