@@ -1,0 +1,35 @@
+{
+  "emotional_registers": {
+    "contemplative": {
+      "keywords": ["reflect", "quiet", "meaning", "loss", "memory", "wonder", "meditat", "mindful", "slow", "soul", "gentle", "still"],
+      "recommended_sequence": ["G", "A", "B", "D", "E"],
+      "photo_likely": true
+    },
+    "analytical": {
+      "keywords": ["data", "research", "study", "analysis", "evidence", "metric", "trend", "report", "science", "framework", "model", "system"],
+      "recommended_sequence": ["F", "C", "A", "D", "B"],
+      "photo_likely": true
+    },
+    "travel": {
+      "keywords": ["travel", "journey", "road", "move", "depart", "arrive", "explore", "adventure", "discover", "wander", "drive", "fly"],
+      "recommended_sequence": ["F", "G", "A", "D", "E"],
+      "photo_likely": true
+    },
+    "urgent": {
+      "keywords": ["breaking", "urgent", "crisis", "critical", "now", "alert", "warning", "deadline", "emergency", "imminent", "demand"],
+      "recommended_sequence": ["F", "C", "B", "A", "E"],
+      "photo_likely": true
+    }
+  },
+  "slide_type_photo_map": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": true,
+    "E": true,
+    "F": true,
+    "G": true
+  },
+  "valid_types": ["A", "B", "C", "D", "E", "F", "G"],
+  "accent_color_rule": "#EEFF88 may ONLY appear on Type F, and on at most ONE slide per carousel"
+}

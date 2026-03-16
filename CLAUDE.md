@@ -33,7 +33,7 @@ styles/{id}/
   evals.json             — Eval pairs (populate from production)
 ```
 
-Active styles: `dark-museum` (pipeline), `nyt-opinion` (pipeline), `sic-toile` (pipeline), `radial-departure` (pipeline, cover-only)
+Active styles: `dark-museum` (pipeline), `nyt-opinion` (pipeline), `sic-toile` (pipeline), `radial-departure` (pipeline, cover-only), `editorial-minimal` (pipeline, conditional)
 Stub: `dispatch`
 
 ## Build & Dev
@@ -101,10 +101,11 @@ All images returned as JPEG (not PNG).
 | `api/_lib/pipeline/stage2Builder.ts` | Delegates to stylePack.buildStage2Prompt() |
 | `api/_lib/pipeline/styleLoader.ts` | Dynamic import from /styles/{id}/config.js, caches |
 | `api/_lib/pipeline/generationLogger.ts` | Fire-and-forget Supabase insert |
+| `api/_lib/pipeline/zoomBurstPrompt.ts` | Shared zoom-burst photo prompt (Radial Departure + Editorial Minimal) |
 | `api/_lib/pipeline/evalRunner.ts` | Skeleton: reads evals.json, runs Stage 1, compares output |
 | `api/_lib/supabase.ts` | Server-side Supabase client (SERVICE_ROLE_KEY) |
 
-## Active Themes (3)
+## Active Themes (5)
 
 | Theme | Format | Pipeline | Image Provider |
 |-------|--------|----------|---------------|
@@ -112,3 +113,4 @@ All images returned as JPEG (not PNG).
 | nyt_opinion | short_form (3-4 slides) | New two-stage | GPT-Image-1.5 |
 | sic_toile | long_form (14 slides) | New two-stage | GPT-Image-1.5 |
 | radial_departure | short_form (7 slides) | New two-stage (cover-only) | GPT-Image-1.5 |
+| editorial_minimal | short_form (5-7 slides) | New two-stage (conditional) | GPT-Image-1.5 |

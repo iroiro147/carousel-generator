@@ -7,7 +7,7 @@ import { run as runPipeline } from '../_lib/pipeline/orchestrator.js'
 console.log('[generate-one] module loaded successfully')
 
 // ─── Styles that use the new two-stage pipeline ──────────────────────────────
-const PIPELINE_STYLES = new Set(['dark_museum', 'nyt_opinion', 'sic_toile', 'radial_departure'])
+const PIPELINE_STYLES = new Set(['dark_museum', 'nyt_opinion', 'sic_toile', 'radial_departure', 'editorial_minimal'])
 
 interface AngleDefinition {
   angle_name: string
