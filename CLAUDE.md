@@ -33,7 +33,7 @@ styles/{id}/
   evals.json             — Eval pairs (populate from production)
 ```
 
-Active styles: `dark-museum` (pipeline), `nyt-opinion` (pipeline), `sic-toile` (pipeline)
+Active styles: `dark-museum` (pipeline), `nyt-opinion` (pipeline), `sic-toile` (pipeline), `radial-departure` (pipeline, cover-only)
 Stub: `dispatch`
 
 ## Build & Dev
@@ -111,3 +111,4 @@ All images returned as JPEG (not PNG).
 | dark_museum | long_form (14 slides) | New two-stage | GPT-Image-1.5 |
 | nyt_opinion | short_form (3-4 slides) | New two-stage | GPT-Image-1.5 |
 | sic_toile | long_form (14 slides) | New two-stage | GPT-Image-1.5 |
+| radial_departure | short_form (7 slides) | New two-stage (cover-only) | GPT-Image-1.5 |

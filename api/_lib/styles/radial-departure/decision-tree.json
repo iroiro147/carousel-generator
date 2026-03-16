@@ -1,0 +1,113 @@
+{
+  "domains": {
+    "fintech": {
+      "keywords": ["payment", "fintech", "checkout", "transaction", "merchant", "settlement", "invoice", "banking", "card", "wallet", "money", "revenue"],
+      "subjects": ["city financial district street", "payment terminal corridor", "airport terminal walkway"],
+      "defaultPalette": {
+        "primary_dark": "#050f1a",
+        "midtone": "#0a2a4a",
+        "burst_highlight": "#88e0ff",
+        "text_accent": "#88e0ff",
+        "flat_color_bg": "#080f18"
+      }
+    },
+    "technology": {
+      "keywords": ["AI", "technology", "server", "data", "algorithm", "software", "cloud", "API", "platform", "compute", "machine learning", "automation"],
+      "subjects": ["server room corridor", "circuit board trace lines", "data center aisle"],
+      "defaultPalette": {
+        "primary_dark": "#080810",
+        "midtone": "#1a1a3a",
+        "burst_highlight": "#a0a8ff",
+        "text_accent": "#c8d0ff",
+        "flat_color_bg": "#0a0a14"
+      }
+    },
+    "growth": {
+      "keywords": ["growth", "scale", "expansion", "market", "startup", "venture", "accelerate", "adoption", "traction", "users"],
+      "subjects": ["highway through landscape", "aerial city at altitude", "root system mycelium network"],
+      "defaultPalette": {
+        "primary_dark": "#0a1005",
+        "midtone": "#1a3a0a",
+        "burst_highlight": "#d0f878",
+        "text_accent": "#eeff88",
+        "flat_color_bg": "#0c1208"
+      }
+    },
+    "knowledge": {
+      "keywords": ["learn", "education", "research", "insight", "understanding", "analysis", "study", "publish", "academic", "library"],
+      "subjects": ["library corridor with shelves", "stadium lecture hall", "open book pages splayed"],
+      "defaultPalette": {
+        "primary_dark": "#1a0f08",
+        "midtone": "#3a2010",
+        "burst_highlight": "#f8d888",
+        "text_accent": "#ffec80",
+        "flat_color_bg": "#1c1108"
+      }
+    },
+    "speed": {
+      "keywords": ["speed", "performance", "latency", "fast", "optimize", "benchmark", "throughput", "real-time", "instant", "response time"],
+      "subjects": ["racetrack straight", "mountain descent road", "Formula 1 pitlane"],
+      "defaultPalette": {
+        "primary_dark": "#0f0f0f",
+        "midtone": "#2a2a2a",
+        "burst_highlight": "#ff8800",
+        "text_accent": "#ffaa44",
+        "flat_color_bg": "#121212"
+      }
+    },
+    "departure": {
+      "keywords": ["change", "transform", "departure", "migrate", "shift", "transition", "evolve", "pivot", "reimagine", "disrupt"],
+      "subjects": ["airport runway at dusk", "train platform at speed", "bridge over water at twilight"],
+      "defaultPalette": {
+        "primary_dark": "#08080f",
+        "midtone": "#1a1a2a",
+        "burst_highlight": "#f0f0ff",
+        "text_accent": "#e0e0f0",
+        "flat_color_bg": "#0a0a12"
+      }
+    },
+    "nature": {
+      "keywords": ["nature", "wellness", "health", "organic", "sustainable", "green", "environment", "climate", "bio", "earth"],
+      "subjects": ["forest path through tall trees", "ocean horizon from water level", "canyon from below"],
+      "defaultPalette": {
+        "primary_dark": "#081408",
+        "midtone": "#1a3a10",
+        "burst_highlight": "#c8f088",
+        "text_accent": "#d8f898",
+        "flat_color_bg": "#0a1608"
+      }
+    },
+    "team": {
+      "keywords": ["team", "culture", "leadership", "hiring", "people", "collaboration", "org", "management", "talent", "community"],
+      "subjects": ["conference hall corridor", "crowd seen from inside at event", "stage from performer POV"],
+      "defaultPalette": {
+        "primary_dark": "#0f0a08",
+        "midtone": "#2a1a10",
+        "burst_highlight": "#ffc868",
+        "text_accent": "#ffd888",
+        "flat_color_bg": "#120c08"
+      }
+    },
+    "finance": {
+      "keywords": ["investment", "capital", "portfolio", "fund", "asset", "equity", "returns", "wealth", "stock", "market", "trading"],
+      "subjects": ["trading floor aisle", "stock ticker tunnel", "vault corridor"],
+      "defaultPalette": {
+        "primary_dark": "#0a0a0f",
+        "midtone": "#1a1a2a",
+        "burst_highlight": "#c0c8ff",
+        "text_accent": "#d0d8ff",
+        "flat_color_bg": "#0c0c12"
+      }
+    }
+  },
+  "emotional_temperatures": {
+    "urgent": { "overlay_opacity": 0.40, "ray_density": "extreme", "glow_intensity": "bright" },
+    "contemplative": { "overlay_opacity": 0.20, "ray_density": "subtle", "glow_intensity": "dim" },
+    "energetic": { "overlay_opacity": 0.10, "ray_density": "extreme", "glow_intensity": "bright" },
+    "calm": { "overlay_opacity": 0.10, "ray_density": "subtle", "glow_intensity": "moderate" },
+    "authoritative": { "overlay_opacity": 0.30, "ray_density": "moderate", "glow_intensity": "moderate" },
+    "intimate": { "overlay_opacity": 0.25, "ray_density": "moderate", "glow_intensity": "moderate" }
+  },
+  "camera_positions": ["driver_pov", "walker_pov", "aerial", "street_level", "interior"],
+  "times_of_day": ["golden_hour", "blue_hour", "midday", "overcast", "dusk", "night"]
+}
