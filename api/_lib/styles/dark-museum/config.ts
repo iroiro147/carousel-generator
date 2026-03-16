@@ -128,7 +128,9 @@ function validateVisualDecision(decision: VisualDecision): ValidationResult {
     errors.push('No artifacts found in visual decision')
   } else {
     for (const artifact of artifacts) {
+      if (!artifact.label) errors.push('Artifact missing label')
       if (!artifact.description) errors.push(`Artifact "${artifact.label}" missing description`)
+      if (!artifact.eraNuance) errors.push(`Artifact "${artifact.label}" missing era_nuance`)
       if (!artifact.materialType) errors.push(`Artifact "${artifact.label}" missing material_type`)
       if (!artifact.physicalCondition)
         errors.push(`Artifact "${artifact.label}" missing physical_condition`)
