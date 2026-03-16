@@ -1,0 +1,33 @@
+{
+  "mode_routing": {
+    "editorial_cartoon": {
+      "signals": ["policy", "economics", "geopolitics", "systemic", "structural", "institutional", "trade", "regulation"],
+      "anti_signals": ["personal", "intimate", "grief", "memoir"]
+    },
+    "fine_art_expressive": {
+      "signals": ["mental health", "personal", "memoir", "identity", "fatigue", "burnout", "lived experience", "profile"],
+      "anti_signals": ["policy", "data", "systemic"]
+    },
+    "conceptual_photography": {
+      "signals": ["literary", "cultural", "gothic", "allure", "danger", "critique", "uncomfortable", "paradox"],
+      "anti_signals": ["warm", "hopeful", "uplifting"]
+    }
+  },
+  "metaphor_domains": {
+    "competition_losing": ["games with obstacles", "races against handicaps", "rigged contests"],
+    "broken_systems": ["malfunctioning machines", "crumbling structures", "Rube Goldberg failures"],
+    "inner_struggle": ["fractured selves", "doubled figures", "distorted perception"],
+    "dangerous_beauty": ["beautiful creatures that bite", "thorned flowers", "gilded traps"],
+    "legacy_impact": ["ripples from a stone", "footprints", "shadow of a single figure"],
+    "moral_urgency": ["seeds and sprouts", "generous acts", "reaching hands"],
+    "hypocrisy_gap": ["masks and facades", "optical illusions", "two-faced objects"],
+    "inequality_injustice": ["tipped scales", "ladders with missing rungs", "divided landscapes"]
+  },
+  "anti_patterns": [
+    "literal depiction of topic (chip for semiconductors, brain for mental health)",
+    "clichés (globe for global, handshake for diplomacy, lightbulb for ideas)",
+    "multi-scene illustrations (one moment only)",
+    "5+ competing hues (max 2-3 colors)",
+    "insider-knowledge metaphors (too clever)"
+  ]
+}
