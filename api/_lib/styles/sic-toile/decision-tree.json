@@ -1,0 +1,57 @@
+{
+  "scene_domains": {
+    "commerce_exchange": {
+      "keywords": ["payment", "merchant", "trade", "exchange", "settlement", "value", "commerce", "market", "transaction", "money", "flow", "revenue", "capital", "invoice", "ledger"],
+      "settings": ["counting house", "quayside", "exchange floor", "merchant ship"]
+    },
+    "governance_institution": {
+      "keywords": ["authority", "institution", "standard", "regulation", "policy", "rule", "mandate", "certified", "official", "trust", "compliance", "law", "framework"],
+      "settings": ["columned hall", "charter signing room", "seal press chamber", "assembly"]
+    },
+    "cartography_navigation": {
+      "keywords": ["global", "international", "routes", "corridors", "territory", "map", "reach", "cross-border", "expand", "navigate", "path", "journey", "network"],
+      "settings": ["atlas room", "ship deck", "survey hilltop", "globe library"]
+    },
+    "natural_philosophy": {
+      "keywords": ["innovation", "discovery", "technology", "science", "mechanism", "reveal", "insight", "research", "data", "analysis", "experiment", "proof"],
+      "settings": ["demonstration hall", "naturalist cabinet", "observatory dome", "laboratory"]
+    },
+    "architecture_infrastructure": {
+      "keywords": ["foundation", "infrastructure", "platform", "architecture", "build", "construct", "layer", "backbone", "scale", "bridge", "structure", "pipeline", "protocol"],
+      "settings": ["bridge construction site", "underground vault", "drafting room", "canal lock"]
+    },
+    "knowledge_scholarship": {
+      "keywords": ["data", "insight", "analysis", "understand", "report", "research", "information", "learn", "document", "record", "archive", "library", "publish"],
+      "settings": ["grand library", "printing press workshop", "scholar desk", "academy session"]
+    },
+    "capital_treasury": {
+      "keywords": ["investment", "capital", "growth", "portfolio", "fund", "asset", "returns", "value", "wealth", "strategic", "resource", "equity", "institutional"],
+      "settings": ["treasury vault", "exchange building entrance", "estate map room", "founding table"]
+    }
+  },
+  "state_vocabulary": {
+    "failing": "in ruins",
+    "outdated": "overgrown",
+    "broken": "collapsed",
+    "chaotic": "in disorder",
+    "opportunity": "newly surveyed",
+    "innovative": "in discovery",
+    "aspirational": "in procession",
+    "growing": "flourishing",
+    "process": "in full operation",
+    "sequential": "in succession",
+    "foundational": "under construction",
+    "connecting": "in correspondence",
+    "securing": "sealed and witnessed",
+    "proving": "demonstrated",
+    "measuring": "under examination",
+    "complex": "in full detail"
+  },
+  "validation_tests": [
+    "single_medium: purely copper-plate engraving, no color/gradients/fills",
+    "period_test: scene could appear in a 1780 folio, no anachronisms",
+    "legibility_test: readable at 1080px carousel scale in 2 seconds",
+    "narrative_test: allegorical not literal representation",
+    "figure_test: all figures in period dress with purposeful poses"
+  ]
+}

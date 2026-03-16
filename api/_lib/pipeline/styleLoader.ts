@@ -9,11 +9,13 @@ import type { StylePack } from './types.js'
 // Static imports — Vercel needs these to bundle the files
 import darkMuseum from '../styles/dark-museum/config.js'
 import nytOpinion from '../styles/nyt-opinion/config.js'
+import sicToile from '../styles/sic-toile/config.js'
 import dispatch from '../styles/dispatch/config.js'
 
 const STYLE_MAP: Record<string, StylePack> = {
   dark_museum: darkMuseum,
   nyt_opinion: nytOpinion,
+  sic_toile: sicToile,
   dispatch: dispatch,
 }
 
