@@ -15,6 +15,10 @@ export interface CoverVariant {
   selected: boolean
   created_at: string
   model?: ImageModel
+
+  // Pipeline fields (Stage 1 output)
+  visual_decision?: Record<string, unknown>
+  provider?: string
 }
 
 export interface VariantCoverSlide {

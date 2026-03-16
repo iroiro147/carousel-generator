@@ -72,7 +72,7 @@ export async function generateImage(
 /**
  * Convert an image buffer to a data URI for passing to the frontend.
  */
-export function bufferToDataURI(buffer: Buffer, mimeType = 'image/png'): string {
+export function bufferToDataURI(buffer: Buffer, mimeType = 'image/jpeg'): string {
   return `data:${mimeType};base64,${buffer.toString('base64')}`
 }
 

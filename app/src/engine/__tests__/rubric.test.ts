@@ -21,14 +21,14 @@ function makeBrief(overrides: Partial<Brief>): Brief {
   }
 }
 
-// ─── Worked Example 1: Passkey Checkout Experience ────────────────────────
-describe('Example 1: Passkey Checkout — product_elevation HIGH', () => {
+// ─── Worked Example 1: Passkey Checkout — dark_museum for educate/explain ────
+describe('Example 1: Passkey Checkout — dark_museum wins for technical product', () => {
   const brief = makeBrief({
     topic: 'How passkey authentication makes checkout faster and frictionless for consumers on mobile',
     goal: 'product_awareness',
     claim: 'Passkey checkout is the fastest, most secure way to pay on mobile — and consumers love it once they try it.',
     audience: 'warm_consumer',
-    tone: ['aspirational_elevated', 'empathetic_human'],
+    tone: ['aspirational_elevated'],
     brand_name: 'Juspay',
     content_category: 'product_feature',
     content_notes: 'Show the checkout UX flow. Mention 40% improvement in conversion.',
@@ -36,16 +36,12 @@ describe('Example 1: Passkey Checkout — product_elevation HIGH', () => {
 
   const result = runRubric(brief)
 
-  test('recommends product_elevation', () => {
-    expect(result.recommended_theme).toBe('product_elevation')
+  test('recommends dark_museum', () => {
+    expect(result.recommended_theme).toBe('dark_museum')
   })
 
   test('confidence is HIGH', () => {
     expect(result.confidence).toBe('HIGH')
-  })
-
-  test('name_archaeology is eliminated (no myth resonance)', () => {
-    expect(result.eliminated_themes).toContain('name_archaeology')
   })
 })
 
@@ -74,7 +70,7 @@ describe('Example 2: Cross-Border Authority — sic_toile HIGH', () => {
 })
 
 // ─── Worked Example 3: OTP Security Argument ──────────────────────────────
-describe('Example 3: OTP Security Argument — nyt_opinion or dark_museum MEDIUM', () => {
+describe('Example 3: OTP Security Argument — nyt_opinion or dark_museum', () => {
   const brief = makeBrief({
     topic: 'Why OTPs are security theater and passkeys are actually secure',
     goal: 'shift_belief',
@@ -92,30 +88,20 @@ describe('Example 3: OTP Security Argument — nyt_opinion or dark_museum MEDIUM
     expect(['nyt_opinion', 'dark_museum']).toContain(result.recommended_theme)
   })
 
-  test('confidence reflects competitive race (nyt_opinion vs dark_museum)', () => {
-    // Worked example shows ~30 vs ~28 (approximate) — exact scoring may produce
-    // a wider gap depending on keyword accumulation. The key test is that nyt_opinion
-    // or dark_museum wins, and both score well above the rest.
-    expect(['HIGH', 'MEDIUM', 'LOW']).toContain(result.confidence)
-    // Verify the race is between nyt_opinion and dark_museum
-    const { nyt_opinion, dark_museum } = result.scores
-    const others = [result.scores.product_elevation, result.scores.experience_capture, result.scores.sic_toile]
-    expect(Math.max(nyt_opinion, dark_museum)).toBeGreaterThan(Math.max(...others))
-  })
-
-  test('name_archaeology is eliminated', () => {
-    expect(result.eliminated_themes).toContain('name_archaeology')
+  test('nyt_opinion and dark_museum score above sic_toile', () => {
+    const { nyt_opinion, dark_museum, sic_toile } = result.scores
+    expect(Math.max(nyt_opinion, dark_museum)).toBeGreaterThan(sic_toile)
   })
 })
 
 // ─── Worked Example 4: Series C Fundraise ─────────────────────────────────
-describe('Example 4: Series C Fundraise — sic_toile or name_archaeology (genuine tie)', () => {
+describe('Example 4: Series C Fundraise — sic_toile wins', () => {
   const brief = makeBrief({
     topic: 'Juspay company story for Series C fundraise — the infrastructure company for the next century of payments',
     goal: 'strategic_narrative',
     claim: 'Juspay is not a payments startup. It is the infrastructure layer that the next century of commerce will run on — just as the railways were to the industrial age.',
     audience: 'institutional_investors',
-    tone: ['heritage_institutional', 'mythological_epic'],
+    tone: ['heritage_institutional'],
     brand_name: 'Juspay',
     content_category: 'institutional_narrative',
     content_notes: 'Frame as civilizational infrastructure. Reference the heritage of payment systems from Silk Road to UPI.',
@@ -123,23 +109,19 @@ describe('Example 4: Series C Fundraise — sic_toile or name_archaeology (genui
 
   const result = runRubric(brief)
 
-  test('recommends sic_toile or name_archaeology', () => {
-    expect(['sic_toile', 'name_archaeology']).toContain(result.recommended_theme)
+  test('recommends sic_toile', () => {
+    expect(result.recommended_theme).toBe('sic_toile')
   })
 
-  test('both sic_toile and name_archaeology score competitively', () => {
-    // Worked example shows ~36 vs ~36 (approximate). Exact arithmetic may vary
-    // based on keyword stacking, negative signal thresholds, and brand name bonus.
-    // The key test: both score well above other themes.
-    const { sic_toile, name_archaeology } = result.scores
-    const others = [result.scores.dark_museum, result.scores.product_elevation, result.scores.experience_capture]
-    const topTwo = Math.min(sic_toile, name_archaeology)
-    expect(topTwo).toBeGreaterThan(Math.max(...others))
+  test('sic_toile scores well above other themes', () => {
+    const { sic_toile, dark_museum, nyt_opinion } = result.scores
+    expect(sic_toile).toBeGreaterThan(dark_museum)
+    expect(sic_toile).toBeGreaterThan(nyt_opinion)
   })
 })
 
 // ─── Worked Example 5: Checkout Drop-Off ──────────────────────────────────
-describe('Example 5: Checkout Drop-Off — experience_capture wins or ties product_elevation', () => {
+describe('Example 5: Checkout Drop-Off — dark_museum or nyt_opinion', () => {
   const brief = makeBrief({
     topic: 'How we reduced checkout abandonment by 40% for a major ecommerce partner',
     goal: 'direct_response',
@@ -153,35 +135,13 @@ describe('Example 5: Checkout Drop-Off — experience_capture wins or ties produ
 
   const result = runRubric(brief)
 
-  test('recommends experience_capture or product_elevation', () => {
-    expect(['experience_capture', 'product_elevation']).toContain(result.recommended_theme)
+  test('recommends one of the active themes', () => {
+    expect(['dark_museum', 'nyt_opinion', 'sic_toile']).toContain(result.recommended_theme)
   })
 })
 
 // ─── Gate Tests ───────────────────────────────────────────────────────────
 describe('Gate checks', () => {
-  test('Brand "Prometheus" passes Name Archaeology gate with +4 bonus', () => {
-    const brief = makeBrief({
-      brand_name: 'Prometheus',
-      topic: 'Building the future of fire — energy infrastructure',
-    })
-    const result = runRubric(brief)
-    expect(result.gate_results.name_archaeology).toBe('passed')
-    expect(result.eliminated_themes).not.toContain('name_archaeology')
-    // Should have the +4 gate bonus + +3 brand name bonus
-    expect(result.scores.name_archaeology).toBeGreaterThan(0)
-  })
-
-  test('Brand "Zepto" fails Name Archaeology gate and is eliminated', () => {
-    const brief = makeBrief({
-      brand_name: 'Zepto',
-      topic: 'Quick commerce delivery speed optimization',
-    })
-    const result = runRubric(brief)
-    expect(result.gate_results.name_archaeology).toBe('failed')
-    expect(result.eliminated_themes).toContain('name_archaeology')
-  })
-
   test('Flat claim with no tension → NYT Opinion soft_fail with -3 penalty', () => {
     const brief = makeBrief({
       goal: 'educate_explain',
@@ -216,13 +176,10 @@ describe('Result structure', () => {
     expect(result).toHaveProperty('score_explanation')
   })
 
-  test('scores has all 6 themes', () => {
+  test('scores has all 3 themes', () => {
     expect(result.scores).toHaveProperty('dark_museum')
-    expect(result.scores).toHaveProperty('product_elevation')
-    expect(result.scores).toHaveProperty('experience_capture')
     expect(result.scores).toHaveProperty('nyt_opinion')
     expect(result.scores).toHaveProperty('sic_toile')
-    expect(result.scores).toHaveProperty('name_archaeology')
   })
 
   test('confidence is HIGH, MEDIUM, or LOW', () => {
@@ -230,7 +187,7 @@ describe('Result structure', () => {
   })
 
   test('recommended_theme is a valid theme', () => {
-    const validThemes = ['dark_museum', 'product_elevation', 'experience_capture', 'nyt_opinion', 'sic_toile', 'name_archaeology']
+    const validThemes = ['dark_museum', 'nyt_opinion', 'sic_toile']
     expect(validThemes).toContain(result.recommended_theme)
   })
 

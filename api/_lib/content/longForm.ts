@@ -73,54 +73,6 @@ The 14 slides must perform an examination — from the surface
 Avoid: questions, exclamation points, future tense ("will be",
 "is going to"). Everything here is already true.`,
 
-  product_elevation: `
-PRODUCT ELEVATION COPY RULES:
-
-This is a luxury product campaign. The headline is desire, not description.
-The body text qualifies desire with precision.
-
-Headline register: Aspirational but specific. Not "The future of payments" —
-that's generic. "One tap. The card stays in your pocket." — that's specific
-and aspirational simultaneously.
-
-Body text register: Short, rhythmic, confident. 2–3 sentences max.
-Use present tense. No passive voice anywhere.
-
-The progression must move: from the problem (what was broken) to the
-product (what it looks like) to the experience (what it feels like)
-to the claim (why it matters at scale).
-
-Never describe features. Describe outcomes of features.
-"Tokenized credentials" is a feature. "Nothing to steal" is an outcome.`,
-
-  experience_capture: `
-EXPERIENCE CAPTURE COPY RULES:
-
-This is documentary. The headline is what the moment actually is —
-not elevated, not aspirational, just named precisely.
-
-Dialogue strings (slide 1 and cover): Must sound overheard,
-not written. Read aloud before finalizing. If it sounds like
-ad copy, rewrite it. Grammatical imperfection is intentional —
-it signals authenticity. The dialogue is ONE person speaking ONE
-sentence or two short sentences. No back-and-forth.
-
-Headline register: The title of a documentary scene.
-"The checkout that almost didn't go through."
-"Faster than you expected."
-"What settlement looks like when it clears early."
-Not: "Revolutionizing the payment experience."
-
-Body text: Bridges the overheard moment and the product claim.
-Stays close to the ground — never abstracts to industry-level
-language. Reads as the narrator's voiceover, not the brand's PR.
-
-Dialogue must follow speech-rhythm line breaks.
-Mark line breaks in the dialogue string with \\n at natural
-pause points — not at character count limits.
-Example: "So like how long\\nyou been doing this?"
-Not: "So like how long you been\\ndoing this?"`,
-
   nyt_opinion: `
 NYT OPINION COPY RULES:
 
@@ -163,37 +115,6 @@ The annotation label (where present) names the scene domain in
 formal plate notation. Format: "[DOMAIN NAME IN CAPS]. TAB. [N]."
 Example: "CARTOGRAPHY. TAB. III." or "COMMERCE. TAB. V."`,
 
-  name_archaeology: `
-NAME ARCHAEOLOGY COPY RULES:
-
-You are a mythographer who has been asked to retell a myth in
-the service of a brand argument. The myth is not metaphor —
-it is the literal frame. The brand's product is what the fire
-was, or what the outlaw's arrows were.
-
-Headline register: Operates on two levels simultaneously.
-The mythological level (what happened in the myth) and the
-present level (what the brand does). The best headlines fuse both.
-"The fire stolen from Olympus. The payment freed from friction."
-"The fox always finds a way through."
-Not: "Like Prometheus, Juspay brings powerful technology to merchants."
-(This is an explicit comparison — avoid. Let the myth do the work implicitly.)
-
-Cover headline (per variant):
-- The Literal Hero: "[Hero's defining act]. [Brand's present claim]."
-- The Unexpected Vessel: "The [animal]. [What the myth says it always does]."
-- The Consequence: "Every [beneficiary]. Every [context]."
-
-Body text: Mythological register for slides 1–6. Contemporary register
-for slides 7–14. The transition from myth to present should feel
-inevitable, not forced. Never use the word "like" to make the
-comparison explicit — the structural parallel is the comparison.
-
-Pivot question slide: Must be a line from the myth or a line
-that could have been from the myth. Not a product question.
-"Who shall draw this sword?" (Arthurian)
-"What does it cost to give fire to the world?" (Prometheus)
-Not: "Are you ready to transform your payments infrastructure?"`,
 }
 
 // ─── Types ─────────────────────────────────────────────────────────────────────

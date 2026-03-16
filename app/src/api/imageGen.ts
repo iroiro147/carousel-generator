@@ -1,7 +1,6 @@
 import type { Brief } from '../types/brief'
 import type { ThemeId } from '../types/theme'
 import type { CoverVariant, ImageModel } from '../types/variant'
-import coverVariantsData from '../data/cover_variants_data.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface AngleDefinition {
@@ -28,19 +27,15 @@ interface AngleDefinition {
   propagation_metadata: Record<string, unknown>
 }
 
-// ─── Get angle definitions from cover_variants_data.json ──────────────────────
-function getCoverAngles(themeId: ThemeId): AngleDefinition[] {
-  const themes = coverVariantsData.themes as Record<
-    string,
-    { variants: Record<string, Omit<AngleDefinition, 'angle_key'>> }
-  >
-  const theme = themes[themeId]
-  if (!theme) return []
-
-  return Object.entries(theme.variants).map(([key, angle]) => ({
-    ...angle,
-    angle_key: key,
-  }))
+// ─── Fetch angle definitions from /api/styles/angles ─────────────────────────
+async function getCoverAngles(themeId: ThemeId): Promise<AngleDefinition[]> {
+  const response = await fetch(`/api/styles/angles?id=${themeId}`)
+  if (!response.ok) {
+    console.error('Failed to fetch angles:', response.status)
+    return []
+  }
+  const data = (await response.json()) as { angles: AngleDefinition[] }
+  return data.angles
 }
 
 // ─── Generate a single cover variant via backend ──────────────────────────────
@@ -73,7 +68,7 @@ async function generateOneVariant(
 }
 
 // ─── Generate all 3 cover variants (parallel, individual callbacks) ───────────
-export function generateCoverVariants(
+export async function generateCoverVariants(
   brief: Partial<Brief>,
   themeId: ThemeId,
   model: ImageModel,
@@ -81,8 +76,8 @@ export function generateCoverVariants(
     onVariantComplete: (index: number, variant: CoverVariant) => void
     onVariantFailed: (index: number, error: string) => void
   },
-): { promises: Promise<void>[]; angles: AngleDefinition[] } {
-  const angles = getCoverAngles(themeId)
+): Promise<{ promises: Promise<void>[]; angles: AngleDefinition[] }> {
+  const angles = await getCoverAngles(themeId)
 
   const promises = angles.map(async (angle, i) => {
     const result = await generateOneVariant(brief, themeId, angle, i, model)
@@ -103,7 +98,7 @@ export async function retrySingleVariant(
   angleIndex: number,
   model: ImageModel = 'gpt-image-1.5',
 ): Promise<CoverVariant | null> {
-  const angles = getCoverAngles(themeId)
+  const angles = await getCoverAngles(themeId)
   const angle = angles[angleIndex]
   if (!angle) return null
 

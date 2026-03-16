@@ -2,8 +2,12 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'crypto'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
 import type { ImageModel } from '../_lib/providers/index.js'
+import { run as runPipeline } from '../_lib/pipeline/orchestrator.js'
 
 console.log('[generate-one] module loaded successfully')
+
+// ─── Styles that use the new two-stage pipeline ──────────────────────────────
+const PIPELINE_STYLES = new Set(['dark_museum'])
 
 interface AngleDefinition {
   angle_name: string
@@ -34,6 +38,7 @@ interface BriefPayload {
   brand_name: string
   brand_color?: string | null
   content_notes?: string | null
+  [key: string]: unknown
 }
 
 function buildHeadline(angle: AngleDefinition, brief: BriefPayload): string {
@@ -117,6 +122,8 @@ function buildHeadline(angle: AngleDefinition, brief: BriefPayload): string {
   return angle.headline_example ?? `${brandName}. ${shortClaim}.`
 }
 
+// ─── Legacy switch-case prompt builder (kept for non-pipeline themes) ────────
+
 function buildCoverPrompt(
   angle: AngleDefinition & { angle_key: string },
   brief: BriefPayload,
@@ -127,12 +134,6 @@ function buildCoverPrompt(
   const topicNoun = topicWords[0] ?? topic.split(/\s+/)[0] ?? 'object'
 
   switch (themeId) {
-    case 'dark_museum':
-      return `${topicNoun} rendered as a luxury museum specimen — precision-machined metal and glass, ${angle.object_state_preference ?? 'gleaming'} state, suspended in absolute darkness with a single overhead spotlight creating a precise cone of warm light (3200K), deep shadow falling directly below, micro-scratches visible on surface, photorealistic 3D render, studio product photography quality, no background elements, object positioned center-canvas, object fills 70% of frame, ultra-high detail, 8K render quality, composition mode: ${angle.composition_mode}`
-    case 'product_elevation':
-      return `${topicNoun} product in ${angle.object_state_preference ?? 'pristine'} state — luxury studio product photography, precision metal and glass surface with mirror-polished finish, three-point studio lighting with key light at 45° upper-left fill at 30% power right rim light creating thin white highlight on upper edge, pure platinum white #F8F5F0 background, shot on medium format camera 85mm equivalent f/4 shallow depth of field, ${angle.composition_mode} composition, commercial product photography, aspirational register, clean isolated product`
-    case 'experience_capture':
-      return `First-person POV photograph from ${angle.pov_preference ?? 'over shoulder screen visible'} — looking at ${topicNoun} interaction, practical light sources only: screen glow and ambient room light, silhouette of user visible, ${angle.scene_domain ?? 'digital'} environment, cinematic color grade, crushed blacks with color retained only in practical light sources, anonymous perspective, night, urban interior, documentary photography aesthetic, no faces visible, no studio lighting`
     case 'nyt_opinion': {
       const mode = angle.illustration_mode ?? 'editorial_cartoon'
       if (mode === 'editorial_cartoon') {
@@ -145,8 +146,6 @@ function buildCoverPrompt(
     }
     case 'sic_toile':
       return `Single-color copper-plate engraving illustration of a ${angle.scene_domain ?? 'commerce exchange'} scene related to ${topicNoun} — rendered entirely in indigo (#2A2ECD) on white/transparent ground, fine parallel hatching for mid-tone areas, cross-hatching for deep shadows, stippling for soft textures, clean confident contour lines, 18th-century French engraving aesthetic — Encyclopédie Diderot plates register, full narrative scene with ground plane and architectural setting, ${angle.scene_preference ?? 'seven or more figures'}, elaborate but legible at carousel scale, no color other than this single indigo — no fills, no gradients, pure line and mark work`
-    case 'name_archaeology':
-      return `19th century steel engraving of ${angle.figure_type ?? 'a mythological hero'} scene related to ${topicNoun} and ${brief.brand_name ?? 'Brand'} — ${angle.wit_layer === 'full_anthropomorphized_animal' ? 'anthropomorphized animal in period clothing' : 'human figures in historically accurate costume'}, ${angle.scene_rule ?? 'defining moment'}, crosshatching technique for deep shadows, fine line work on figures, monochromatic sepia tint on aged parchment background, no color fills — pure line and mark work, high detail centered composition, encyclopedic plate aesthetic`
     default:
       return `Professional illustration of ${topicNoun} for ${themeId} theme, high quality, editorial aesthetic`
   }
@@ -173,6 +172,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const imageModel = model ?? 'gpt-image-1.5'
     console.log('[generate-one] theme:', theme_id, 'model:', imageModel, 'angle:', angle.angle_key)
+
+    // ── New two-stage pipeline for supported styles ────────────────────
+    if (PIPELINE_STYLES.has(theme_id)) {
+      const headline = buildHeadline(angle, brief)
+
+      const result = await runPipeline({
+        brief,
+        styleId: theme_id,
+        angle: angle.angle_key,
+        model: imageModel,
+        headline,
+        slideContent: `${brief.topic}. ${brief.claim}`,
+        imageFocus: brief.topic,
+      })
+
+      if ('error' in result) {
+        console.error(`[generate-one] Pipeline error: ${result.message}`)
+        return res.status(500).json({ error: result.message })
+      }
+
+      const variant = {
+        variant_id: randomUUID(),
+        brief_id: 'current',
+        theme: theme_id,
+        angle_key: angle.angle_key,
+        angle_name: angle.angle_name,
+        angle_description: angle.angle_description,
+        cover_slide: {
+          composition_mode: angle.composition_mode ?? 'centered',
+          headline: result.headline,
+          headline_size: 48,
+          text_position: 'center',
+          image_prompt: result.stage2Prompt,
+          thumbnail_url: result.imageBase64,
+        },
+        propagation_metadata: angle.propagation_metadata,
+        generation_status: 'complete' as const,
+        selected: false,
+        created_at: new Date().toISOString(),
+        // New fields from pipeline
+        visual_decision: result.visualDecision,
+        provider: result.provider,
+      }
+
+      return res.json(variant)
+    }
+
+    // ── Legacy switch-case path for non-pipeline themes ───────────────
     const prompt = buildCoverPrompt(angle, brief, theme_id)
     const headline = buildHeadline(angle, brief)
     const imageBuffer = await generateImage(prompt, theme_id, imageModel)

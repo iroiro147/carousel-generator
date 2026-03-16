@@ -16,8 +16,7 @@ export interface RubricResult {
 type ThemeScoreMap = Partial<Record<ThemeId, number>>
 
 const ALL_THEMES: ThemeId[] = [
-  'dark_museum', 'product_elevation', 'experience_capture',
-  'nyt_opinion', 'sic_toile', 'name_archaeology',
+  'dark_museum', 'nyt_opinion', 'sic_toile',
 ]
 
 // ─── Tension language detection ───────────────────────────────────────────
@@ -147,36 +146,10 @@ function runGates(
   eliminated: Set<ThemeId>,
 ): GateResults {
   const gateResults: GateResults = {
-    name_archaeology: 'passed',
     nyt_opinion: 'passed',
   }
 
-  // Gate 1: Name Archaeology
-  const mythScore = getBrandNameMythScore(brief.brand_name)
-  const topicHasMythKeywords = checkTopicForMyth(brief.topic)
-
-  // A weak brand name match only passes the gate if the topic/goal supports
-  // a mythological narrative (e.g. strategic narrative, heritage topic).
-  // Per spec: "The name must carry a world, not just a word."
-  const topicSupportsMyth = topicHasMythKeywords ||
-    brief.goal === 'strategic_narrative' ||
-    brief.tone.some((t) => t === 'heritage_institutional' || t === 'mythological_epic')
-
-  if (mythScore === 'strong' || topicHasMythKeywords) {
-    // Gate passes — add +4 bonus
-    gateResults.name_archaeology = 'passed'
-    scores.name_archaeology += 4
-  } else if (mythScore === 'weak' && topicSupportsMyth) {
-    // Weak match with supporting context — gate passes with smaller bonus
-    gateResults.name_archaeology = 'bonus'
-    scores.name_archaeology += 1
-  } else {
-    // No match, or weak match without supporting context — eliminate
-    gateResults.name_archaeology = 'failed'
-    eliminated.add('name_archaeology')
-  }
-
-  // Gate 2: NYT Opinion
+  // Gate: NYT Opinion
   const hasTension = hasTensionLanguage(brief.claim)
   const goalIsArgument = brief.goal === 'shift_belief'
 
@@ -204,21 +177,13 @@ function checkTopicForMyth(topic: string): boolean {
   return mythTopicKeywords.some((kw) => lower.includes(kw))
 }
 
-// ─── Pass 6: Brand name bonus ─────────────────────────────────────────────
+// ─── Pass 6: Brand name bonus (no-op after theme removal) ────────────────
 function applyBrandNameBonus(
-  brief: Brief,
-  scores: RubricScores,
-  eliminated: Set<ThemeId>,
+  _brief: Brief,
+  _scores: RubricScores,
+  _eliminated: Set<ThemeId>,
 ): void {
-  if (eliminated.has('name_archaeology')) return
-
-  const mythScore = getBrandNameMythScore(brief.brand_name)
-  if (mythScore === 'strong') {
-    scores.name_archaeology += 3
-  } else if (mythScore === 'weak') {
-    scores.name_archaeology += 1
-  }
-  // 'none' → no additional bonus (gate should have already handled elimination)
+  // Name Archaeology removed — no brand name scoring needed
 }
 
 // ─── Pass 7: Negative signals ─────────────────────────────────────────────
@@ -232,26 +197,26 @@ function applyNegativeSignals(
     brief.audience === 'cold_consumer' &&
     brief.tone.some((t) => t === 'heritage_institutional' || t === 'mythological_epic')
   ) {
-    applyPenalty(scores, eliminated, { sic_toile: -4, name_archaeology: -2 })
+    applyPenalty(scores, eliminated, { sic_toile: -4 })
   }
 
   // 2. Short brief — claim + notes combined < 200 chars
   const combinedLen = (brief.claim?.length ?? 0) + (brief.content_notes?.length ?? 0)
   if (combinedLen < 200) {
-    applyPenalty(scores, eliminated, { sic_toile: -3, name_archaeology: -3, dark_museum: -2 })
+    applyPenalty(scores, eliminated, { sic_toile: -3, dark_museum: -2 })
   }
 
   // 3. Product demo primary — goal is product_awareness + category is product_feature
   if (brief.goal === 'product_awareness' && brief.content_category === 'product_feature') {
     applyPenalty(scores, eliminated, {
-      sic_toile: -4, name_archaeology: -4, nyt_opinion: -3, experience_capture: -2,
+      sic_toile: -4, nyt_opinion: -3,
     })
   }
 
   // 4. No narrative arc — goal is product_awareness + claim has no tension language
   if (brief.goal === 'product_awareness' && !hasTensionLanguage(brief.claim)) {
     applyPenalty(scores, eliminated, {
-      name_archaeology: -5, experience_capture: -3, sic_toile: -2,
+      sic_toile: -2,
     })
   }
 
@@ -359,11 +324,8 @@ function applyTieBreak(
 function generateExplanation(winner: ThemeId, brief: Brief): string {
   const themeNames: Record<ThemeId, string> = {
     dark_museum: 'Dark Museum',
-    product_elevation: 'Product Elevation',
-    experience_capture: 'Experience Capture',
     nyt_opinion: 'NYT Opinion',
     sic_toile: 'SIC Toile',
-    name_archaeology: 'Name Archaeology',
   }
 
   const audienceLabels: Record<string, string> = {
@@ -398,11 +360,8 @@ function generateExplanation(winner: ThemeId, brief: Brief): string {
 export function runRubric(brief: Brief): RubricResult {
   const scores: RubricScores = {
     dark_museum: 0,
-    product_elevation: 0,
-    experience_capture: 0,
     nyt_opinion: 0,
     sic_toile: 0,
-    name_archaeology: 0,
   }
 
   const eliminated: Set<ThemeId> = new Set()

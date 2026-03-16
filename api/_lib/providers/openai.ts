@@ -29,8 +29,9 @@ export async function callGPTImage(prompt: string): Promise<GeneratedImage> {
     n: 1,
     size: '1024x1536',
     quality: 'high',
+    output_format: 'jpeg',
     response_format: 'b64_json',
-  })
+  } as Parameters<OpenAI['images']['generate']>[0])
 
   if (!response.data || response.data.length === 0) {
     throw new Error('OpenAI returned no image data')

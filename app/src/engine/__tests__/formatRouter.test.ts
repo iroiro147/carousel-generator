@@ -18,10 +18,7 @@ describe('routeToFormat', () => {
   it('returns long_form for all non-NYT themes', () => {
     const longFormThemes = [
       'dark_museum',
-      'product_elevation',
-      'experience_capture',
       'sic_toile',
-      'name_archaeology',
     ] as const
     for (const theme of longFormThemes) {
       expect(routeToFormat(theme).format).toBe('long_form')

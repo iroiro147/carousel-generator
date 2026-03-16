@@ -58,6 +58,22 @@ function PulseDots() {
   )
 }
 
+// ─── Metaphor Badge (Stage 1 visual decision summary) ────────────────────────
+function MetaphorBadge({ decision }: { decision: Record<string, unknown> }) {
+  // Extract the most interesting field from the visual decision
+  const artifact = (decision.primary_artifact ?? decision.subject_description ?? decision.full_scene_description) as string | undefined
+  if (!artifact) return null
+
+  // Show first ~40 chars of the artifact description
+  const label = artifact.length > 40 ? artifact.slice(0, 40) + '...' : artifact
+  return (
+    <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 text-[10px] font-medium max-w-full">
+      <span className="shrink-0">Metaphor:</span>
+      <span className="truncate">{label}</span>
+    </span>
+  )
+}
+
 // ─── Variant Card component ──────────────────────────────────────────────────
 function VariantCard({
   variant,
@@ -185,6 +201,9 @@ function VariantCard({
               &ldquo;{variant.cover_slide.headline}&rdquo;
             </p>
           )}
+          {isComplete && variant.visual_decision && (
+            <MetaphorBadge decision={variant.visual_decision} />
+          )}
           {!isFailed && (
             <span
               className={`mt-auto pt-2 text-xs font-medium transition-colors ${
@@ -299,7 +318,7 @@ export default function CoverVariants() {
 
   // ─── Fire a generation run for a given model ─────────────────────────
   const fireRun = useCallback(
-    (model: ImageModel, isInitial: boolean) => {
+    async (model: ImageModel, isInitial: boolean) => {
       let startIndex = 0
 
       if (isInitial) {
@@ -311,7 +330,7 @@ export default function CoverVariants() {
         setRuns((prev) => [...prev, { model, startIndex, count: 3 }])
       }
 
-      const { angles } = generateCoverVariants(brief, themeId, model, {
+      const { angles } = await generateCoverVariants(brief, themeId, model, {
         onVariantComplete: (index: number, variant: CoverVariant) => {
           const globalIndex = startIndex + index
           setVariantComplete(globalIndex, variant)

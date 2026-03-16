@@ -446,15 +446,11 @@ function SlidePreview({
   themeId: ThemeId
   slideIndex: number
 }) {
-  if (themeId === 'dark_museum' || themeId === 'product_elevation') {
+  if (themeId === 'dark_museum') {
     return <DarkMuseumPreview slide={slide} themeId={themeId} slideIndex={slideIndex} />
   }
 
-  if (themeId === 'experience_capture') {
-    return <ExperienceCapturePreview slide={slide} slideIndex={slideIndex} />
-  }
-
-  if (themeId === 'sic_toile' || themeId === 'name_archaeology') {
+  if (themeId === 'sic_toile') {
     return <CartouchePreview slide={slide} themeId={themeId} slideIndex={slideIndex} />
   }
 
@@ -535,37 +531,10 @@ function DarkMuseumPreview({ slide, themeId, slideIndex }: { slide: Slide; theme
   )
 }
 
-// ─── Experience Capture Preview (placeholder) ────────────────────────────────
-
-function ExperienceCapturePreview({ slide, slideIndex }: { slide: Slide; slideIndex: number }) {
-  return (
-    <div className="w-full h-full bg-zinc-700 flex flex-col items-center justify-center gap-4 relative overflow-hidden">
-      {slide.image_url && (
-        <img src={slide.image_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-      )}
-      <div className="relative z-10 text-center px-12">
-        <p className="text-white/40 text-xs uppercase tracking-widest mb-4">Compositor preview</p>
-        <EditableText
-          value={slide.headline}
-          field="headline"
-          slideIndex={slideIndex}
-          className="leading-snug"
-          style={{ fontFamily: "'Lora', serif", fontWeight: 700, fontSize: 48, color: '#FFFFFF' }}
-        />
-        {slide.dialogue && (
-          <p className="mt-6 text-white/70 text-lg" style={{ fontFamily: "'Lora', serif" }}>
-            &ldquo;{slide.dialogue.split('\n')[0]}&hellip;&rdquo;
-          </p>
-        )}
-      </div>
-    </div>
-  )
-}
-
-// ─── SIC Toile / Name Archaeology Preview (placeholder) ──────────────────────
+// ─── SIC Toile Preview (placeholder) ─────────────────────────────────────────
 
 function CartouchePreview({ slide, themeId, slideIndex }: { slide: Slide; themeId: ThemeId; slideIndex: number }) {
-  const strokeColor = themeId === 'sic_toile' ? '#2A2ECD' : '#8B5E3C'
+  const strokeColor = '#2A2ECD'
 
   return (
     <div

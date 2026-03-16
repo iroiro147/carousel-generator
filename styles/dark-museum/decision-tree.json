@@ -1,0 +1,45 @@
+{
+  "metaphor_categories": {
+    "MOVEMENT": {
+      "keywords": ["bridging", "opening", "transfer", "flow", "connecting", "migration"],
+      "logic": "Select objects designed for Interconnectivity or Mechanical Action — things that eject, slide, or change state to allow a flow.",
+      "examples": ["1980s Hi-Fi Cassette Deck with tape door ejected", "Slide Projector mid-carousel-turn", "Industrial Sliding Gate with exposed pulleys"]
+    },
+    "STRUCTURE": {
+      "keywords": ["framework", "foundation", "regulations", "architecture", "infrastructure", "backbone"],
+      "logic": "Select objects that represent the Inflexible Backbone of a system — artifacts that define the grid or skeleton.",
+      "examples": ["Steel Suspension Bridge Section with thick cables", "Glass Skyscraper section", "Full-Height Server Rack with 90s LEDs", "Nautical Anchor"]
+    },
+    "SPEED": {
+      "keywords": ["fast", "instant", "real-time", "rapid", "acceleration", "velocity"],
+      "logic": "Select objects that represent Kinetic Velocity or Propulsion — physically built to cut through resistance.",
+      "examples": ["1980s Jet Turbine Engine with chrome blades", "Vintage Steam Locomotive Engine", "1990s Rocket Booster section", "Formula-1 Race Car Chassis"]
+    },
+    "SECURITY": {
+      "keywords": ["trust", "safety", "verification", "authentication", "protection", "encryption"],
+      "logic": "Select objects designed for Hard Containment or Physical Access — heavy, tactile, requiring specific force.",
+      "examples": ["Floor-Standing Steel Safe with mechanical dial", "1950s Bakelite Rotary Telephone", "Jewel Box with heavy silver latch", "Stone-carved gargoyle"]
+    }
+  },
+  "condition_mapping": {
+    "PRISTINE": { "sentiment": "Success / Trust / New Feature", "keywords": ["glowing", "polished", "factory-new", "sharp edges"] },
+    "WORN": { "sentiment": "History / Legacy / Reliability", "keywords": ["scratched plastic", "faded paint", "dull sheen"] },
+    "RUSTED": { "sentiment": "Old Ways / Inefficiency / Danger", "keywords": ["corroded", "oxidized", "pitted", "decaying"] },
+    "BROKEN": { "sentiment": "Disruption / Failure / Speed", "keywords": ["shattered glass", "fragmented casing", "exploding components"] }
+  },
+  "object_categories": {
+    "Computers/Tech": ["CRT Monitor", "Floppy Disk", "Dot-Matrix Printer", "Joystick", "Cassette Tape", "1980s Brick-Phone"],
+    "Industrial": ["Analog Radar Machine", "Control Panel with Toggle Switches", "Oscilloscope", "Pressure Gauge", "Ham Radio"],
+    "Communication": ["Rotary Dial Telephone", "Typewriter", "Record Player", "Polaroid Camera", "Walkie-Talkie"],
+    "Domestic/Lifestyle": ["Tufted Velvet Sofa", "Jewel Box", "Wooden Record Cabinet", "Potted Fern", "Mahogany Armchair", "Glass Decanter"],
+    "Fintech Metaphor": ["Apothecary Scales", "Ledger Book", "Abacus", "Brass Compass", "Mechanical Metronome"]
+  },
+  "material_types": {
+    "Beige ABS Plastic": "Yellowed 90s computer plastic with subtle scratches and matte texture.",
+    "Phosphorus Glass": "Green glowing CRT screen with visible scanlines and glass curvature.",
+    "Bakelite": "Deep black polished resin with high-contrast reflections and heavy weight.",
+    "Walnut/Teak": "Rich wood grain with a satin finish and worn edges.",
+    "Chrome/Steel": "Brushed industrial metal with oil smudges and micro-abrasions.",
+    "Velvet/Fabric": "Deeply tufted textile with realistic fiber detail and dust motes."
+  }
+}

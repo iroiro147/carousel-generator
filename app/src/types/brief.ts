@@ -59,16 +59,12 @@ export interface Brief {
 
 export interface RubricScores {
   dark_museum: number
-  product_elevation: number
-  experience_capture: number
   nyt_opinion: number
   sic_toile: number
-  name_archaeology: number
 }
 
 export type ConfidenceLevel = 'HIGH' | 'MEDIUM' | 'LOW'
 
 export interface GateResults {
-  name_archaeology: 'passed' | 'failed' | 'bonus'
   nyt_opinion: 'passed' | 'failed' | 'soft_fail'
 }

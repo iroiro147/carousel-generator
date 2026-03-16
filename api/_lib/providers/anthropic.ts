@@ -3,17 +3,21 @@ import Anthropic from '@anthropic-ai/sdk'
 // Lazy-init: don't crash if ANTHROPIC_API_KEY is missing
 let client: Anthropic | null = null
 
+function getApiKey(): string | undefined {
+  return process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY_NEW
+}
+
 function getClient(): Anthropic {
   if (!client) {
-    const apiKey = process.env.ANTHROPIC_API_KEY
-    if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set')
+    const apiKey = getApiKey()
+    if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set (checked ANTHROPIC_API_KEY and ANTHROPIC_API_KEY_NEW)')
     client = new Anthropic({ apiKey })
   }
   return client
 }
 
 export function isAnthropicAvailable(): boolean {
-  return !!process.env.ANTHROPIC_API_KEY
+  return !!getApiKey()
 }
 
 export async function callClaude(

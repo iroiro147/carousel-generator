@@ -2,8 +2,7 @@ import { test, expect } from 'vitest'
 import { getTheme, getImageProvider, isShortForm, getThemeDisplayName } from '../index'
 
 const THEME_IDS = [
-  'dark_museum', 'product_elevation', 'experience_capture',
-  'nyt_opinion', 'sic_toile', 'name_archaeology'
+  'dark_museum', 'nyt_opinion', 'sic_toile'
 ] as const
 
 test('all themes load without error', () => {
@@ -23,11 +22,14 @@ test('all themes have required top-level keys', () => {
 
 test('provider routing is correct', () => {
   expect(getImageProvider('dark_museum').provider).toBe('openai_gpt_image')
-  expect(getImageProvider('product_elevation').provider).toBe('openai_gpt_image')
-  expect(getImageProvider('experience_capture').provider).toBe('openai_gpt_image')
-  expect(getImageProvider('nyt_opinion').provider).toBe('google_imagen')
-  expect(getImageProvider('sic_toile').provider).toBe('google_imagen')
-  expect(getImageProvider('name_archaeology').provider).toBe('google_imagen')
+  expect(getImageProvider('nyt_opinion').provider).toBe('openai_gpt_image')
+  expect(getImageProvider('sic_toile').provider).toBe('openai_gpt_image')
+})
+
+test('all providers use gpt-image-1.5', () => {
+  THEME_IDS.forEach(id => {
+    expect(getImageProvider(id).model).toBe('gpt-image-1.5')
+  })
 })
 
 test('format routing is correct', () => {

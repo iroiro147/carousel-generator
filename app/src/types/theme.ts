@@ -1,10 +1,7 @@
 export type ThemeId =
   | 'dark_museum'
-  | 'product_elevation'
-  | 'experience_capture'
   | 'nyt_opinion'
   | 'sic_toile'
-  | 'name_archaeology'
 
 export type CarouselFormat = 'short_form' | 'long_form'
 

@@ -6,61 +6,34 @@ import type { ThemeId } from '../../types/theme'
 // ─── Theme display names ────────────────────────────────────────────────────
 const THEME_NAMES: Record<ThemeId, string> = {
   dark_museum: 'Dark Museum',
-  product_elevation: 'Product Elevation',
-  experience_capture: 'Experience Capture',
   nyt_opinion: 'NYT Opinion',
   sic_toile: 'SIC Toile',
-  name_archaeology: 'Name Archaeology',
 }
 
 const THEME_DESCRIPTIONS: Record<ThemeId, string> = {
   dark_museum: 'Near-black canvas, museum lighting, editorial luxury',
-  product_elevation: 'Aspirational product showcase, conversion-focused',
-  experience_capture: 'Reader-first storytelling, scroll-stopping recognition',
   nyt_opinion: 'Bold editorial statement, 4-slide argument format',
   sic_toile: 'Institutional heritage, copper-plate engraving aesthetic',
-  name_archaeology: 'Brand as protagonist in historical/mythological narrative',
 }
 
 const ALL_THEMES: ThemeId[] = [
-  'dark_museum', 'product_elevation', 'experience_capture',
-  'nyt_opinion', 'sic_toile', 'name_archaeology',
+  'dark_museum', 'nyt_opinion', 'sic_toile',
 ]
 
 // ─── Tradeoff text for winner/alternative pairs ──────────────────────────────
 const TRADEOFFS: Record<string, string> = {
-  // From spec worked examples
-  'dark_museum|product_elevation':
-    'Dark Museum treats the technology as timeless artifact — high authority. Product Elevation treats it as aspirational product — high conversion.',
-  'product_elevation|dark_museum':
-    'Product Elevation leads with aspiration and conversion. Dark Museum leads with authority and timelessness.',
-  'experience_capture|product_elevation':
-    'Experience Capture starts with the reader\'s frustration — recognition stops the scroll. Product Elevation starts with aspiration — desire drives the click.',
-  'product_elevation|experience_capture':
-    'Product Elevation leads with aspirational product framing. Experience Capture leads with the reader\'s lived frustration.',
-  'sic_toile|name_archaeology':
-    'SIC Toile positions the brand as a built institution. Name Archaeology positions it as protagonist in a larger historical pattern.',
-  'name_archaeology|sic_toile':
-    'Name Archaeology weaves the brand into historical narrative. SIC Toile frames it as established institutional authority.',
   'nyt_opinion|dark_museum':
     'NYT Opinion makes the argument as an editorial statement — 4 slides, shareable. Dark Museum makes the same argument through objects — educational, authoritative.',
   'dark_museum|nyt_opinion':
     'Dark Museum presents the argument through curated objects. NYT Opinion delivers it as a bold editorial statement.',
-  // Additional common pairs
-  'dark_museum|experience_capture':
-    'Dark Museum frames through authority and artifacts. Experience Capture frames through the reader\'s own experience.',
-  'experience_capture|dark_museum':
-    'Experience Capture connects through recognition. Dark Museum connects through reverence.',
   'dark_museum|sic_toile':
     'Dark Museum uses contemporary luxury aesthetics. SIC Toile uses historical institutional weight.',
   'sic_toile|dark_museum':
     'SIC Toile brings institutional gravitas. Dark Museum brings editorial sophistication.',
-  'nyt_opinion|experience_capture':
-    'NYT Opinion argues a position directly. Experience Capture lets the reader discover the position through their own frustration.',
-  'experience_capture|nyt_opinion':
-    'Experience Capture builds empathy first. NYT Opinion leads with the argument.',
-  'product_elevation|sic_toile':
-    'Product Elevation drives conversion with aspirational framing. SIC Toile drives prestige with institutional weight.',
+  'nyt_opinion|sic_toile':
+    'NYT Opinion argues a position in 4 sharp slides. SIC Toile builds institutional authority across 14.',
+  'sic_toile|nyt_opinion':
+    'SIC Toile presents heritage and permanence. NYT Opinion presents a bold editorial argument.',
 }
 
 function getTradeoffText(winner: ThemeId, alternative: ThemeId): string {
@@ -70,10 +43,7 @@ function getTradeoffText(winner: ThemeId, alternative: ThemeId): string {
 }
 
 // ─── Gate failure tooltip text ───────────────────────────────────────────────
-function getEliminatedReason(theme: ThemeId, gateResults: { name_archaeology: string; nyt_opinion: string }): string | null {
-  if (theme === 'name_archaeology' && gateResults.name_archaeology === 'failed') {
-    return "Brand name doesn't have mythological resonance."
-  }
+function getEliminatedReason(theme: ThemeId, gateResults: { nyt_opinion: string }): string | null {
   if (theme === 'nyt_opinion' && gateResults.nyt_opinion === 'failed') {
     return 'Requires a genuine argument — this brief reads as broadly agreeable.'
   }

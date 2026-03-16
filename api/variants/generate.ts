@@ -1,16 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'crypto'
-import { readFileSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const coverVariantsData = JSON.parse(
-  readFileSync(join(__dirname, '../_lib/data/cover_variants_data.json'), 'utf-8')
-) as { themes: Record<string, { variants: Record<string, unknown> }> }
+import { loadStyle } from '../_lib/pipeline/styleLoader.js'
 
 interface AngleDefinition {
+  angle_key: string
   angle_name: string
   angle_description: string
   composition_mode?: string
@@ -35,18 +29,29 @@ interface BriefPayload {
   content_notes?: string | null
 }
 
-function getCoverAngles(themeId: string): Array<AngleDefinition & { angle_key: string }> {
-  const themes = coverVariantsData.themes as Record<
-    string,
-    { variants: Record<string, AngleDefinition> }
-  >
-  const theme = themes[themeId]
-  if (!theme) throw new Error(`Unknown theme: ${themeId}`)
-
-  return Object.entries(theme.variants).map(([key, angle]) => ({
-    ...angle,
-    angle_key: key,
-  }))
+async function getCoverAngles(themeId: string): Promise<AngleDefinition[]> {
+  try {
+    const style = await loadStyle(themeId)
+    return style.angles.map((a) => ({
+      angle_key: a.key,
+      angle_name: a.name,
+      angle_description: a.description,
+      composition_mode: (a as Record<string, unknown>).composition_mode as string | undefined,
+      object_state_preference: (a as Record<string, unknown>).object_state_preference as string | undefined,
+      headline_structure: a.headline_structure,
+      headline_example: a.headline_example,
+      illustration_mode: (a as Record<string, unknown>).illustration_mode as string | undefined,
+      scene_domain: (a as Record<string, unknown>).scene_domain as string | undefined,
+      pov_preference: (a as Record<string, unknown>).pov_preference as string | undefined,
+      wit_layer: (a as Record<string, unknown>).wit_layer as string | undefined,
+      figure_type: (a as Record<string, unknown>).figure_type as string | undefined,
+      scene_rule: (a as Record<string, unknown>).scene_rule as string | undefined,
+      scene_preference: (a as Record<string, unknown>).scene_preference as string | undefined,
+      propagation_metadata: (a as Record<string, unknown>).propagation_metadata as Record<string, unknown> ?? {},
+    }))
+  } catch {
+    throw new Error(`Unknown theme: ${themeId}`)
+  }
 }
 
 function buildHeadline(angle: AngleDefinition, brief: BriefPayload): string {
@@ -75,7 +80,7 @@ function buildHeadline(angle: AngleDefinition, brief: BriefPayload): string {
 }
 
 function buildCoverPrompt(
-  angle: AngleDefinition & { angle_key: string },
+  angle: AngleDefinition,
   brief: BriefPayload,
   themeId: string,
 ): string {
@@ -104,7 +109,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing required fields: brief, theme_id' })
     }
 
-    const angles = getCoverAngles(theme_id)
+    const angles = await getCoverAngles(theme_id)
     const prompts = angles.map((angle) => buildCoverPrompt(angle, brief, theme_id))
 
     const results = await Promise.allSettled(
