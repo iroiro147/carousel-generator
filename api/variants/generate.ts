@@ -32,23 +32,28 @@ interface BriefPayload {
 async function getCoverAngles(themeId: string): Promise<AngleDefinition[]> {
   try {
     const style = await loadStyle(themeId)
-    return style.angles.map((a) => ({
-      angle_key: a.key,
-      angle_name: a.name,
-      angle_description: a.description,
-      composition_mode: (a as Record<string, unknown>).composition_mode as string | undefined,
-      object_state_preference: (a as Record<string, unknown>).object_state_preference as string | undefined,
-      headline_structure: a.headline_structure,
-      headline_example: a.headline_example,
-      illustration_mode: (a as Record<string, unknown>).illustration_mode as string | undefined,
-      scene_domain: (a as Record<string, unknown>).scene_domain as string | undefined,
-      pov_preference: (a as Record<string, unknown>).pov_preference as string | undefined,
-      wit_layer: (a as Record<string, unknown>).wit_layer as string | undefined,
-      figure_type: (a as Record<string, unknown>).figure_type as string | undefined,
-      scene_rule: (a as Record<string, unknown>).scene_rule as string | undefined,
-      scene_preference: (a as Record<string, unknown>).scene_preference as string | undefined,
-      propagation_metadata: (a as Record<string, unknown>).propagation_metadata as Record<string, unknown> ?? {},
-    }))
+    return style.angles.map((a) => {
+      // Pipeline AngleDefinition uses id/label/headline_seed;
+      // map to the local interface used by generate.ts
+      const ext = a as unknown as Record<string, unknown>
+      return {
+        angle_key: a.id,
+        angle_name: a.label,
+        angle_description: a.description,
+        composition_mode: ext.composition_mode as string | undefined,
+        object_state_preference: ext.object_state_preference as string | undefined,
+        headline_structure: a.headline_seed,
+        headline_example: ext.headline_example as string | undefined,
+        illustration_mode: ext.illustration_mode as string | undefined,
+        scene_domain: ext.scene_domain as string | undefined,
+        pov_preference: ext.pov_preference as string | undefined,
+        wit_layer: ext.wit_layer as string | undefined,
+        figure_type: ext.figure_type as string | undefined,
+        scene_rule: ext.scene_rule as string | undefined,
+        scene_preference: ext.scene_preference as string | undefined,
+        propagation_metadata: (ext.propagation_metadata as Record<string, unknown>) ?? {},
+      }
+    })
   } catch {
     throw new Error(`Unknown theme: ${themeId}`)
   }

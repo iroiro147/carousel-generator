@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
-import { buildImagePrompt } from '../_lib/images/promptBuilder.js'
+import { buildImagePrompt, type PromptParams } from '../_lib/images/promptBuilder.js'
 
 function chunk<T>(arr: T[], size: number): T[][] {
   const chunks: T[][] = []
@@ -22,9 +22,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing required fields: slides, theme_id' })
     }
 
-    const imageSlides = slides.filter(
-      (s: { content_type?: string; archetype: string }) =>
-        s.content_type !== 'text_only' && !TEXT_ONLY_ARCHETYPES.has(s.archetype),
+    const imageSlides = (slides as Record<string, unknown>[]).filter(
+      (s) =>
+        s.content_type !== 'text_only' && !TEXT_ONLY_ARCHETYPES.has(String(s.archetype ?? '')),
     )
 
     const batches = chunk(imageSlides, 5)
@@ -40,13 +40,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const batch = batches[batchIdx]
 
       const batchResults = await Promise.allSettled(
-        batch.map(async (slide: { slide_index: number; archetype: string; [key: string]: unknown }) => {
-          const prompt = buildImagePrompt({ ...slide, theme_id } as Parameters<typeof buildImagePrompt>[0])
+        batch.map(async (slide: Record<string, unknown>) => {
+          const prompt = buildImagePrompt({
+            theme_id,
+            archetype: String(slide.archetype ?? ''),
+            object_name: String(slide.object_name ?? ''),
+            object_state: String(slide.object_state ?? ''),
+            ...slide,
+          } as PromptParams)
           const imageBuffer = await generateImage(prompt, theme_id)
           const dataURI = bufferToDataURI(imageBuffer)
           return {
-            slide_index: slide.slide_index,
-            archetype: slide.archetype,
+            slide_index: Number(slide.slide_index ?? -1),
+            archetype: String(slide.archetype ?? 'unknown'),
             image_url: dataURI,
             prompt_used: prompt,
           }
@@ -58,10 +64,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           results.push(result.value)
         } else {
           const errMsg = result.reason instanceof Error ? result.reason.message : 'Generation failed'
-          const slideIdx = batch[batchResults.indexOf(result)]
+          const failedSlide = batch[batchResults.indexOf(result)] as Record<string, unknown> | undefined
           results.push({
-            slide_index: slideIdx?.slide_index ?? -1,
-            archetype: slideIdx?.archetype ?? 'unknown',
+            slide_index: Number(failedSlide?.slide_index ?? -1),
+            archetype: String(failedSlide?.archetype ?? 'unknown'),
             image_url: null,
             prompt_used: '',
             error: errMsg,

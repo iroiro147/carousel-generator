@@ -33,10 +33,12 @@ export async function callGPTImage(prompt: string): Promise<GeneratedImage> {
     response_format: 'b64_json',
   } as Parameters<OpenAI['images']['generate']>[0])
 
-  if (!response.data || response.data.length === 0) {
+  // The SDK returns a union including Stream; we always get ImagesResponse with b64_json
+  const data = (response as { data: Array<{ b64_json?: string }> }).data
+  if (!data || data.length === 0) {
     throw new Error('OpenAI returned no image data')
   }
-  const b64 = response.data[0].b64_json!
+  const b64 = data[0].b64_json!
   const buffer = Buffer.from(b64, 'base64')
 
   return { buffer, provider: 'openai_gpt_image', model: 'gpt-image-1.5' }
