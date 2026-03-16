@@ -2,7 +2,7 @@
 // Ported from design-ai 2/demo/lib/promptBuilder.ts buildImagePrompt()
 // Assembles the GPT-Image-1.5 prompt from the parsed visual decision.
 
-import type { VisualDecision, Tokens } from '../../api/_lib/pipeline/types.js'
+import type { VisualDecision, Tokens } from '../../pipeline/types.js'
 
 interface DarkMuseumArtifact {
   label: string

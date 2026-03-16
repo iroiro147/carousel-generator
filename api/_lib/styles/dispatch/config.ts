@@ -1,7 +1,7 @@
 // ─── Dispatch Style Pack (Stub) ──────────────────────────────────────────────
 // Placeholder for future Dispatch style. Not yet active.
 
-import type { StylePack, VisualDecision, ValidationResult, Tokens } from '../../api/_lib/pipeline/types.js'
+import type { StylePack, VisualDecision, ValidationResult, Tokens } from '../../pipeline/types.js'
 
 const dispatch: StylePack = {
   id: 'dispatch',

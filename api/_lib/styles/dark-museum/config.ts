@@ -4,7 +4,7 @@
 
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { extractTag, extractAllTags, extractBlock } from '../../api/_lib/pipeline/xmlParser.js'
+import { extractTag, extractAllTags, extractBlock } from '../../pipeline/xmlParser.js'
 import { buildStage2Prompt } from './stage2-template.js'
 import type {
   StylePack,
@@ -13,7 +13,7 @@ import type {
   AngleDefinition,
   SlideArchetype,
   Tokens,
-} from '../../api/_lib/pipeline/types.js'
+} from '../../pipeline/types.js'
 
 // ─── Load static assets ──────────────────────────────────────────────────────
 
