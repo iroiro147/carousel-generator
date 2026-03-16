@@ -2,9 +2,9 @@
 // Two-stage pipeline: Stage 1 (Gemini reasoning) → Stage 2 (image generation).
 //
 // Timeout budget (Architecture Decision #2):
-//   Stage 1: 8s per attempt, max 2 attempts (16s total)
-//   Stage 2: 35s
-//   Global backstop: 50s AbortController
+//   Stage 1: 15s per attempt, max 2 attempts (30s total)
+//   Stage 2: 45s
+//   Global backstop: 55s (within Vercel 60s maxDuration)
 //
 // ┌─ Stage 1 ─────────────────────────────────────────────────────────────┐
 // │ analyzeContent → parseVisualDecision → validateVisualDecision         │
@@ -28,10 +28,10 @@ import { generateImage, bufferToDataURI } from '../providers/index.js'
 import { logGeneration } from './generationLogger.js'
 import type { GenerationResult, GenerationError, VisualDecision } from './types.js'
 
-const STAGE1_TIMEOUT_MS = 8_000
+const STAGE1_TIMEOUT_MS = 15_000
 const STAGE1_MAX_ATTEMPTS = 2
-const STAGE2_TIMEOUT_MS = 35_000
-const GLOBAL_TIMEOUT_MS = 50_000
+const STAGE2_TIMEOUT_MS = 45_000
+const GLOBAL_TIMEOUT_MS = 55_000
 
 interface RunParams {
   brief: {
