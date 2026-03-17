@@ -8,16 +8,20 @@ const THEME_NAMES: Record<ThemeId, string> = {
   dark_museum: 'Dark Museum',
   nyt_opinion: 'NYT Opinion',
   sic_toile: 'SIC Toile',
+  radial_departure: 'Radial Departure',
+  editorial_minimal: 'Editorial Minimal',
 }
 
 const THEME_DESCRIPTIONS: Record<ThemeId, string> = {
   dark_museum: 'Near-black canvas, museum lighting, editorial luxury',
   nyt_opinion: 'Bold editorial statement, 4-slide argument format',
   sic_toile: 'Institutional heritage, copper-plate engraving aesthetic',
+  radial_departure: 'Zoom-burst motion photography, dynamic palette, 7 slides',
+  editorial_minimal: 'Swiss editorial typography, 7 slide types, conditional photo',
 }
 
 const ALL_THEMES: ThemeId[] = [
-  'dark_museum', 'nyt_opinion', 'sic_toile',
+  'dark_museum', 'nyt_opinion', 'sic_toile', 'radial_departure', 'editorial_minimal',
 ]
 
 // ─── Tradeoff text for winner/alternative pairs ──────────────────────────────
@@ -34,6 +38,34 @@ const TRADEOFFS: Record<string, string> = {
     'NYT Opinion argues a position in 4 sharp slides. SIC Toile builds institutional authority across 14.',
   'sic_toile|nyt_opinion':
     'SIC Toile presents heritage and permanence. NYT Opinion presents a bold editorial argument.',
+  'radial_departure|dark_museum':
+    'Radial Departure creates immersive motion energy. Dark Museum builds through curated objects under spotlight.',
+  'dark_museum|radial_departure':
+    'Dark Museum offers editorial luxury. Radial Departure offers kinetic momentum.',
+  'radial_departure|editorial_minimal':
+    'Radial Departure leads with a single powerful photograph. Editorial Minimal leads with typographic variety.',
+  'editorial_minimal|radial_departure':
+    'Editorial Minimal uses Swiss editorial restraint. Radial Departure uses dynamic motion photography.',
+  'editorial_minimal|dark_museum':
+    'Editorial Minimal achieves clarity through type hierarchy. Dark Museum achieves authority through objects.',
+  'dark_museum|editorial_minimal':
+    'Dark Museum brings photorealistic luxury. Editorial Minimal brings typographic precision.',
+  'editorial_minimal|nyt_opinion':
+    'Editorial Minimal offers 7 varied slide types. NYT Opinion delivers a sharp 4-slide argument.',
+  'nyt_opinion|editorial_minimal':
+    'NYT Opinion argues in bold editorial strokes. Editorial Minimal presents with quiet typographic authority.',
+  'radial_departure|nyt_opinion':
+    'Radial Departure immerses the viewer in motion. NYT Opinion confronts the viewer with argument.',
+  'nyt_opinion|radial_departure':
+    'NYT Opinion delivers a sharp editorial statement. Radial Departure delivers kinetic visual energy.',
+  'radial_departure|sic_toile':
+    'Radial Departure is momentum and velocity. SIC Toile is permanence and heritage.',
+  'sic_toile|radial_departure':
+    'SIC Toile builds institutional weight. Radial Departure builds forward momentum.',
+  'editorial_minimal|sic_toile':
+    'Editorial Minimal uses modern Swiss typography. SIC Toile uses historical engraving aesthetics.',
+  'sic_toile|editorial_minimal':
+    'SIC Toile brings allegorical depth. Editorial Minimal brings clean editorial clarity.',
 }
 
 function getTradeoffText(winner: ThemeId, alternative: ThemeId): string {
@@ -209,7 +241,7 @@ export default function ThemeConfirmation() {
         {/* ── Manual theme selection ─────────────────────────────────── */}
         <div className="pt-2">
           <p className="text-sm text-muted mb-3">Or choose a different theme</p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             {ALL_THEMES.map((themeId) => {
               const isEliminated = eliminated_themes.includes(themeId)
               const isRecommended = themeId === recommended_theme

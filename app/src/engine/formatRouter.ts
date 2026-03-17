@@ -13,6 +13,26 @@ export function routeToFormat(themeId: ThemeId): FormatConfig {
       content_generation: 'quote_primary',
     }
   }
+  if (themeId === 'radial_departure') {
+    return {
+      format: 'short_form',
+      slide_count_range: { min: 7, max: 7 },
+      archetype_system: 'standard_archetypes',
+      cover_variants_mode: 'composition_angle_variants',
+      image_generation: 'cover_only',
+      content_generation: 'object_primary',
+    }
+  }
+  if (themeId === 'editorial_minimal') {
+    return {
+      format: 'short_form',
+      slide_count_range: { min: 5, max: 7 },
+      archetype_system: 'standard_archetypes',
+      cover_variants_mode: 'composition_angle_variants',
+      image_generation: 'cover_only',
+      content_generation: 'quote_primary',
+    }
+  }
   return {
     format: 'long_form',
     slide_count_range: { min: 14, max: 14 },

@@ -2,6 +2,8 @@ export type ThemeId =
   | 'dark_museum'
   | 'nyt_opinion'
   | 'sic_toile'
+  | 'radial_departure'
+  | 'editorial_minimal'
 
 export type CarouselFormat = 'short_form' | 'long_form'
 

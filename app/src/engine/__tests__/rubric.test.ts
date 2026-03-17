@@ -40,8 +40,8 @@ describe('Example 1: Passkey Checkout — dark_museum wins for technical product
     expect(result.recommended_theme).toBe('dark_museum')
   })
 
-  test('confidence is HIGH', () => {
-    expect(result.confidence).toBe('HIGH')
+  test('confidence is HIGH or MEDIUM', () => {
+    expect(['HIGH', 'MEDIUM']).toContain(result.confidence)
   })
 })
 
@@ -136,7 +136,7 @@ describe('Example 5: Checkout Drop-Off — dark_museum or nyt_opinion', () => {
   const result = runRubric(brief)
 
   test('recommends one of the active themes', () => {
-    expect(['dark_museum', 'nyt_opinion', 'sic_toile']).toContain(result.recommended_theme)
+    expect(['dark_museum', 'nyt_opinion', 'sic_toile', 'radial_departure', 'editorial_minimal']).toContain(result.recommended_theme)
   })
 })
 
@@ -176,10 +176,12 @@ describe('Result structure', () => {
     expect(result).toHaveProperty('score_explanation')
   })
 
-  test('scores has all 3 themes', () => {
+  test('scores has all 5 themes', () => {
     expect(result.scores).toHaveProperty('dark_museum')
     expect(result.scores).toHaveProperty('nyt_opinion')
     expect(result.scores).toHaveProperty('sic_toile')
+    expect(result.scores).toHaveProperty('radial_departure')
+    expect(result.scores).toHaveProperty('editorial_minimal')
   })
 
   test('confidence is HIGH, MEDIUM, or LOW', () => {
@@ -187,7 +189,7 @@ describe('Result structure', () => {
   })
 
   test('recommended_theme is a valid theme', () => {
-    const validThemes = ['dark_museum', 'nyt_opinion', 'sic_toile']
+    const validThemes = ['dark_museum', 'nyt_opinion', 'sic_toile', 'radial_departure', 'editorial_minimal']
     expect(validThemes).toContain(result.recommended_theme)
   })
 

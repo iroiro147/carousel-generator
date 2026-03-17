@@ -61,6 +61,8 @@ export interface RubricScores {
   dark_museum: number
   nyt_opinion: number
   sic_toile: number
+  radial_departure: number
+  editorial_minimal: number
 }
 
 export type ConfidenceLevel = 'HIGH' | 'MEDIUM' | 'LOW'

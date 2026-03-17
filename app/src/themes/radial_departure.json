@@ -1,0 +1,121 @@
+{
+  "name": "Radial Departure",
+  "version": "1.0",
+  "canvas": {
+    "width": 1080,
+    "height": 1350,
+    "padding_left_pct": 7,
+    "padding_right_pct": 7,
+    "safe_zone_px": 76
+  },
+  "_format_note": "7 slides per carousel. Cover-only image generation — one zoom-burst photograph, CSS-cropped for content slides.",
+  "slide_count_range": {"min": 7, "max": 7},
+  "color_system": {
+    "_philosophy": "Dynamic palette derived from content analysis. Stage 1 selects 5 colors: primary_dark, midtone, burst_highlight, text_accent, flat_color_bg. Palette is unique per carousel.",
+    "constants": {
+      "text_primary": "#FFFFFF",
+      "text_secondary": "#CCCCCC",
+      "overlay_max_opacity": 0.4
+    },
+    "palette_structure": {
+      "primary_dark": "Deep background, vignette edges",
+      "midtone": "Content slide backgrounds, UI elements",
+      "burst_highlight": "Radial light rays, motion streaks (never #FFFFFF)",
+      "text_accent": "Headlines on dark backgrounds",
+      "flat_color_bg": "Data/narrative slide backgrounds"
+    }
+  },
+  "typography": {
+    "headline": {
+      "font_family": "DM Sans",
+      "weight": 800,
+      "size_range_px": "64–96",
+      "line_height": "1.05em",
+      "case": "UPPERCASE",
+      "color": "text_accent from palette"
+    },
+    "body": {
+      "font_family": "DM Sans",
+      "weight": 300,
+      "size_range_px": "28–36",
+      "line_height": "1.4em",
+      "color": "#FFFFFF"
+    },
+    "data_label": {
+      "font_family": "DM Sans",
+      "weight": 800,
+      "size_range_px": "120–160",
+      "color": "burst_highlight from palette"
+    }
+  },
+  "slide_structure": {
+    "cover": {
+      "image": "full_bleed",
+      "overlay": "radial gradient from center, opacity from Stage 1",
+      "text_position": "bottom-left",
+      "elements": ["headline", "subtitle", "brand"]
+    },
+    "content_claim": {
+      "image": "right_strip_28pct",
+      "text_position": "left",
+      "elements": ["claim_text", "supporting_detail"]
+    },
+    "content_data": {
+      "image": "none",
+      "background": "flat_color_bg",
+      "text_position": "center",
+      "elements": ["large_number", "context_label"]
+    },
+    "content_narrative": {
+      "image": "none",
+      "background": "midtone",
+      "text_position": "left",
+      "elements": ["narrative_text"]
+    },
+    "content_quote": {
+      "image": "corner_accent_22pct",
+      "text_position": "left",
+      "elements": ["quote_text", "attribution"]
+    },
+    "content_claim_2": {
+      "image": "right_strip_28pct",
+      "text_position": "left",
+      "elements": ["claim_text", "supporting_detail"]
+    },
+    "end_cta": {
+      "image": "vignette",
+      "text_position": "center",
+      "elements": ["cta_headline", "brand", "url"]
+    }
+  },
+  "narrative_arc": {
+    "slide_1": {"archetype": "Cover", "purpose": "Immersive zoom-burst entry point"},
+    "slide_2": {"archetype": "Content Claim", "purpose": "Primary argument with motion strip"},
+    "slide_3": {"archetype": "Content Data", "purpose": "Key statistic on flat color"},
+    "slide_4": {"archetype": "Content Narrative", "purpose": "Story development"},
+    "slide_5": {"archetype": "Content Quote", "purpose": "Expert or source quote"},
+    "slide_6": {"archetype": "Content Claim 2", "purpose": "Secondary argument"},
+    "slide_7": {"archetype": "End CTA", "purpose": "Call to action with vignette"}
+  },
+  "image_system": {
+    "_philosophy": "One zoom-burst photograph per carousel from first-person POV. Motion radial blur emanating from a vanishing point. Content slides reuse the cover image via CSS crops.",
+    "generation": "cover-only",
+    "crop_specs": {
+      "cover": "full_bleed",
+      "content_claim": "right_strip, 28% width",
+      "content_quote": "corner_accent, 22% width",
+      "content_data": "none",
+      "content_narrative": "none",
+      "end_cta": "full_bleed with vignette overlay"
+    }
+  },
+  "quality_checklist": [
+    "Does the zoom-burst photo have a clear vanishing point?",
+    "Is burst_highlight NOT pure white (#FFFFFF)?",
+    "Is overlay_opacity between 0.0 and 0.4?",
+    "Do all 5 palette colors have valid hex values?",
+    "Are CSS crops rendering correctly for content slides?",
+    "Is the POV description specific enough to generate a coherent scene?",
+    "Does the dynamic palette create sufficient contrast for text legibility?"
+  ]
+}

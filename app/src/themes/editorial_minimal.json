@@ -1,0 +1,149 @@
+{
+  "name": "Editorial Minimal",
+  "version": "1.0",
+  "canvas": {
+    "width": 1080,
+    "height": 1350,
+    "padding_left_pct": 7,
+    "padding_right_pct": 7,
+    "safe_zone_px": 76
+  },
+  "_format_note": "5–7 slides per carousel. Conditional image generation — only generates a photo if the recommended sequence includes photo-bearing slide types (D, E, F, G).",
+  "slide_count_range": {"min": 5, "max": 7},
+  "color_system": {
+    "_philosophy": "Seven distinct slide types, each with its own background color. Accent color #EEFF88 appears ONLY on Type F slides, at most once per carousel.",
+    "slide_type_colors": {
+      "A_minimal_white": "#FFFFFF",
+      "B_dark_mode": "#1A1A1A",
+      "C_flat_blue": "#1669D3",
+      "D_card_frame": "#EBEBEB",
+      "E_split_editorial_header": "#3D3D28",
+      "F_full_bleed_overlay": "photo with dark overlay",
+      "G_photo_overlay": "photo with bottom gradient"
+    },
+    "accent": "#EEFF88",
+    "accent_rule": "May ONLY appear on Type F, and on at most ONE slide per carousel"
+  },
+  "typography": {
+    "sans": {
+      "font_family": "DM Sans",
+      "weights": [300, 400, 800],
+      "role": "Primary — headlines, body, labels"
+    },
+    "serif": {
+      "font_family": "EB Garamond",
+      "weight": 400,
+      "role": "Display — Type E and G headlines"
+    },
+    "title": {
+      "sans_size_px": 76,
+      "serif_size_px": 84,
+      "bold_overlay_size_px": 96,
+      "card_frame_size_px": 52,
+      "line_height": "1.05em"
+    },
+    "subtitle": {
+      "size_px": 38,
+      "line_height": "1.35em"
+    },
+    "byline": {
+      "size_px": 30,
+      "line_height": "1.3em",
+      "style": "italic",
+      "case": "lowercase"
+    },
+    "url": {
+      "size_px": 19,
+      "case": "UPPERCASE",
+      "letter_spacing": "0.12em"
+    }
+  },
+  "slide_types": {
+    "A": {
+      "name": "Minimal White",
+      "background": "#FFFFFF",
+      "has_photo": false,
+      "title_font": "DM Sans 300",
+      "title_color": "#2A2A2A",
+      "alignment": "left"
+    },
+    "B": {
+      "name": "Dark Mode",
+      "background": "#1A1A1A",
+      "has_photo": false,
+      "title_font": "DM Sans 300",
+      "title_color": "#FFFFFF",
+      "alignment": "left"
+    },
+    "C": {
+      "name": "Flat Blue",
+      "background": "#1669D3",
+      "has_photo": false,
+      "title_font": "DM Sans 300",
+      "title_color": "#FFFFFF",
+      "alignment": "left"
+    },
+    "D": {
+      "name": "Card Frame",
+      "background": "#EBEBEB",
+      "has_photo": true,
+      "photo_treatment": "contained_card",
+      "title_font": "DM Sans 400",
+      "title_color": "#2A2A2A",
+      "alignment": "center"
+    },
+    "E": {
+      "name": "Split Editorial",
+      "has_photo": true,
+      "photo_treatment": "bottom_52pct",
+      "header_color": "#3D3D28",
+      "title_font": "EB Garamond 400",
+      "title_color": "#FFFFFF",
+      "alignment": "center"
+    },
+    "F": {
+      "name": "Full-Bleed Bold",
+      "has_photo": true,
+      "photo_treatment": "full_bleed_overlay",
+      "overlay_opacity": 0.35,
+      "title_font": "DM Sans 800",
+      "title_color": "#EEFF88",
+      "title_case": "UPPERCASE",
+      "alignment": "center",
+      "no_subtitle": true
+    },
+    "G": {
+      "name": "Photo Overlay",
+      "has_photo": true,
+      "photo_treatment": "full_bleed_gradient",
+      "gradient": "transparent 0%, transparent 55%, rgba(26,26,26,0.7) 70%, #1A1A1A 82%",
+      "title_font": "EB Garamond 400",
+      "title_color": "#FFFFFF",
+      "alignment": "left"
+    }
+  },
+  "narrative_arc": {
+    "_note": "Stage 1 recommends a 5-7 slide sequence from types A-G based on emotional register analysis.",
+    "emotional_registers": {
+      "contemplative": "G → A → B → D → E",
+      "analytical": "F → C → A → D → B",
+      "travel": "F → G → A → D → E",
+      "urgent": "F → C → B → A → E"
+    }
+  },
+  "image_system": {
+    "_philosophy": "Conditional — only generates a zoom-burst photograph if the recommended sequence includes photo-bearing types (D, E, F, G). Text-only sequences (A, B, C only) skip image generation entirely.",
+    "generation": "conditional",
+    "photo_types": ["D", "E", "F", "G"],
+    "text_only_types": ["A", "B", "C"]
+  },
+  "quality_checklist": [
+    "Is the recommended sequence 5-7 unique slide type letters from A-G?",
+    "Does #EEFF88 accent appear ONLY on Type F?",
+    "Is there at most ONE Type F slide per carousel?",
+    "Are title/subtitle/byline all non-empty?",
+    "If photo_needed is false, are there zero image generation API calls?",
+    "Does the emotional register classification match the content tone?",
+    "Is each slide type rendered with its correct background and typography?"
+  ]
+}

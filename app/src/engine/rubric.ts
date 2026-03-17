@@ -16,7 +16,7 @@ export interface RubricResult {
 type ThemeScoreMap = Partial<Record<ThemeId, number>>
 
 const ALL_THEMES: ThemeId[] = [
-  'dark_museum', 'nyt_opinion', 'sic_toile',
+  'dark_museum', 'nyt_opinion', 'sic_toile', 'radial_departure', 'editorial_minimal',
 ]
 
 // ─── Tension language detection ───────────────────────────────────────────
@@ -326,6 +326,8 @@ function generateExplanation(winner: ThemeId, brief: Brief): string {
     dark_museum: 'Dark Museum',
     nyt_opinion: 'NYT Opinion',
     sic_toile: 'SIC Toile',
+    radial_departure: 'Radial Departure',
+    editorial_minimal: 'Editorial Minimal',
   }
 
   const audienceLabels: Record<string, string> = {
@@ -362,6 +364,8 @@ export function runRubric(brief: Brief): RubricResult {
     dark_museum: 0,
     nyt_opinion: 0,
     sic_toile: 0,
+    radial_departure: 0,
+    editorial_minimal: 0,
   }
 
   const eliminated: Set<ThemeId> = new Set()
