@@ -7,17 +7,35 @@ export function getThemeColors(themeId: ThemeId): Record<string, string> {
   return theme.colors as Record<string, string>
 }
 
-// ─── Short-form: dynamic — color derived from illustration (async, backend) ────
-export async function deriveSignatureColor(illustrationUrl: string): Promise<{
+// ─── Color derivation response shape ──────────────────────────────────────────
+
+export interface ColorDerivationResult {
   signature_color: string
-  tonal_variant: string
+  tone_a: string
+  tone_b: string
+  alternation_range: 'wide' | 'medium' | 'narrow' | 'minimal'
+  derivation_path: 'chromatic_primary' | 'chromatic_secondary' | 'material_neutral' | 'fallback'
   passes_wcag_aa: boolean
   contrast_ratio: number
-}> {
+  sentiment: string
+  reasoning: string
+}
+
+// ─── Short-form: dynamic — color derived from cover image (async, backend) ────
+
+export async function deriveSignatureColor(params: {
+  imageBase64: string
+  topic: string
+  claim: string
+}): Promise<ColorDerivationResult> {
   const response = await fetch('/api/color/derive', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ illustration_url: illustrationUrl }),
+    body: JSON.stringify({
+      image_base64: params.imageBase64,
+      topic: params.topic,
+      claim: params.claim,
+    }),
   })
   return response.json()
 }

@@ -14,6 +14,11 @@ export interface Carousel {
   signature_color?: string | null
   signature_color_source?: 'derived' | 'manual' | 'fallback' | null
   tonal_variant?: string | null
+  tone_a?: string | null
+  tone_b?: string | null
+  alternation_range?: 'wide' | 'medium' | 'narrow' | 'minimal' | null
+  color_derivation_path?: string | null
+  color_sentiment?: string | null
 
   slides: Slide[]
   cover_variants?: CoverVariant[]

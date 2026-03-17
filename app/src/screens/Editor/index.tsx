@@ -1216,13 +1216,21 @@ function DesignTab({
         currentSlide.headline,
       )
 
-      // Derive new signature color
+      // Derive new colors via 8-step pipeline
       let newColor = currentSlide.signature_color ?? fallbackSig
+      let newToneA = carousel.tone_a ?? newColor
+      let newToneB = carousel.tone_b ?? newColor
       try {
-        const colorResult = await deriveSignatureColor(result.image_url)
+        const colorResult = await deriveSignatureColor({
+          imageBase64: result.image_url,
+          topic: brief.topic,
+          claim: carousel.argument?.thesis ?? brief.topic,
+        })
         newColor = colorResult.signature_color
+        newToneA = colorResult.tone_a
+        newToneB = colorResult.tone_b
       } catch {
-        // Keep existing color if derivation fails
+        // Keep existing colors if derivation fails
       }
 
       // Update cover slide
@@ -1231,13 +1239,20 @@ function DesignTab({
         signature_color: newColor,
       })
 
-      // Update all slides with new signature color
+      // Update all slides with new derived tone colors
       const updatedSlides = carousel.slides.map((s, i) => ({
         ...s,
-        signature_color: newColor,
+        // Cover keeps signature color, text slides get alternating tones
+        signature_color: i === 0 ? newColor : (s.slide_index % 2 === 0 ? newToneA : newToneB),
         ...(i === selectedSlideIndex ? { illustration_url: result.image_url } : {}),
       }))
-      setCarousel({ ...carousel, slides: updatedSlides, signature_color: newColor })
+      setCarousel({
+        ...carousel,
+        slides: updatedSlides,
+        signature_color: newColor,
+        tone_a: newToneA,
+        tone_b: newToneB,
+      })
     } catch (err) {
       setRegenError(err instanceof Error ? err.message : 'Cover regeneration failed')
     } finally {

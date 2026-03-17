@@ -2,12 +2,12 @@ import type { Brief } from '../types/brief'
 import type { Carousel, Slide } from '../types/carousel'
 import type { CoverVariant } from '../types/variant'
 import { deriveSignatureColor } from '../engine/colorSystem'
+import type { ColorDerivationResult } from '../engine/colorSystem'
 import { getTheme } from '../themes'
 
 // NYT Opinion theme fallback colors for when color derivation fails
 const nytTheme = getTheme('nyt_opinion') as Record<string, any>
 const NYT_FALLBACK_SIG = nytTheme.color_system?.constants?.fallback_signature ?? '#C2185B'
-const NYT_FALLBACK_TONAL = '#5A8FD1' // tonal variant of fallback — no equivalent in theme yet
 
 // ─── Slide builders ─────────────────────────────────────────────────────────
 
@@ -22,7 +22,8 @@ function buildNYTCoverSlide(
     slide_index: 1,
     archetype: 'cover_hook',
     content_type: 'illustration',
-    illustration_url: variant.cover_slide.illustration_url ?? null,
+    // BUG FIX: Use thumbnail_url (where base64 is actually stored), not illustration_url
+    illustration_url: variant.cover_slide.thumbnail_url ?? null,
     illustration_mode: variant.cover_slide.illustration_mode ?? null,
     headline: variant.cover_slide.headline,
     headline_size: 76,
@@ -39,6 +40,8 @@ function buildNYTQuoteSlide(
   totalSlides: number,
   signatureColor: string,
   brandName: string,
+  toneA: string,
+  toneB: string,
 ): Slide {
   const quoteText = quoteContent.quote_text ?? ''
 
@@ -50,6 +53,10 @@ function buildNYTQuoteSlide(
         ? 'landing'
         : 'evidence'
 
+  // Step 8: Assign tone based on slide position
+  // Even text slides (2, 4, 6, 8, 10) → Tone A, Odd text slides (3, 5, 7, 9) → Tone B
+  const backgroundColor = slideIndex % 2 === 0 ? toneA : toneB
+
   return {
     slide_id: crypto.randomUUID(),
     carousel_id: carouselId,
@@ -59,7 +66,7 @@ function buildNYTQuoteSlide(
     quote_text: quoteText,
     quote_word_count: quoteText.split(/\s+/).filter(Boolean).length,
     quote_rhetorical_structure: quoteContent.rhetorical_structure_used ?? null,
-    signature_color: signatureColor,
+    signature_color: backgroundColor,
     headline: '',
     headline_size: 0,
     byline: `— ${brandName}`,
@@ -110,20 +117,33 @@ export async function assembleShortFormCarousel(
     slide_count: number
   }
 
-  // Step 2: Derive signature color from selected variant's illustration
-  const illustrationUrl = selectedVariant.cover_slide.illustration_url
+  // Step 2: Derive colors from cover illustration via 8-step pipeline
+  // BUG FIX: Use thumbnail_url (where base64 is actually stored), not illustration_url
+  const imageBase64 = selectedVariant.cover_slide.thumbnail_url
   let signatureColor = NYT_FALLBACK_SIG
-  let tonalVariant = NYT_FALLBACK_TONAL
+  let toneA = '#E8D5D0'   // Fallback Tone A (soft warm)
+  let toneB = '#C2785B'   // Fallback Tone B (bolder warm)
   let colorSource: 'derived' | 'fallback' = 'fallback'
+  let alternationRange: 'wide' | 'medium' | 'narrow' | 'minimal' = 'medium'
+  let derivationPath = 'fallback'
+  let colorSentiment = 'standard'
 
-  if (illustrationUrl) {
+  if (imageBase64) {
     try {
-      const colorData = await deriveSignatureColor(illustrationUrl)
+      const colorData: ColorDerivationResult = await deriveSignatureColor({
+        imageBase64,
+        topic: brief.topic,
+        claim: argument?.thesis ?? brief.topic,
+      })
       signatureColor = colorData.signature_color
-      tonalVariant = colorData.tonal_variant
-      colorSource = 'derived'
+      toneA = colorData.tone_a
+      toneB = colorData.tone_b
+      alternationRange = colorData.alternation_range
+      derivationPath = colorData.derivation_path
+      colorSentiment = colorData.sentiment
+      colorSource = derivationPath === 'fallback' ? 'fallback' : 'derived'
     } catch {
-      // Keep fallback colors
+      // Keep fallback colors — never crash carousel assembly
     }
   }
 
@@ -138,7 +158,7 @@ export async function assembleShortFormCarousel(
   const slides: Slide[] = [
     // Slide 1: Cover with illustration
     buildNYTCoverSlide(carouselId, selectedVariant, signatureColor),
-    // Slides 2–N: Quote cards
+    // Slides 2–N: Quote cards with alternating tone backgrounds
     ...quoteSlides.map((quote, i) =>
       buildNYTQuoteSlide(
         carouselId,
@@ -147,6 +167,8 @@ export async function assembleShortFormCarousel(
         slideCount,
         signatureColor,
         brief.brand_name ?? brief.topic,
+        toneA,
+        toneB,
       ),
     ),
   ]
@@ -172,7 +194,11 @@ export async function assembleShortFormCarousel(
     },
     signature_color: signatureColor,
     signature_color_source: colorSource,
-    tonal_variant: tonalVariant,
+    tone_a: toneA,
+    tone_b: toneB,
+    alternation_range: alternationRange,
+    color_derivation_path: derivationPath,
+    color_sentiment: colorSentiment,
   }
 
   return carousel

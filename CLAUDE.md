@@ -62,7 +62,7 @@ Vercel handles API functions automatically in production.
 | POST | /api/variants/generate | Generate batch cover variants (all themes via pipeline) |
 | POST | /api/feedback/submit | Submit thumbs up/down feedback on a variant |
 | GET | /api/styles/angles?id={themeId} | Get angle definitions for a style pack |
-| POST | /api/color/derive | Derive brand color (stub) |
+| POST | /api/color/derive | NYT 8-step color derivation (Gemini Flash vision → HSL tone math) |
 
 ## Provider Mapping
 
