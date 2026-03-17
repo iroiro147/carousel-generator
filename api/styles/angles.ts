@@ -16,11 +16,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const stylePack = await loadStyle(styleId)
+
+    // Map style pack angle shape (id, label, description, headline_seed)
+    // to client AngleDefinition shape (angle_key, angle_name, etc.)
+    const mappedAngles = stylePack.angles.map((a: Record<string, unknown>) => ({
+      angle_key: a.id,
+      angle_name: a.label,
+      angle_description: a.description,
+      headline_structure: a.headline_seed,
+      headline_example: a.headline_example ?? null,
+      composition_mode: a.composition_mode ?? 'centered',
+      object_state_preference: a.object_state_preference ?? null,
+      object_selection_rule: a.object_selection_rule ?? null,
+      rhetorical_register: a.rhetorical_register ?? null,
+      illustration_mode: a.illustration_mode ?? null,
+      illustration_rule: a.illustration_rule ?? null,
+      scene_domain: a.scene_domain ?? null,
+      pov_preference: a.pov_preference ?? null,
+      scene_preference: a.scene_preference ?? null,
+      propagation_metadata: a.propagation_metadata ?? {},
+    }))
+
     return res.json({
       style_id: stylePack.id,
       style_name: stylePack.name,
       status: stylePack.status,
-      angles: stylePack.angles,
+      angles: mappedAngles,
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
