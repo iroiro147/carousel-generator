@@ -1,6 +1,12 @@
+// ─── Batch Body Slide Image Generation ──────────────────────────────────────
+// POST /api/images/generate-carousel
+// Routes through the style pack system (no more legacy promptBuilder switch-case).
+// Generates body slide images in batches of 5 with rate-limit delays.
+
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
-import { buildImagePrompt, type PromptParams } from '../_lib/images/promptBuilder.js'
+import { loadStyle } from '../_lib/pipeline/styleLoader.js'
+import type { BodySlideParams } from '../_lib/pipeline/types.js'
 
 function chunk<T>(arr: T[], size: number): T[][] {
   const chunks: T[][] = []
@@ -22,6 +28,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing required fields: slides, theme_id' })
     }
 
+    const stylePack = await loadStyle(theme_id)
+
+    if (!stylePack.buildBodySlidePrompt) {
+      return res.json({
+        images: [],
+        skipped: `Style pack "${theme_id}" does not support per-slide body image generation`,
+      })
+    }
+
     const imageSlides = (slides as Record<string, unknown>[]).filter(
       (s) =>
         s.content_type !== 'text_only' && !TEXT_ONLY_ARCHETYPES.has(String(s.archetype ?? '')),
@@ -41,13 +56,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const batchResults = await Promise.allSettled(
         batch.map(async (slide: Record<string, unknown>) => {
-          const prompt = buildImagePrompt({
-            theme_id,
+          const params: BodySlideParams = {
             archetype: String(slide.archetype ?? ''),
             object_name: String(slide.object_name ?? ''),
             object_state: String(slide.object_state ?? ''),
-            ...slide,
-          } as PromptParams)
+            object_domain: slide.object_domain as string | undefined,
+            brief_context: slide.brief_context as string | undefined,
+            illustration_mode: slide.illustration_mode as string | undefined,
+            emotional_register: slide.emotional_register as string | undefined,
+            dominant_hue: slide.dominant_hue as string | undefined,
+            scene_description: slide.scene_description as string | undefined,
+            figure_count: slide.figure_count as number | undefined,
+            architectural_elements: slide.architectural_elements as string | undefined,
+          }
+
+          const prompt = stylePack.buildBodySlidePrompt!(params)
           const imageBuffer = await generateImage(prompt, theme_id)
           const dataURI = bufferToDataURI(imageBuffer)
           return {

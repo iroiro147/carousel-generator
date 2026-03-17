@@ -13,6 +13,7 @@ import type {
   AngleDefinition,
   SlideArchetype,
   Tokens,
+  BodySlideParams,
 } from '../../pipeline/types.js'
 
 // ─── Load static assets ──────────────────────────────────────────────────────
@@ -135,6 +136,31 @@ function isValidHex(hex: string): boolean {
 
 // ─── Style Pack Export ──────────────────────────────────────────────────────
 
+// ─── Body Slide Prompt Builder ───────────────────────────────────────────────
+// NYT is cover-only, but provide a body prompt builder for safety.
+// Migrated from legacy api/_lib/images/promptBuilder.ts buildNYTOpinionPrompt().
+
+function buildBodySlidePrompt(params: BodySlideParams): string {
+  const mode = params.illustration_mode ?? 'editorial_cartoon'
+  const dominantHue = params.dominant_hue ?? 'warm red-orange'
+
+  switch (mode) {
+    case 'editorial_cartoon':
+      return `Flat vector editorial illustration of ${params.object_name} as a commentary — bold saturated colors in a limited palette of 2-3 colors, clean confident outlines with no gradients, flat color fills only, mid-century editorial illustration aesthetic — Ben Shahn meets Push Pin Studios, centered scene composition, white or light background, ${dominantHue} as the primary color occupying 60-70% of the image area, black outlines throughout, no photographic elements, no gradients, no shadows — pure flat vector aesthetic`
+
+    case 'fine_art_expressive': {
+      const emotion = params.emotional_register ?? 'haunted'
+      return `Drypoint etching of a figure contemplating ${params.object_name} — ${emotion} emotional register, heavy texture throughout from drypoint burr, figure partially visible in shadow, muted palette dominated by ${dominantHue}, atmospheric and expressive rather than precise, somber mood, the mark-making is the emotional content, museum-quality fine art print aesthetic`
+    }
+
+    case 'conceptual_photography':
+      return `Studio chiaroscuro photograph of ${params.object_name} as symbolic object — single dramatic light source from upper left, isolated against pure black background, strong specular highlight on edges, cinematic and slightly uncomfortable register, photorealistic, high material quality surface detail`
+
+    default:
+      return `Flat vector editorial illustration of ${params.object_name}, bold colors, clean outlines, editorial aesthetic, white background`
+  }
+}
+
 const nytOpinion: StylePack = {
   id: 'nyt_opinion',
   name: 'NYT Opinion',
@@ -158,6 +184,7 @@ const nytOpinion: StylePack = {
   parseVisualDecision,
   validateVisualDecision,
   buildStage2Prompt,
+  buildBodySlidePrompt,
 
   tokens,
 }

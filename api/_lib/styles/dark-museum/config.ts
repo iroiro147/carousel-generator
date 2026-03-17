@@ -13,6 +13,7 @@ import type {
   AngleDefinition,
   SlideArchetype,
   Tokens,
+  BodySlideParams,
 } from '../../pipeline/types.js'
 
 // ─── Load static assets ──────────────────────────────────────────────────────
@@ -144,6 +145,37 @@ function validateVisualDecision(decision: VisualDecision): ValidationResult {
   return { valid: errors.length === 0, errors }
 }
 
+// ─── Body Slide Prompt Builder ───────────────────────────────────────────────
+// Direct prompt construction for per-slide body images (no Stage 1 reasoning).
+// Migrated from legacy api/_lib/images/promptBuilder.ts buildDarkMuseumPrompt().
+
+const STATE_DESCRIPTORS: Record<string, string> = {
+  gleaming: 'pristine and perfect with sharp specular highlights, precision-machined metal and glass',
+  weathered: 'aged with warm patina, subtle wear marks telling a history of use, brass showing through chrome',
+  degraded: 'failing with visible structural damage, hairline fractures in glass, oxide corrosion on exposed metal edges',
+  activated: 'powered on with internal illumination visible through translucent surfaces, operational state',
+  sealed: 'hermetically sealed, museum-grade preservation, no signs of human contact',
+}
+
+const MATERIAL_DESCRIPTORS: Record<string, string> = {
+  security_access: 'brushed aluminum housing, precision-machined edges, sapphire glass lens element',
+  time_decay: 'polished brass body, engraved measurement markings, leather-wrapped grip',
+  friction_chaos: 'industrial steel construction, oxide patina on exposed welds, cable bundle detail',
+  opportunity_opening: 'polished brass body, engraved measurement markings, leather-wrapped grip',
+  foundation_infrastructure: 'industrial steel construction, reinforced joints, cable bundle detail',
+  process_sequence: 'polished brass body, fine mechanical detail, precision gearing visible',
+  identity_proof: 'aged cream paper stock, letterpress typography visible, hand-written annotation',
+  balance_optimization: 'precision-machined brass and steel, calibrated measurement surfaces',
+  complexity_technology: 'brushed aluminum housing, micro-component arrays visible, sapphire glass',
+}
+
+function buildBodySlidePrompt(params: BodySlideParams): string {
+  const stateDesc = STATE_DESCRIPTORS[params.object_state] ?? params.object_state
+  const materialDesc = MATERIAL_DESCRIPTORS[params.object_domain ?? ''] ?? 'precision-machined metal and glass'
+
+  return `${params.object_name} rendered as a luxury museum specimen — ${materialDesc}, ${stateDesc}, suspended in absolute darkness with a single overhead spotlight creating a precise cone of warm light (3200K), deep shadow falling directly below, micro-scratches visible on surface, photorealistic 3D render, studio product photography quality, no background elements, object positioned center-canvas, object fills 70% of frame, ultra-high detail, 8K render quality`
+}
+
 // ─── Style Pack Export ───────────────────────────────────────────────────────
 
 const darkMuseum: StylePack = {
@@ -169,6 +201,7 @@ const darkMuseum: StylePack = {
   parseVisualDecision,
   validateVisualDecision,
   buildStage2Prompt,
+  buildBodySlidePrompt,
 
   tokens: loadTokens(),
 }

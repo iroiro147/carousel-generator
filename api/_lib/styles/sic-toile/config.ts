@@ -13,6 +13,7 @@ import type {
   AngleDefinition,
   SlideArchetype,
   Tokens,
+  BodySlideParams,
 } from '../../pipeline/types.js'
 
 // ─── Load static assets ──────────────────────────────────────────────────────
@@ -187,6 +188,30 @@ function validateVisualDecision(decision: VisualDecision): ValidationResult {
 
 // ─── Style Pack Export ──────────────────────────────────────────────────────
 
+// ─── Body Slide Prompt Builder ───────────────────────────────────────────────
+// Direct prompt construction for per-slide body images (no Stage 1 reasoning).
+// Migrated from legacy api/_lib/images/promptBuilder.ts buildSICToilePrompt().
+
+const SIC_STATE_VOCABULARY: Record<string, string> = {
+  'in ruins': 'structural collapse visible, vegetation encroaching through cracks, dramatic shadow in ruin depth',
+  'in disorder': 'figures in agitated poses, scattered objects across ground plane, gestural energy in composition',
+  'in full operation': 'active figures at each stage of process, purposeful movement implied through pose angles',
+  'sealed and witnessed': 'formal tableau with document as compositional center, figures in grave witness poses',
+  'newly surveyed': 'open horizon visible, surveying equipment prominent, scene has air of discovery and open space',
+  'under construction': 'scaffolding visible, workers in period dress, architectural framework emerging',
+  'in procession': 'figures in ordered march, ceremonial objects carried, architectural backdrop',
+  'in exchange': 'merchant scene with goods and currency visible, balanced composition of giver and receiver',
+}
+
+function buildBodySlidePrompt(params: BodySlideParams): string {
+  const stateDesc = SIC_STATE_VOCABULARY[params.object_state] ?? params.object_state
+  const scene = params.scene_description ?? `a ${params.object_domain ?? 'commerce exchange'} scene related to ${params.object_name}`
+  const figureCount = params.figure_count ?? 7
+  const archElements = params.architectural_elements ?? 'classical columns and arched doorways'
+
+  return `Single-color copper-plate engraving illustration of ${scene} — rendered entirely in indigo (#2A2ECD) on white/transparent ground, fine parallel hatching for mid-tone areas, cross-hatching for deep shadows under ${archElements}, stippling for soft textures, clean confident contour lines for primary figure and object outlines, 18th-century French engraving aesthetic — Encyclopédie Diderot plates register, full narrative scene with ground plane and architectural setting, ${stateDesc}, ${figureCount} or more figures in period dress, elaborate but legible at carousel scale, no color other than this single indigo — no fills, no gradients, pure line and mark work`
+}
+
 const sicToile: StylePack = {
   id: 'sic_toile',
   name: 'SIC Enlightenment Toile',
@@ -210,6 +235,7 @@ const sicToile: StylePack = {
   parseVisualDecision,
   validateVisualDecision,
   buildStage2Prompt,
+  buildBodySlidePrompt,
 
   tokens: loadTokens(),
 }

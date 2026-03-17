@@ -38,6 +38,22 @@ export interface VisualDecision {
   [key: string]: unknown
 }
 
+export interface BodySlideParams {
+  archetype: string
+  object_name: string
+  object_state: string
+  object_domain?: string
+  brief_context?: string
+  // NYT Opinion specific
+  illustration_mode?: string
+  emotional_register?: string
+  dominant_hue?: string
+  // SIC Toile specific
+  scene_description?: string
+  figure_count?: number
+  architectural_elements?: string
+}
+
 export interface StylePack {
   id: string
   name: string
@@ -66,6 +82,10 @@ export interface StylePack {
   parseVisualDecision: (xml: string) => VisualDecision
   validateVisualDecision: (decision: VisualDecision) => ValidationResult
   buildStage2Prompt: (decision: VisualDecision, tokens: Tokens) => string
+
+  // Body slide prompt builder (per-slide image themes only: dark_museum, sic_toile)
+  // Returns null if this style doesn't generate per-slide images
+  buildBodySlidePrompt?: (params: BodySlideParams) => string
 
   // Tokens
   tokens: Tokens

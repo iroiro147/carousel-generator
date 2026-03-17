@@ -1,7 +1,7 @@
 // ─── Stage 2 Builder ─────────────────────────────────────────────────────────
 // Delegates to the style pack's buildStage2Prompt() function.
-// Named stage2Builder (not promptBuilder) to avoid clash with
-// api/_lib/images/promptBuilder.ts (Architecture Decision #9).
+// Handles cover variant image prompts (Stage 1 XML → Stage 2 prompt).
+// Body slide prompts use stylePack.buildBodySlidePrompt() directly.
 
 import type { StylePack, VisualDecision } from './types.js'
 

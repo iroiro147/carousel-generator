@@ -215,11 +215,52 @@ interface ArchetypeSpec {
   body_size: number
 }
 
+// ─── Build propagation metadata context block ────────────────────────────────
+function buildPropagationContext(meta?: Record<string, unknown>): string {
+  if (!meta) return ''
+
+  const parts: string[] = []
+
+  if (meta.creative_angle) {
+    parts.push(`Creative angle: ${meta.creative_angle}`)
+  }
+  if (meta.narrative_frame) {
+    parts.push(`Narrative frame: ${meta.narrative_frame}`)
+  }
+  if (meta.body_slide_tone) {
+    parts.push(`Body slide tone: ${meta.body_slide_tone} — maintain this register across all body text`)
+  }
+  if (meta.headline_style) {
+    parts.push(`Headline style: ${meta.headline_style}`)
+  }
+  if (meta.object_domain_lock) {
+    parts.push(`Object domain lock: ${meta.object_domain_lock} — all metaphor objects must come from this domain`)
+  }
+  if (meta.wit_layer_consistency) {
+    parts.push(`Wit layer: ${meta.wit_layer_consistency}`)
+  }
+  if (Array.isArray(meta.state_progression) && meta.state_progression.length > 0) {
+    parts.push(`State progression (slide-by-slide object states): ${meta.state_progression.join(' → ')}`)
+  }
+  if (Array.isArray(meta.scene_domain_arc) && meta.scene_domain_arc.length > 0) {
+    parts.push(`Scene domain arc: ${meta.scene_domain_arc.join(' → ')}`)
+  }
+  if (Array.isArray(meta.quote_structure_preference) && meta.quote_structure_preference.length > 0) {
+    parts.push(`Quote structure preferences: ${meta.quote_structure_preference.join(', ')}`)
+  }
+
+  if (parts.length === 0) return ''
+
+  return `\nCREATIVE DIRECTION (from selected cover variant — maintain coherence):
+${parts.join('\n')}\n`
+}
+
 // ─── Build the user prompt for batch generation ────────────────────────────────
 function buildBatchUserPrompt(
   brief: BriefPayload,
   themeId: string,
   archetypeSequence: ArchetypeSpec[],
+  propagationMetadata?: Record<string, unknown>,
 ): string {
   const slideCount = archetypeSequence.length
 
@@ -234,6 +275,8 @@ Body size: ${a.body_size}px`,
     )
     .join('\n\n')
 
+  const propagationContext = buildPropagationContext(propagationMetadata)
+
   return `BRIEF:
 Topic: ${brief.topic}
 Goal: ${brief.goal_display_label ?? brief.goal ?? 'Not specified'}
@@ -243,7 +286,7 @@ Brand name: ${brief.brand_name}
 Central claim: ${brief.claim}
 Content category: ${brief.content_category_display_label ?? brief.content_category ?? 'Not specified'}
 Additional constraints: ${brief.content_notes ?? 'None'}
-
+${propagationContext}
 THEME: ${themeId}
 
 SLIDE SEQUENCE:
@@ -289,12 +332,12 @@ export async function generateLongFormContent(
   brief: BriefPayload,
   themeId: string,
   archetypeSequence: ArchetypeSpec[],
-  _propagationMetadata?: Record<string, unknown>,
+  propagationMetadata?: Record<string, unknown>,
 ): Promise<{ slides: SlideContent[]; has_errors: boolean }> {
   const themeAddition = THEME_ADDITIONS[themeId] ?? ''
   const systemPrompt = MASTER_SYSTEM_PROMPT + '\n' + themeAddition
 
-  let userPrompt = buildBatchUserPrompt(brief, themeId, archetypeSequence)
+  let userPrompt = buildBatchUserPrompt(brief, themeId, archetypeSequence, propagationMetadata)
 
   let slides: SlideContent[] = []
   let lastErrors: string[] = []

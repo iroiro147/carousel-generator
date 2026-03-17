@@ -56,8 +56,8 @@ Vercel handles API functions automatically in production.
 | GET | /api/health | Health check |
 | POST | /api/content/generate | Generate slide copy (long-form or short-form) |
 | POST | /api/content/regenerate-slide | Regenerate single slide |
-| POST | /api/images/generate-slide | Generate single slide image (uses legacy promptBuilder.ts) |
-| POST | /api/images/generate-carousel | Batch generate all slide images (uses legacy promptBuilder.ts) |
+| POST | /api/images/generate-slide | Generate single body slide image (routes through style pack) |
+| POST | /api/images/generate-carousel | Batch generate all body slide images (routes through style pack) |
 | POST | /api/variants/generate-one | Generate single cover variant (all themes via pipeline) |
 | POST | /api/variants/generate | Generate batch cover variants (all themes via pipeline) |
 | POST | /api/feedback/submit | Submit thumbs up/down feedback on a variant |
@@ -92,8 +92,9 @@ All images returned as JPEG (not PNG).
 - No sharp dependency — images returned at provider native resolution
 - Style packs loaded via dynamic `import()` in `styleLoader.ts`, cached after first load
 - Supabase generation logging is fire-and-forget (never crashes the response)
-- `api/_lib/images/promptBuilder.ts` is the legacy per-slide body image prompt builder — still used by `generate-slide.ts` and `generate-carousel.ts` for body slide images within an assembled carousel. Cover variant generation uses the pipeline exclusively.
+- Body slide image generation routes through style pack `buildBodySlidePrompt()` — same pattern as cover images but without Stage 1 reasoning
 - Feedback UI (thumbs up/down) sends to `/api/feedback/submit` → Supabase `generation_feedback` table. Non-critical: silent on failure.
+- `propagationMetadata` from the selected cover variant is injected into the content generation prompt as CREATIVE DIRECTION context (creative angle, narrative frame, body slide tone, etc.)
 
 ## Pipeline Files
 
@@ -140,5 +141,4 @@ Routing is in `CoverVariants/index.tsx` → `assembleCarouselForTheme()`.
 
 ## Known Gaps
 
-- `_propagationMetadata` parameter in `longForm.ts` is accepted but unused
-- Body slide image generation (`generate-slide.ts`, `generate-carousel.ts`) still uses the legacy `promptBuilder.ts` switch-case system — pipeline migration for body slides is a future effort
+None. All pipeline migrations complete.
