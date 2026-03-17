@@ -151,11 +151,7 @@ export async function assembleEditorialMinimalCarousel(
 
   const { slides: slideContent } = await contentResponse.json()
 
-  // Step 2: Check if we need photo generation
-  const photoTypes = new Set(['D', 'E', 'F', 'G'])
-  const needsPhoto = sequence.some((l) => photoTypes.has(l))
-
-  // Step 3: Build slides
+  // Step 2: Build slides
   const carouselId = crypto.randomUUID()
 
   const slides: Slide[] = sequence.map((letter, i) => {

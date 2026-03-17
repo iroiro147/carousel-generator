@@ -4,11 +4,8 @@
 
 type ThemeId =
   | 'dark_museum'
-  | 'product_elevation'
-  | 'experience_capture'
   | 'nyt_opinion'
   | 'sic_toile'
-  | 'name_archaeology'
 
 export interface PromptParams {
   theme_id: string
@@ -25,18 +22,6 @@ export interface PromptParams {
   scene_description?: string
   figure_count?: number
   architectural_elements?: string
-  // Name Archaeology specific
-  era_prompt_modifier?: string
-  frame_type?: string
-  border_style?: string
-  texture_type?: string
-  figures_instruction?: string
-  // Experience Capture specific
-  camera_position?: string
-  motion_description?: string
-  light_sources?: string
-  environment_type?: string
-  time_of_day?: string
 }
 
 // ─── Main entry point ──────────────────────────────────────────────────────────
@@ -44,16 +29,10 @@ export function buildImagePrompt(params: PromptParams): string {
   switch (params.theme_id as ThemeId) {
     case 'dark_museum':
       return buildDarkMuseumPrompt(params)
-    case 'product_elevation':
-      return buildProductElevationPrompt(params)
-    case 'experience_capture':
-      return buildExperienceCapturePrompt(params)
     case 'nyt_opinion':
       return buildNYTOpinionPrompt(params)
     case 'sic_toile':
       return buildSICToilePrompt(params)
-    case 'name_archaeology':
-      return buildNameArchaeologyPrompt(params)
     default:
       return `Professional illustration of ${params.object_name} for ${params.theme_id} theme, high quality, editorial aesthetic`
   }
@@ -86,32 +65,6 @@ function buildDarkMuseumPrompt(params: PromptParams): string {
   const materialDesc = DARK_MUSEUM_MATERIAL_DESCRIPTORS[params.object_domain ?? ''] ?? 'precision-machined metal and glass'
 
   return `${params.object_name} rendered as a luxury museum specimen — ${materialDesc}, ${stateDesc}, suspended in absolute darkness with a single overhead spotlight creating a precise cone of warm light (3200K), deep shadow falling directly below, micro-scratches visible on surface, photorealistic 3D render, studio product photography quality, no background elements, object positioned center-canvas, object fills 70% of frame, ultra-high detail, 8K render quality`
-}
-
-// ─── Product Elevation State Modifiers ─────────────────────────────────────────
-const PRODUCT_ELEVATION_STATE_MODIFIERS: Record<string, string> = {
-  unboxed: 'emerging from tissue paper, packaging context implied but not shown, fresh from box condition',
-  gleaming: 'peak performance condition, no signs of use, reflections sharp and clear',
-  activated: 'powered on, screen or indicator illuminated, in use state',
-  macro: 'extreme close-up detail, internal structure visible through surface, abstract at this scale',
-  pristine: 'flawless condition, mirror-polished finish, zero imperfections',
-}
-
-function buildProductElevationPrompt(params: PromptParams): string {
-  const stateDesc = PRODUCT_ELEVATION_STATE_MODIFIERS[params.object_state] ?? params.object_state
-
-  return `${params.object_name} in ${stateDesc} — luxury studio product photography, precision metal and glass surface with mirror-polished finish, three-point studio lighting with key light at 45° upper-left fill at 30% power right rim light creating thin white highlight on upper edge, pure platinum white #F8F5F0 background, shot on medium format camera 85mm equivalent f/4 shallow depth of field, centered composition, commercial product photography, aspirational register, clean isolated product`
-}
-
-// ─── Experience Capture ────────────────────────────────────────────────────────
-function buildExperienceCapturePrompt(params: PromptParams): string {
-  const cameraPos = params.camera_position ?? 'over shoulder, screen visible'
-  const motion = params.motion_description ?? 'sharp stillness'
-  const lights = params.light_sources ?? 'screen glow and ambient room light'
-  const envType = params.environment_type ?? 'urban interior'
-  const time = params.time_of_day ?? 'night'
-
-  return `First-person POV photograph from ${cameraPos} — looking at ${params.object_name} interaction, ${motion}, practical light sources only: ${lights}, silhouette of user visible, ${params.object_domain ?? 'digital'} environment, cinematic color grade, crushed blacks with color retained only in practical light sources, anonymous perspective, ${time}, ${envType}, documentary photography aesthetic, no faces visible, no studio lighting`
 }
 
 // ─── NYT Opinion ───────────────────────────────────────────────────────────────
@@ -157,13 +110,3 @@ function buildSICToilePrompt(params: PromptParams): string {
   return `Single-color copper-plate engraving illustration of ${scene} — rendered entirely in indigo (#2A2ECD) on white/transparent ground, fine parallel hatching for mid-tone areas, cross-hatching for deep shadows under ${archElements}, stippling for soft textures, clean confident contour lines for primary figure and object outlines, 18th-century French engraving aesthetic — Encyclopédie Diderot plates register, full narrative scene with ground plane and architectural setting, ${stateDesc}, ${figureCount} or more figures in period dress, elaborate but legible at carousel scale, no color other than this single indigo — no fills, no gradients, pure line and mark work`
 }
 
-// ─── Name Archaeology ──────────────────────────────────────────────────────────
-function buildNameArchaeologyPrompt(params: PromptParams): string {
-  const eraModifier = params.era_prompt_modifier ?? 'crosshatching technique for deep shadows, fine line work on figures'
-  const frameType = params.frame_type ?? 'rectangular vignette'
-  const borderStyle = params.border_style ?? 'fine ornamental border detail'
-  const textureType = params.texture_type ?? 'aged parchment background'
-  const figuresInstr = params.figures_instruction ?? `anthropomorphized figure related to ${params.object_name}`
-
-  return `19th century steel engraving of ${figuresInstr} — ${frameType} with ${borderStyle}, ${eraModifier}, monochromatic sepia tint on ${textureType}, no color fills — pure line and mark work, ${params.object_state}, high detail centered composition, encyclopedic plate aesthetic`
-}

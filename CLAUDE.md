@@ -7,9 +7,11 @@ Monorepo deployed to Vercel:
 - `api/` — Vercel Serverless Functions (Node.js)
 - `api/_lib/` — Shared server code (providers, content gen, pipeline)
 - `api/_lib/pipeline/` — Two-stage image generation pipeline
-- `styles/` — Self-contained style packs (one directory per theme)
+- `api/_lib/styles/` — Self-contained style packs (one directory per theme)
 
 ## Two-Stage Pipeline
+
+All cover variant generation uses the two-stage pipeline:
 
 ```
 Brief → orchestrator.ts
@@ -21,10 +23,12 @@ Brief → orchestrator.ts
 
 Each style pack defines: `stage1SystemPrompt`, `parseVisualDecision()`, `validateVisualDecision()`, `buildStage2Prompt()`.
 
+The pipeline returns a `GenerationResult` containing `imageBase64`, `visualDecision` (Stage 1 metadata), `stage2Prompt`, `provider`, `headline`, and `mimeType`. These flow through the `CoverVariant` → `Carousel` → Editor Info tab for full traceability.
+
 ## Style Pack System
 
 ```
-styles/{id}/
+api/_lib/styles/{id}/
   config.ts              — StylePack implementation (angles, parser, validator, builder)
   stage1-system.md       — Gemini Flash system prompt
   stage2-template.ts     — GPT Image prompt builder
@@ -33,7 +37,7 @@ styles/{id}/
   evals.json             — Eval pairs (populate from production)
 ```
 
-Active styles: `dark-museum` (pipeline), `nyt-opinion` (pipeline), `sic-toile` (pipeline), `radial-departure` (pipeline, cover-only), `editorial-minimal` (pipeline, conditional)
+Active styles: `dark-museum`, `nyt-opinion`, `sic-toile`, `radial-departure` (cover-only), `editorial-minimal` (conditional)
 Stub: `dispatch`
 
 ## Build & Dev
@@ -52,16 +56,16 @@ Vercel handles API functions automatically in production.
 | GET | /api/health | Health check |
 | POST | /api/content/generate | Generate slide copy (long-form or short-form) |
 | POST | /api/content/regenerate-slide | Regenerate single slide |
-| POST | /api/images/generate-slide | Generate single slide image |
-| POST | /api/images/generate-carousel | Batch generate all slide images |
-| POST | /api/variants/generate-one | Generate single cover variant (pipeline for dark_museum, legacy for others) |
-| POST | /api/variants/generate | Generate batch cover variants |
+| POST | /api/images/generate-slide | Generate single slide image (uses legacy promptBuilder.ts) |
+| POST | /api/images/generate-carousel | Batch generate all slide images (uses legacy promptBuilder.ts) |
+| POST | /api/variants/generate-one | Generate single cover variant (all themes via pipeline) |
+| POST | /api/variants/generate | Generate batch cover variants (legacy prompts, not pipeline) |
 | GET | /api/styles/angles?id={themeId} | Get angle definitions for a style pack |
 | POST | /api/color/derive | Derive brand color (stub) |
 
 ## Provider Mapping
 
-- **GPT-Image-1.5**: Primary image provider for ALL themes (Architecture Decision #14)
+- **GPT-Image-1.5**: Primary image provider for ALL themes
 - **Nano Banana 2**: Fallback if GPT fails
 - **Gemini 2.5 Flash**: Stage 1 text reasoning (analyzeContent.ts)
 - **Claude**: All content generation (longForm + shortForm)
@@ -87,7 +91,8 @@ All images returned as JPEG (not PNG).
 - No sharp dependency — images returned at provider native resolution
 - Style packs loaded via dynamic `import()` in `styleLoader.ts`, cached after first load
 - Supabase generation logging is fire-and-forget (never crashes the response)
-- Old switch-case prompt system (`api/_lib/images/promptBuilder.ts`) coexists with new pipeline until Phase 5
+- `api/_lib/images/promptBuilder.ts` is the legacy per-slide body image prompt builder — still used by `generate-slide.ts` and `generate-carousel.ts` for body slide images within an assembled carousel. Cover variant generation uses the pipeline exclusively.
+- `api/variants/generate.ts` (batch endpoint) uses legacy hardcoded prompts, not the pipeline. Known gap — batch generation is rarely used in practice.
 
 ## Pipeline Files
 
@@ -105,12 +110,35 @@ All images returned as JPEG (not PNG).
 | `api/_lib/pipeline/evalRunner.ts` | Skeleton: reads evals.json, runs Stage 1, compares output |
 | `api/_lib/supabase.ts` | Server-side Supabase client (SERVICE_ROLE_KEY) |
 
+## Per-Theme Assembly Functions
+
+Each theme has its own carousel assembly function on the frontend:
+- `assembleLongFormCarousel()` — dark_museum, sic_toile (14 slides)
+- `assembleShortFormCarousel()` — nyt_opinion (3-4 slides)
+- `assembleRadialDepartureCarousel()` — radial_departure (7 slides, cover-only image + CSS crops)
+- `assembleEditorialMinimalCarousel()` — editorial_minimal (5-7 slides, conditional photo)
+
+Routing is in `CoverVariants/index.tsx` → `assembleCarouselForTheme()`.
+
 ## Active Themes (5)
 
-| Theme | Format | Pipeline | Image Provider |
-|-------|--------|----------|---------------|
-| dark_museum | long_form (14 slides) | New two-stage | GPT-Image-1.5 |
-| nyt_opinion | short_form (3-4 slides) | New two-stage | GPT-Image-1.5 |
-| sic_toile | long_form (14 slides) | New two-stage | GPT-Image-1.5 |
-| radial_departure | short_form (7 slides) | New two-stage (cover-only) | GPT-Image-1.5 |
-| editorial_minimal | short_form (5-7 slides) | New two-stage (conditional) | GPT-Image-1.5 |
+| Theme | Format | Slides | Image Strategy |
+|-------|--------|--------|---------------|
+| dark_museum | long_form | 14 | Per-slide images |
+| nyt_opinion | short_form | 3-4 | Cover-only |
+| sic_toile | long_form | 14 | Per-slide images |
+| radial_departure | short_form | 7 | Cover-only, CSS crops for body |
+| editorial_minimal | short_form | 5-7 | Conditional (photo if sequence includes D/E/F/G) |
+
+## Editor Features
+
+- **Info Tab**: "Why this image?" panel shows Stage 1 visual decision fields, image provider, and collapsible Stage 2 prompt. Blue dot indicator when visual decision data is available.
+- **Design Tab**: Typography controls, layout switching, font size/weight/case adjustments.
+- **Slide Navigator**: Left panel with slide thumbnails, reorder/duplicate/delete.
+- **Canvas**: 1200×1500 center preview with zoom controls.
+
+## Known Gaps
+
+- Batch variant endpoint (`generate.ts`) uses legacy prompts, not the pipeline
+- `_propagationMetadata` parameter in `longForm.ts` is accepted but unused
+- Body slide image generation (`generate-slide.ts`, `generate-carousel.ts`) still uses the legacy `promptBuilder.ts` switch-case system — pipeline migration for body slides is a future effort
