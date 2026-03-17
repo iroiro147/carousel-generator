@@ -5,10 +5,11 @@ import { useBriefStore } from '../../store/briefStore'
 import { generateCoverVariants, retrySingleVariant } from '../../api/imageGen'
 import { assembleLongFormCarousel } from '../../api/carousel'
 import { assembleShortFormCarousel } from '../../api/carouselShortForm'
+import { assembleRadialDepartureCarousel } from '../../api/carouselRadialDeparture'
+import { assembleEditorialMinimalCarousel } from '../../api/carouselEditorialMinimal'
 import type { Brief } from '../../types/brief'
 import type { CoverVariant, ImageModel } from '../../types/variant'
 import type { ThemeId } from '../../types/theme'
-import { isShortForm } from '../../themes'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Run {
@@ -57,6 +58,26 @@ function PulseDots() {
       <span className="w-[3px] h-[3px] rounded-full bg-current inline-block" />
     </span>
   )
+}
+
+// ─── Per-theme assembly dispatcher ───────────────────────────────────────────
+import type { Carousel } from '../../types/carousel'
+
+async function assembleCarouselForTheme(
+  themeId: ThemeId,
+  brief: Brief,
+  selectedVariant: CoverVariant,
+): Promise<Carousel> {
+  switch (themeId) {
+    case 'nyt_opinion':
+      return assembleShortFormCarousel(brief, selectedVariant)
+    case 'radial_departure':
+      return assembleRadialDepartureCarousel(brief, selectedVariant)
+    case 'editorial_minimal':
+      return assembleEditorialMinimalCarousel(brief, selectedVariant)
+    default:
+      return assembleLongFormCarousel(brief, themeId, selectedVariant)
+  }
 }
 
 // ─── Metaphor Badge (Stage 1 visual decision summary) ────────────────────────
@@ -437,9 +458,7 @@ export default function CoverVariants() {
     }, 250)
 
     try {
-      const carousel = isShortForm(themeId)
-        ? await assembleShortFormCarousel(brief as Brief, selectedVariant)
-        : await assembleLongFormCarousel(brief as Brief, themeId, selectedVariant)
+      const carousel = await assembleCarouselForTheme(themeId, brief as Brief, selectedVariant)
       clearInterval(progressInterval)
       setAssemblyProgress(100)
       setCarousel(carousel)

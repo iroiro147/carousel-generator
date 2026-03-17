@@ -115,6 +115,79 @@ The annotation label (where present) names the scene domain in
 formal plate notation. Format: "[DOMAIN NAME IN CAPS]. TAB. [N]."
 Example: "CARTOGRAPHY. TAB. III." or "COMMERCE. TAB. V."`,
 
+  radial_departure: `
+RADIAL DEPARTURE COPY RULES:
+
+This is a motion-forward carousel. The viewer is accelerating through
+a zoom-burst photograph from a first-person POV. The text must carry
+that forward momentum.
+
+7 slides. One immersive cover photo. Content slides use flat colors
+or CSS crops of the same photo.
+
+Slide structure:
+  1. COVER — The arrival. DM Sans 800 uppercase headline.
+     Short, kinetic. "Before [X]. After, [Y]." or "[Number]. [Absence]."
+  2. CONTENT CLAIM — Primary argument. Bold assertion + 1-2 supporting lines.
+  3. CONTENT DATA — One key number. Hero stat as large display text. Use the
+     number as headline. body_text is the contextual label beneath (max 8 words).
+  4. CONTENT NARRATIVE — Story beat. 2-3 sentences of the core argument.
+  5. CONTENT QUOTE — Expert quote or source attribution. headline = quote text.
+  6. CONTENT CLAIM 2 — Secondary argument or consequence.
+  7. END CTA — Call to action. headline = CTA statement. cta_text = brand URL or action.
+
+Headline register: DM Sans 800 uppercase will render all headlines.
+Write short, punchy, declarative. No questions. No hedging.
+Maximum 6 words for cover. Maximum 10 words for content slides.
+
+Body text: DM Sans 300. Brief — 1-2 sentences max. Supporting detail only.
+
+Avoid: passive voice, future tense, marketing buzzwords. Everything
+is happening now, at speed.`,
+
+  editorial_minimal: `
+EDITORIAL MINIMAL COPY RULES:
+
+This is a Swiss editorial publication. Clean, typographic, restrained.
+7 distinct slide types (A through G), each with its own visual character.
+The copy must be precise enough to stand alone on stark backgrounds.
+
+Slide types and their copy rules:
+
+  TYPE A (Minimal White) — DM Sans 300 on white. The quietest slide.
+    headline: A clear, measured statement. No capitals. 8-12 words.
+    body_text: One supporting sentence. Optional.
+
+  TYPE B (Dark Mode) — DM Sans 300 on near-black.
+    headline: Same register as A but inverted. Slight edge.
+    body_text: Optional. 1 sentence.
+
+  TYPE C (Flat Blue) — DM Sans 300 on #1669D3.
+    headline: A claim that deserves emphasis. The color says "pay attention."
+    body_text: Required. 1-2 sentences. Context for the claim.
+
+  TYPE D (Card Frame) — DM Sans 400 on light grey. Contains a photo in a card.
+    headline: Descriptive. Names what the photo shows. 6-10 words.
+    body_text: Caption-like. 1 sentence.
+
+  TYPE E (Split Editorial) — EB Garamond 400 on dark olive header, photo below.
+    headline: Serif register. More literary. A considered observation.
+    body_text: Required. 2 sentences. The editorial voice.
+
+  TYPE F (Full-Bleed Bold) — DM Sans 800 uppercase over photo. Accent color.
+    headline: The boldest statement. UPPERCASE. Maximum 5 words.
+    body_text: null — no subtitle on this type.
+
+  TYPE G (Photo Overlay) — EB Garamond 400 over photo with gradient.
+    headline: The reflective close. A sentence that lingers.
+    body_text: Optional. The quiet conclusion.
+
+General rules:
+- No exclamation marks. No questions except genuine rhetorical ones.
+- Each slide must be self-contained — readable without the others.
+- The sequence must form a narrative arc across 5-7 slides.
+- The archetype field in the output must be the slide type letter (A, B, C, D, E, F, or G).`,
+
 }
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
