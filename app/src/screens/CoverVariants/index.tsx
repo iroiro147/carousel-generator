@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, useState } from 'react'
+import { useEffect, useCallback, useRef, useState, type MouseEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCarouselStore } from '../../store/carouselStore'
 import { useBriefStore } from '../../store/briefStore'
@@ -93,6 +93,79 @@ function MetaphorBadge({ decision }: { decision: Record<string, unknown> }) {
       <span className="shrink-0">Metaphor:</span>
       <span className="truncate">{label}</span>
     </span>
+  )
+}
+
+// ─── Feedback Buttons ────────────────────────────────────────────────────────
+function FeedbackButtons({ variant }: { variant: CoverVariant }) {
+  const [rating, setRating] = useState<'up' | 'down' | null>(null)
+  const [sending, setSending] = useState(false)
+  const briefTopic = useBriefStore((s) => s.brief.topic)
+
+  async function submitFeedback(value: 'up' | 'down', e: MouseEvent) {
+    e.stopPropagation()
+    if (rating === value) return // already rated this way
+    setSending(true)
+    setRating(value)
+    try {
+      await fetch('/api/feedback/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          variant_id: variant.variant_id,
+          style_id: variant.theme,
+          rating: value,
+          angle: variant.angle_key,
+          brief_topic: briefTopic,
+          provider: variant.provider ?? null,
+          model: variant.model ?? null,
+        }),
+      })
+    } catch {
+      // Silent — feedback is non-critical
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-1 mt-1.5">
+      <button
+        type="button"
+        disabled={sending}
+        onClick={(e) => submitFeedback('up', e)}
+        className={`p-1 rounded transition-all ${
+          rating === 'up'
+            ? 'text-emerald-600 bg-emerald-50'
+            : 'text-zinc-300 hover:text-emerald-500 hover:bg-emerald-50/50'
+        }`}
+        title="Good result"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M7 10v12M15 5.88L14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        disabled={sending}
+        onClick={(e) => submitFeedback('down', e)}
+        className={`p-1 rounded transition-all ${
+          rating === 'down'
+            ? 'text-red-500 bg-red-50'
+            : 'text-zinc-300 hover:text-red-400 hover:bg-red-50/50'
+        }`}
+        title="Poor result"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 14V2M9 18.12L10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z" />
+        </svg>
+      </button>
+      {rating && (
+        <span className="text-[10px] text-zinc-400 ml-0.5">
+          {rating === 'up' ? 'Thanks!' : 'Noted'}
+        </span>
+      )}
+    </div>
   )
 }
 
@@ -225,6 +298,9 @@ function VariantCard({
           )}
           {isComplete && variant.visual_decision && (
             <MetaphorBadge decision={variant.visual_decision} />
+          )}
+          {isComplete && (
+            <FeedbackButtons variant={variant} />
           )}
           {!isFailed && (
             <span

@@ -59,7 +59,8 @@ Vercel handles API functions automatically in production.
 | POST | /api/images/generate-slide | Generate single slide image (uses legacy promptBuilder.ts) |
 | POST | /api/images/generate-carousel | Batch generate all slide images (uses legacy promptBuilder.ts) |
 | POST | /api/variants/generate-one | Generate single cover variant (all themes via pipeline) |
-| POST | /api/variants/generate | Generate batch cover variants (legacy prompts, not pipeline) |
+| POST | /api/variants/generate | Generate batch cover variants (all themes via pipeline) |
+| POST | /api/feedback/submit | Submit thumbs up/down feedback on a variant |
 | GET | /api/styles/angles?id={themeId} | Get angle definitions for a style pack |
 | POST | /api/color/derive | Derive brand color (stub) |
 
@@ -92,7 +93,7 @@ All images returned as JPEG (not PNG).
 - Style packs loaded via dynamic `import()` in `styleLoader.ts`, cached after first load
 - Supabase generation logging is fire-and-forget (never crashes the response)
 - `api/_lib/images/promptBuilder.ts` is the legacy per-slide body image prompt builder — still used by `generate-slide.ts` and `generate-carousel.ts` for body slide images within an assembled carousel. Cover variant generation uses the pipeline exclusively.
-- `api/variants/generate.ts` (batch endpoint) uses legacy hardcoded prompts, not the pipeline. Known gap — batch generation is rarely used in practice.
+- Feedback UI (thumbs up/down) sends to `/api/feedback/submit` → Supabase `generation_feedback` table. Non-critical: silent on failure.
 
 ## Pipeline Files
 
@@ -139,6 +140,5 @@ Routing is in `CoverVariants/index.tsx` → `assembleCarouselForTheme()`.
 
 ## Known Gaps
 
-- Batch variant endpoint (`generate.ts`) uses legacy prompts, not the pipeline
 - `_propagationMetadata` parameter in `longForm.ts` is accepted but unused
 - Body slide image generation (`generate-slide.ts`, `generate-carousel.ts`) still uses the legacy `promptBuilder.ts` switch-case system — pipeline migration for body slides is a future effort

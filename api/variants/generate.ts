@@ -1,25 +1,11 @@
+// POST /api/variants/generate
+// Batch endpoint: generates all cover variants for a theme in parallel via the pipeline.
+
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'crypto'
-import { generateImage, bufferToDataURI } from '../_lib/providers/index.js'
+import type { ImageModel } from '../_lib/providers/index.js'
+import { run as runPipeline } from '../_lib/pipeline/orchestrator.js'
 import { loadStyle } from '../_lib/pipeline/styleLoader.js'
-
-interface AngleDefinition {
-  angle_key: string
-  angle_name: string
-  angle_description: string
-  composition_mode?: string
-  object_state_preference?: string
-  headline_structure: string
-  headline_example?: string
-  illustration_mode?: string
-  scene_domain?: string
-  pov_preference?: string
-  wit_layer?: string
-  figure_type?: string
-  scene_rule?: string
-  scene_preference?: string
-  propagation_metadata: Record<string, unknown>
-}
 
 interface BriefPayload {
   topic: string
@@ -27,46 +13,20 @@ interface BriefPayload {
   brand_name: string
   brand_color?: string | null
   content_notes?: string | null
+  [key: string]: unknown
 }
 
-async function getCoverAngles(themeId: string): Promise<AngleDefinition[]> {
-  try {
-    const style = await loadStyle(themeId)
-    return style.angles.map((a) => {
-      // Pipeline AngleDefinition uses id/label/headline_seed;
-      // map to the local interface used by generate.ts
-      const ext = a as unknown as Record<string, unknown>
-      return {
-        angle_key: a.id,
-        angle_name: a.label,
-        angle_description: a.description,
-        composition_mode: ext.composition_mode as string | undefined,
-        object_state_preference: ext.object_state_preference as string | undefined,
-        headline_structure: a.headline_seed,
-        headline_example: ext.headline_example as string | undefined,
-        illustration_mode: ext.illustration_mode as string | undefined,
-        scene_domain: ext.scene_domain as string | undefined,
-        pov_preference: ext.pov_preference as string | undefined,
-        wit_layer: ext.wit_layer as string | undefined,
-        figure_type: ext.figure_type as string | undefined,
-        scene_rule: ext.scene_rule as string | undefined,
-        scene_preference: ext.scene_preference as string | undefined,
-        propagation_metadata: (ext.propagation_metadata as Record<string, unknown>) ?? {},
-      }
-    })
-  } catch {
-    throw new Error(`Unknown theme: ${themeId}`)
-  }
-}
-
-function buildHeadline(angle: AngleDefinition, brief: BriefPayload): string {
-  const topic = brief.topic.trim()
-  const brandName = brief.brand_name.trim()
-  const claim = brief.claim.trim()
+function buildHeadline(
+  angle: { headline_seed: string; label: string },
+  brief: BriefPayload,
+): string {
+  const topic = (brief.topic ?? '').trim() || 'Product'
+  const brandName = (brief.brand_name ?? '').trim() || 'Brand'
+  const claim = (brief.claim ?? '').trim() || 'A better solution.'
   const topicWords = topic.split(/\s+/).filter((w) => w.length > 3)
   const topicNoun = topicWords[0] ?? topic.split(/\s+/)[0] ?? 'Product'
   const shortClaim = claim.split(/[.!?]/)[0]?.trim() ?? claim.slice(0, 60)
-  const structure = angle.headline_structure
+  const structure = angle.headline_seed
 
   if (structure.includes('[Object name]')) {
     return structure
@@ -81,67 +41,98 @@ function buildHeadline(angle: AngleDefinition, brief: BriefPayload): string {
   if (structure.includes('[Scope]')) {
     return [`Every ${topicNoun.toLowerCase()}`, 'Every device', 'Every market'].join('. ') + '.'
   }
-  return angle.headline_example ?? `${brandName}. ${shortClaim}.`
-}
 
-function buildCoverPrompt(
-  angle: AngleDefinition,
-  brief: BriefPayload,
-  themeId: string,
-): string {
-  const topicWords = brief.topic.trim().split(/\s+/).filter((w) => w.length > 3)
-  const topicNoun = topicWords[0] ?? brief.topic.trim().split(/\s+/)[0] ?? 'object'
-
-  switch (themeId) {
-    case 'dark_museum':
-      return `${topicNoun} rendered as a luxury museum specimen — precision-machined metal and glass, ${angle.object_state_preference ?? 'gleaming'} state, suspended in absolute darkness with a single overhead spotlight creating a precise cone of warm light (3200K), deep shadow falling directly below, photorealistic 3D render, ultra-high detail, composition mode: ${angle.composition_mode}`
-    case 'nyt_opinion':
-      return `Flat vector editorial illustration of ${topicNoun} as a commentary — bold saturated colors, clean confident outlines, flat color fills only, mid-century editorial illustration aesthetic, centered scene, white background`
-    case 'sic_toile':
-      return `Single-color copper-plate engraving illustration of ${topicNoun} — rendered entirely in indigo (#2A2ECD), fine parallel hatching, 18th-century French engraving aesthetic, ${angle.scene_preference ?? 'seven or more figures'}`
-    default:
-      return `Professional illustration of ${topicNoun} for ${themeId} theme, high quality, editorial aesthetic`
-  }
+  return `${brandName}. ${shortClaim}.`
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   try {
-    const { brief, theme_id } = req.body as { brief: BriefPayload; theme_id: string }
+    const { brief, theme_id, model } = req.body as {
+      brief: BriefPayload
+      theme_id: string
+      model?: ImageModel
+    }
 
     if (!brief || !theme_id) {
       return res.status(400).json({ error: 'Missing required fields: brief, theme_id' })
     }
 
-    const angles = await getCoverAngles(theme_id)
-    const prompts = angles.map((angle) => buildCoverPrompt(angle, brief, theme_id))
+    const imageModel = model ?? 'gpt-image-1.5'
+    const style = await loadStyle(theme_id)
+    const angles = style.angles
+
+    console.log(`[generate] Batch: theme=${theme_id}, model=${imageModel}, angles=${angles.length}`)
 
     const results = await Promise.allSettled(
-      prompts.map((prompt) => generateImage(prompt, theme_id)),
+      angles.map(async (angle) => {
+        const headline = buildHeadline(angle, brief)
+        const ext = angle as unknown as Record<string, unknown>
+
+        const result = await runPipeline({
+          brief,
+          styleId: theme_id,
+          angle: angle.id,
+          model: imageModel,
+          headline,
+          slideContent: `${brief.topic}. ${brief.claim}`,
+          imageFocus: brief.topic,
+        })
+
+        if ('error' in result) {
+          throw new Error(result.message)
+        }
+
+        return {
+          variant_id: randomUUID(),
+          brief_id: 'current',
+          theme: theme_id,
+          angle_key: angle.id,
+          angle_name: angle.label,
+          angle_description: angle.description,
+          cover_slide: {
+            composition_mode: (ext.composition_mode as string) ?? 'centered',
+            headline: result.headline,
+            headline_size: 48,
+            text_position: 'center',
+            image_prompt: result.stage2Prompt,
+            thumbnail_url: result.imageBase64,
+          },
+          propagation_metadata: (ext.propagation_metadata as Record<string, unknown>) ?? {},
+          generation_status: 'complete' as const,
+          selected: false,
+          created_at: new Date().toISOString(),
+          visual_decision: result.visualDecision,
+          provider: result.provider,
+        }
+      }),
     )
 
-    const variants = angles.map((angle, i) => {
-      const result = results[i]
-      const succeeded = result.status === 'fulfilled'
-
+    const variants = results.map((result, i) => {
+      if (result.status === 'fulfilled') {
+        return result.value
+      }
+      // Failed — return a failed stub
+      const angle = angles[i]
+      const ext = angle as unknown as Record<string, unknown>
       return {
         variant_id: randomUUID(),
         brief_id: 'current',
         theme: theme_id,
-        angle_key: angle.angle_key,
-        angle_name: angle.angle_name,
-        angle_description: angle.angle_description,
+        angle_key: angle.id,
+        angle_name: angle.label,
+        angle_description: angle.description,
         cover_slide: {
-          composition_mode: angle.composition_mode ?? 'centered',
+          composition_mode: (ext.composition_mode as string) ?? 'centered',
           headline: buildHeadline(angle, brief),
           headline_size: 48,
           text_position: 'center',
-          image_prompt: prompts[i],
-          thumbnail_url: succeeded ? bufferToDataURI(result.value) : null,
+          image_prompt: null,
+          thumbnail_url: null,
         },
-        propagation_metadata: angle.propagation_metadata,
-        generation_status: succeeded ? ('complete' as const) : ('failed' as const),
+        propagation_metadata: (ext.propagation_metadata as Record<string, unknown>) ?? {},
+        generation_status: 'failed' as const,
         selected: false,
         created_at: new Date().toISOString(),
       }
