@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "input": {
+      "topic": "The loneliness epidemic among young men",
+      "slideContent": "Social media promised connection but delivered isolation at scale",
+      "imageFocus": "A solitary figure standing in an empty stadium"
+    },
+    "expected": {
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "metaphor_rationale", "signature_hex", "color_rationale"]
+    }
+  },
+  {
+    "input": {
+      "topic": "Why remote work is not going back",
+      "slideContent": "The office was a 20th-century solution to a coordination problem that software now solves better",
+      "imageFocus": "An empty corporate office building with lights still on"
+    },
+    "expected": {
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "metaphor_rationale", "signature_hex", "color_rationale"]
+    }
+  },
+  {
+    "input": {
+      "topic": "The moral case for universal basic income",
+      "slideContent": "Automation will displace 40% of jobs by 2035 — society must choose between mass poverty and redistribution",
+      "imageFocus": "Hands reaching upward through a floor of coins"
+    },
+    "expected": {
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "metaphor_rationale", "signature_hex", "color_rationale"]
+    }
+  }
+]

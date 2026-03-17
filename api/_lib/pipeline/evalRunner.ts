@@ -22,7 +22,7 @@ interface EvalCase {
   }
 }
 
-interface EvalResult {
+export interface EvalResult {
   styleId: string
   totalCases: number
   passed: number
@@ -39,7 +39,9 @@ interface EvalResult {
  */
 export async function runEvals(styleId: string): Promise<EvalResult> {
   const stylePack = await loadStyle(styleId)
-  const evalsPath = join(__dirname, '../../../styles', styleId, 'evals.json')
+  // Style IDs use underscores (dark_museum) but directories use kebab-case (dark-museum)
+  const dirName = styleId.replace(/_/g, '-')
+  const evalsPath = join(__dirname, '../styles', dirName, 'evals.json')
 
   let cases: EvalCase[]
   try {

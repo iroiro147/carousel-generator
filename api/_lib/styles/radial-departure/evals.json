@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "input": {
+      "topic": "The speed advantage of real-time payments",
+      "slideContent": "When money moves in milliseconds, entire business models become possible that weren't before",
+      "imageFocus": "A highway stretching to a vanishing point with light trails from passing vehicles"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "domain", "vanishing_point_subject", "emotional_temperature", "camera_position", "pov_description", "primary_dark", "midtone", "burst_highlight", "text_accent", "flat_color_bg", "ray_density", "overlay_opacity"]
+    }
+  },
+  {
+    "input": {
+      "topic": "Why startups should embrace AI-first development",
+      "slideContent": "The cost of ignoring AI is not stagnation — it is extinction",
+      "imageFocus": "A corridor of server racks converging toward a bright endpoint"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "domain", "vanishing_point_subject", "emotional_temperature", "camera_position", "pov_description", "primary_dark", "midtone", "burst_highlight", "text_accent", "flat_color_bg", "ray_density", "overlay_opacity"]
+    }
+  },
+  {
+    "input": {
+      "topic": "The growth trajectory of India's digital economy",
+      "slideContent": "UPI processes 14 billion transactions a month — more than Visa and Mastercard combined",
+      "imageFocus": "A sunrise over a sprawling cityscape seen from an aerial perspective"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "domain", "vanishing_point_subject", "emotional_temperature", "camera_position", "pov_description", "primary_dark", "midtone", "burst_highlight", "text_accent", "flat_color_bg", "ray_density", "overlay_opacity"]
+    }
+  }
+]

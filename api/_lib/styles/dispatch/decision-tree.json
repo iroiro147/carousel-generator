@@ -1,0 +1,300 @@
+{
+  "_meta": {
+    "style": "dispatch",
+    "version": "1.0.0",
+    "description": "Machine-executable decision tree. Given company inputs, routes to one of four cover pathways and one of six content slide types per slide. No subjective judgment calls — all branches are deterministic.",
+    "schema": "juno-universal-decision-tree-v1"
+  },
+
+  "style_id": "dispatch",
+
+  "cover_pathway_tree": {
+    "description": "Four-question tree. First YES wins. Evaluated top-to-bottom against companyName and brandContext.",
+    "evaluation_order": ["name-archaeology", "experience-capture", "symbol-literalization", "product-elevation"],
+    "default_pathway": "product-elevation",
+
+    "concept_domains": [
+      {
+        "domain_name": "name-archaeology",
+        "question": "Does the company name carry a myth, legend, historical figure, folklore character, or cultural archetype?",
+        "trigger_concepts": [
+          "folk hero", "mythology", "historical figure", "legend", "archetype",
+          "ancient deity", "medieval character", "literary figure", "cultural icon",
+          "place with explorer mythology", "warrior culture", "ancient civilization reference",
+          "military concept", "prophetic role", "elemental force personified"
+        ],
+        "trigger_examples": [
+          "Robinhood", "Amazon", "Oracle", "Titan", "Apollo", "Patagonia",
+          "Vanguard", "Hermes", "Atlas", "Diana", "Pandora", "Ares",
+          "Olympus", "Sahara", "Pioneer"
+        ],
+        "exclusion_rules": [
+          "surname without mythology (e.g. McDonald, Ferrari, Ford)",
+          "invented portmanteau (e.g. Spotify, Kodak, Xerox, Google)",
+          "pure descriptive compound (e.g. Facebook, YouTube, Airbnb)"
+        ],
+        "visual_elements": {
+          "medium": "historical-illustration",
+          "illustration_styles": {
+            "medieval-european":   "19th century steel engraving, oval vignette frame, crosshatch linework",
+            "ancient-greek-roman": "classical line engraving, marble relief style",
+            "norse-viking":        "woodcut, runic border treatment",
+            "renaissance":         "copperplate engraving, heraldic composition",
+            "age-of-exploration":  "cartographic illustration, compass rose borders",
+            "american-frontier":   "wood engraving, dime novel illustration",
+            "industrial-victorian": "technical lithograph, patent illustration style",
+            "ancient-egyptian":    "hieroglyphic register, papyrus texture"
+          },
+          "frame_type": "oval-vignette",
+          "frame_decorative_detail": "foliage, architectural, or heraldic elements at base appropriate to era",
+          "subject_rule": "Most unexpected but precise rendering — animal substitution, role reversal, or anachronistic precision. Wit layer is required.",
+          "illustration_tint_rule": "Same hue family as background, 1-2 tones darker. Never black."
+        },
+        "selection_bias": "Prefer most unexpected interpretation over literal. Fox archer beats human Robin Hood. Warrior queen beats generic Amazon logo."
+      },
+
+      {
+        "domain_name": "experience-capture",
+        "question": "Does the company have a single universally recognized human moment inside its core product interaction — one every user has had and could describe in a sentence?",
+        "trigger_concepts": [
+          "rideshare small talk", "first unlock of shared space", "guilt notification",
+          "unexpected song match", "algorithm reads your mood", "arriving now",
+          "are you still watching", "read receipts", "you're on mute",
+          "waiting for delivery", "first swipe match", "recruiter cold message",
+          "checkout friction", "password reset loop", "waiting for OTP"
+        ],
+        "trigger_examples": [
+          "Uber", "Airbnb", "Tinder", "Duolingo", "Spotify", "Netflix",
+          "WhatsApp", "Zoom", "DoorDash", "Deliveroo", "LinkedIn", "Swiggy"
+        ],
+        "exclusion_rules": [
+          "brand whose product is a physical object, not a service",
+          "brand whose experience is entirely internal/solitary with no interpersonal moment",
+          "brand with no single universally shared moment (too varied per user)"
+        ],
+        "visual_elements": {
+          "medium": "first-person-photography",
+          "camera_position": "inside the brand's core interaction environment, looking into the experience",
+          "human_presence": "silhouette or shape only — never face, never identifiable",
+          "motion_treatment": "long-exposure-blur if brand involves movement, otherwise sharp",
+          "color_source": "practical light sources within photograph only — never designed color elements",
+          "quote_required": true,
+          "quote_rules": {
+            "source": "verbatim-style overheard dialogue",
+            "grammar": "imperfect — how people actually speak",
+            "test": "read aloud — if it sounds like ad copy, rewrite it",
+            "typography": "editorial serif, ~52px, white, sentence case",
+            "position": "upper area of canvas, slight left bias, ~24-30% from top",
+            "line_break": "speech rhythm, not column width"
+          }
+        },
+        "selection_bias": "The most awkward, intimate, or universally embarrassing moment beats the aspirational moment."
+      },
+
+      {
+        "domain_name": "symbol-literalization",
+        "question": "Does the company's logo or primary emblem depict a real-world subject (animal, natural object, figure) that is MORE iconic than the product itself?",
+        "trigger_concepts": [
+          "animal mascot", "real creature in logo", "prancing horse", "roaring lion",
+          "crocodile", "charging bull", "leaping puma", "penguin", "seagull",
+          "real bird", "real mammal", "shell", "natural object as primary mark",
+          "logo more famous than product"
+        ],
+        "trigger_examples": [
+          "Ferrari", "MGM", "Lacoste", "Red Bull", "Puma", "Penguin Books",
+          "Chicago Bulls", "Ford Mustang", "Jaguar", "Lamborghini", "Hollister", "Dove"
+        ],
+        "exclusion_rules": [
+          "abstract or geometric logo (Nike swoosh, Adidas stripes, Google G)",
+          "letterform logo without depicted subject",
+          "human face or portrait logo (likeness rights)",
+          "logo subject cannot be photographed or rendered with emotional impact"
+        ],
+        "visual_elements": {
+          "medium": "photography-or-photorealistic-render",
+          "pose_rule": "Must correspond precisely to logo pose. Viewer must simultaneously recognize the logo AND see the living creature. Pose correspondence is the concept.",
+          "subject_color": "warm near-black (#0A0505 range) — not neutral black",
+          "detail_level": "near-silhouette — shape readable, surface detail minimal",
+          "lighting": "single hard key light, upper-left or upper-right, no fill",
+          "lighting_effect": "faint edge highlight on one surface only, all else falls to near-black",
+          "composition": "subject center-right, open color field on left side",
+          "ground": "faint hue-matched shadow beneath subject — no visible ground plane"
+        },
+        "selection_bias": "The gap between the flat logo and the living creature IS the concept. Closer pose correspondence = stronger emotional charge."
+      },
+
+      {
+        "domain_name": "product-elevation",
+        "question": "Does the company have an iconic product object immediately recognizable without packaging or brand context?",
+        "trigger_concepts": [
+          "iconic food product", "recognizable consumer object", "signature hardware",
+          "famous bottle", "classic footwear silhouette", "recognizable toy",
+          "famous timepiece", "signature appliance", "classic vehicle silhouette",
+          "instantly recognizable without branding"
+        ],
+        "trigger_examples": [
+          "McDonald's", "Apple", "Nike", "Coca-Cola", "Heinz", "LEGO",
+          "Rolex", "Jordan", "Porsche", "Dyson", "AirPods", "Nespresso"
+        ],
+        "exclusion_rules": [
+          "brand whose product is not visually iconic or requires context to identify",
+          "brand already in luxury category (elevation has no gap to exploit)",
+          "brand whose logo symbol is more iconic than any product"
+        ],
+        "visual_elements": {
+          "medium": "studio-product-photography",
+          "studio_setup": "black studio, no environmental context, no packaging, no branding",
+          "lighting": "single hard key light, no fill, upper-right or upper-left",
+          "composition_devices": {
+            "cascade": "multiple instances floating in vertical diagonal, scale progression (nearest largest), rotation variation 3-8 degrees alternating",
+            "single-specimen": "one instance, centered or offset to golden ratio, maximum negative space",
+            "explosion": "product deconstructed, components floating apart from center"
+          },
+          "instance_count_rule": "cascade → 2-4 instances | single-specimen → 1 | explosion → 1 deconstructed",
+          "shadow_pool": "faint hue-matched shadow beneath lowest instance — same hue as background, 20-30% darker",
+          "post_processing": "crush blacks, push highlights, warm or cool grade matching product material"
+        },
+        "selection_bias": "The wider the gap between how the brand normally shows this product and how this shot renders it, the stronger the concept. Fast food lit like jewellery beats luxury goods lit like luxury goods."
+      }
+    ]
+  },
+
+  "color_system": {
+    "description": "Pre-determined color derivation. Pure function: f(brandHex, pathway, energy) → colorSystem. See dispatch-phase1-color-derivation.md for full algorithm.",
+    "engine": "dispatchColorEngine.ts",
+    "type": "pre-determined",
+    "async_pathways": ["experience-capture"],
+    "sync_pathways": ["name-archaeology", "product-elevation", "symbol-literalization"],
+    "inputs": ["brandHex", "pathway", "productDescription", "energy", "coverImageBase64"],
+    "output_ref": "DispatchColorSystem interface in dispatch-phase1-color-derivation.md"
+  },
+
+  "state_modifiers": {
+    "description": "Dispatch does not use sentiment-based state modifiers like Dark Museum (broken/rusted/pristine). Color derivation and pathway selection encode state implicitly.",
+    "energy_levels": {
+      "bold-direct":        { "alternation_range": "wide",    "toneAChromaMultiplier": 1.0, "toneBChromaMultiplier": 0.3  },
+      "clear-confident":    { "alternation_range": "medium",  "toneAChromaMultiplier": 1.0, "toneBChromaMultiplier": 0.6  },
+      "thoughtful-nuanced": { "alternation_range": "narrow",  "toneAChromaMultiplier": 0.7, "toneBChromaMultiplier": 0.6  },
+      "one-clear-message":  { "alternation_range": "minimal", "toneAChromaMultiplier": 0.7, "toneBChromaMultiplier": 0.7  }
+    }
+  },
+
+  "content_slide_routing": {
+    "description": "Determines slide type for each content slide. Applied after cover. Uses declared type if provided, otherwise infers from content.",
+    "type_assignment": {
+      "section-header": { "toneAssignment": "A", "inference_conditions": ["content.wordCount <= 8", "content.isChapterMarker", "content.startsWithHash"] },
+      "stat":           { "toneAssignment": "B", "inference_conditions": ["content.containsPrimaryNumber", "content.wordCount <= 20"] },
+      "quote":          { "toneAssignment": "A", "inference_conditions": ["content.containsQuotationMarks", "content.containsAttribution", "content.isDirectSpeech"] },
+      "body":           { "toneAssignment": "B", "inference_conditions": ["default — used when no other type matches"] },
+      "list":           { "toneAssignment": "B", "inference_conditions": ["content.isBulletList", "content.itemCount >= 3", "content.isEnumeration"] },
+      "closing":        { "toneAssignment": "A", "inference_conditions": ["slideNumber === totalSlides"] }
+    },
+    "inference_priority": ["closing", "section-header", "stat", "quote", "list", "body"]
+  },
+
+  "slide_archetypes": [
+    {
+      "archetype_name": "cover",
+      "position_in_carousel": 1,
+      "visual_tier": "T1",
+      "element_count": 1,
+      "layout_rule": "full-bleed. Visual statement owns entire canvas. Bottom 15% clear or dark for footer zone.",
+      "special_rules": [
+        "pathway determined by cover_pathway_tree",
+        "no text in generated image",
+        "no logos in generated image — coordinates output only",
+        "footer zone outputs placeholder coordinates, no generated content"
+      ]
+    },
+    {
+      "archetype_name": "section-header",
+      "position_in_carousel": "2-9",
+      "visual_tier": "T4",
+      "element_count": 0,
+      "layout_rule": "TONE_A background. Cormorant Garamond italic 64-84px centered vertically. Context strip active.",
+      "special_rules": [
+        "serif headline — the only T4 slide with Cormorant Garamond",
+        "marks structural chapter transitions in carousel",
+        "accent line always present at zone2-zone4 boundary"
+      ]
+    },
+    {
+      "archetype_name": "stat",
+      "position_in_carousel": "2-9",
+      "visual_tier": "T4",
+      "element_count": 0,
+      "layout_rule": "TONE_B background. Primary number DM Sans 800 120-140px. Secondary number 48px accentHex. Internal divider 1px accentHex 60% width.",
+      "special_rules": [
+        "maximum 2 numbers per slide — 3+ stats = split across slides",
+        "tabular figures if font supports it",
+        "accent color on secondary number only — never primary"
+      ]
+    },
+    {
+      "archetype_name": "quote",
+      "position_in_carousel": "2-9",
+      "visual_tier": "T4",
+      "element_count": 0,
+      "layout_rule": "TONE_A background. Opening quote mark 96px accentHex. Quote body Cormorant Garamond italic 32-44px. Attribution DM Sans 500 15px.",
+      "special_rules": [
+        "opening quotation mark is oversized and in accentHex — the only typographic moment of color",
+        "attribution indented 16px under quote body",
+        "quote length scales font size: 1-2 lines → 44px | 3 lines → 38px | 4 lines → 32px | max 4 lines"
+      ]
+    },
+    {
+      "archetype_name": "body",
+      "position_in_carousel": "2-9",
+      "visual_tier": "T4",
+      "element_count": 0,
+      "layout_rule": "TONE_B background. Optional headline DM Sans 700 28px. Body copy DM Sans 400 18-20px textSecondary. Max 4 sentences.",
+      "special_rules": [
+        "left-aligned body copy — never justified",
+        "headline is optional — omit if context strip is self-explanatory",
+        "no serif on body slides"
+      ]
+    },
+    {
+      "archetype_name": "list",
+      "position_in_carousel": "2-9",
+      "visual_tier": "T4",
+      "element_count": 0,
+      "layout_rule": "TONE_B background. List title DM Sans 600 22px. Items with accentHex 4px square markers. Max 5 items.",
+      "special_rules": [
+        "markers are accent color filled squares — the one typographic accent on list slides",
+        "sequential markers (01 02 03) replace squares when sequence matters",
+        "max 5 items — split into 2 list slides if more needed",
+        "item spacing 16px between items"
+      ]
+    },
+    {
+      "archetype_name": "closing",
+      "position_in_carousel": "last",
+      "visual_tier": "T4",
+      "element_count": 0,
+      "layout_rule": "TONE_A background. Closing statement Cormorant Garamond italic 52-64px centered. Optional action line DM Sans 400 16px accentHex centered.",
+      "special_rules": [
+        "ONLY centered layout in the entire system — signals closure",
+        "no other slide type uses center alignment",
+        "context strip reads 'DISPATCH · END'",
+        "action line in accentHex — subtle CTA, not aggressive"
+      ]
+    }
+  ],
+
+  "slide_count_rules": {
+    "minimum": 1,
+    "maximum": 10,
+    "recommended": "5-8",
+    "single_card_mode": "slideCount === 1 produces cover only (backward compatibility with Quartr Cards format)",
+    "enforcement": "pipeline rejects input.slides.length > 10 with error message"
+  },
+
+  "multi_model_routing": {
+    "description": "Model preference per pathway. See dispatch-image-system.md for full prompt templates.",
+    "name-archaeology":      { "preferred": "midjourney-v6", "fallback": "recraft",         "reason": "Best at era-specific illustration and crosshatch linework" },
+    "experience-capture":    { "preferred": "gpt-image-1",   "fallback": "midjourney-v6",   "reason": "Best at following complex scene composition and atmosphere" },
+    "product-elevation":     { "preferred": "midjourney-v6", "fallback": "gpt-image-1",     "reason": "Best at studio product photography and dark studio lighting" },
+    "symbol-literalization": { "preferred": "midjourney-v6", "fallback": "stable-diffusion", "reason": "Best at chiaroscuro lighting and near-silhouette animal subjects" }
+  }
+}

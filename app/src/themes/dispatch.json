@@ -1,0 +1,65 @@
+{
+  "name": "Dispatch",
+  "version": "1.0",
+  "canvas": {
+    "width": 1080,
+    "height": 1350,
+    "padding_left_pct": 4.4,
+    "padding_right_pct": 4.4,
+    "safe_zone_px": 48
+  },
+  "_format_note": "Cover-only image generation. 4 creative pathways: name-archaeology, experience-capture, symbol-literalization, product-elevation. Phase 2A: cover only.",
+  "slide_count_range": {"min": 1, "max": 10},
+  "color_system": {
+    "_philosophy": "Pre-determined color derivation from brand hex + pathway. All Dispatch lives in darkness — no pathway produces a light seed color.",
+    "constants": {
+      "text_primary": "#FFFFFF",
+      "near_black": "#080808",
+      "pure_black": "#000000"
+    },
+    "derived_fields": ["seed", "toneA", "toneB", "textSecondary", "accentHex"]
+  },
+  "typography": {
+    "headline": {
+      "font_family": "Cormorant Garamond",
+      "weight": 600,
+      "style": "italic",
+      "size_range_px": "64–84",
+      "line_height": "1.1em",
+      "case": "sentence",
+      "color": "#FFFFFF"
+    },
+    "body": {
+      "font_family": "DM Sans",
+      "weight": 400,
+      "size_range_px": "18–20",
+      "line_height": "1.65em",
+      "color": "textSecondary (derived)"
+    },
+    "stat_primary": {
+      "font_family": "DM Sans",
+      "weight": 800,
+      "size_range_px": "120–140",
+      "color": "#FFFFFF"
+    }
+  },
+  "cover": {
+    "format": "full-bleed",
+    "aspect_ratio": "4:5",
+    "bottom_clear_zone_pct": 15,
+    "pathways": {
+      "name_archaeology": "Historical illustration, oval vignette, monochromatic brand hue",
+      "experience_capture": "First-person photography, practical light only, silhouette human presence",
+      "symbol_literalization": "Logo subject as living creature, near-silhouette, chiaroscuro",
+      "product_elevation": "Studio product photography, black void, single key light"
+    }
+  },
+  "format": {
+    "format": "short_form",
+    "slide_count_range": {"min": 1, "max": 10},
+    "archetype_system": "standard_archetypes",
+    "cover_variants_mode": "composition_angle_variants",
+    "image_generation": "cover_only",
+    "content_generation": "object_primary"
+  }
+}

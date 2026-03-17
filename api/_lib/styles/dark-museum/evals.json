@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "input": {
+      "topic": "Why payments need better security",
+      "slideContent": "Current payment systems rely on outdated authentication that leaves billions vulnerable",
+      "imageFocus": "A broken floor-standing steel safe with its door torn from its hinges"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "focus_mapping", "strategy", "artifacts", "layout_style", "position_focus", "lighting_accent"],
+      "conditions": ["PRISTINE", "WORN", "RUSTED", "BROKEN"]
+    }
+  },
+  {
+    "input": {
+      "topic": "The evolution of cloud infrastructure",
+      "slideContent": "From mainframes to serverless: how computing shed its physical constraints",
+      "imageFocus": "A pristine brass mechanical calculating machine"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "focus_mapping", "strategy", "artifacts", "layout_style", "position_focus", "lighting_accent"],
+      "conditions": ["PRISTINE", "WORN", "RUSTED", "BROKEN"]
+    }
+  },
+  {
+    "input": {
+      "topic": "Why data privacy regulations are failing",
+      "slideContent": "Despite GDPR and CCPA, corporate data breaches hit record highs in 2025",
+      "imageFocus": "A rusted iron padlock with exposed internal mechanisms"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "focus_mapping", "strategy", "artifacts", "layout_style", "position_focus", "lighting_accent"],
+      "conditions": ["PRISTINE", "WORN", "RUSTED", "BROKEN"]
+    }
+  }
+]

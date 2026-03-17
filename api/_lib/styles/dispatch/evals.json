@@ -1,0 +1,42 @@
+[
+  {
+    "input": {
+      "topic": "Robinhood Q3 2025 Earnings",
+      "slideContent": "Robinhood reports record revenue as retail trading volumes surge 40% year-over-year",
+      "imageFocus": "A fox archer in period costume drawing a longbow in a moonlit forest clearing"
+    },
+    "expected": {
+      "requiredFields": ["pathway", "pathway_rationale", "subject", "scene_description", "color_direction", "era_style", "composition", "wit_layer", "negative_prompt"]
+    }
+  },
+  {
+    "input": {
+      "topic": "Uber Q4 2025 Earnings",
+      "slideContent": "Uber achieves first full-year of sustained profitability as autonomous vehicle partnerships scale",
+      "imageFocus": "A backseat view through a rain-streaked car window at blurred city lights"
+    },
+    "expected": {
+      "requiredFields": ["pathway", "pathway_rationale", "subject", "scene_description", "color_direction", "era_style", "composition", "quote", "negative_prompt"]
+    }
+  },
+  {
+    "input": {
+      "topic": "Ferrari Q2 2025 Earnings",
+      "slideContent": "Ferrari announces record deliveries and unveils its first fully electric supercar",
+      "imageFocus": "A prancing stallion mid-rear in the exact pose of the Ferrari shield logo"
+    },
+    "expected": {
+      "requiredFields": ["pathway", "pathway_rationale", "subject", "scene_description", "color_direction", "era_style", "composition", "negative_prompt"]
+    }
+  },
+  {
+    "input": {
+      "topic": "Apple Q1 2026 Earnings",
+      "slideContent": "Apple reports all-time record revenue driven by iPhone 17 Pro and Vision Pro 2 sales",
+      "imageFocus": "A single iPhone floating in a black studio void with a single hard key light"
+    },
+    "expected": {
+      "requiredFields": ["pathway", "pathway_rationale", "subject", "scene_description", "color_direction", "era_style", "composition", "negative_prompt"]
+    }
+  }
+]

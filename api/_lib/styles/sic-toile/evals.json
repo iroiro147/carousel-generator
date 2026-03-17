@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "input": {
+      "topic": "How venture capital reshapes emerging markets",
+      "slideContent": "Capital flows into frontier economies are rebuilding institutions from the ground up",
+      "imageFocus": "A grand mercantile exchange hall with traders and goods flowing through arched doorways"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "scene_domain", "physical_state", "figure_count", "architectural_setting", "full_scene_description", "density"]
+    }
+  },
+  {
+    "input": {
+      "topic": "The future of synthetic biology",
+      "slideContent": "CRISPR-based therapies are moving from lab curiosities to standard care",
+      "imageFocus": "A natural philosophy laboratory with scholars examining specimens under magnifying lenses"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "scene_domain", "physical_state", "figure_count", "architectural_setting", "full_scene_description", "density"]
+    }
+  },
+  {
+    "input": {
+      "topic": "Why infrastructure spending is the best economic stimulus",
+      "slideContent": "Every dollar invested in bridges, roads, and broadband returns $1.80 in GDP growth",
+      "imageFocus": "A grand construction scene with workers, scaffolding, and classical columns rising"
+    },
+    "expected": {
+      "requiredFields": ["concept_analysis", "scene_domain", "physical_state", "figure_count", "architectural_setting", "full_scene_description", "density"]
+    }
+  }
+]

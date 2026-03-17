@@ -2,6 +2,7 @@ export type ThemeId =
   | 'dark_museum'
   | 'nyt_opinion'
   | 'sic_toile'
+  | 'dispatch'
   | 'radial_departure'
   | 'editorial_minimal'
 

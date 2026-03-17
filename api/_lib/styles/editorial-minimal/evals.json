@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "input": {
+      "topic": "The quiet revolution in mental health care",
+      "slideContent": "Therapy apps are reaching people who would never walk into a clinic",
+      "imageFocus": "A person sitting alone on a park bench at golden hour"
+    },
+    "expected": {
+      "requiredFields": ["title", "subtitle", "byline", "emotional_register", "recommended_sequence", "photo_needed"]
+    }
+  },
+  {
+    "input": {
+      "topic": "How climate migration will reshape cities by 2040",
+      "slideContent": "Phoenix, Miami, and Houston will lose population while the Great Lakes region booms",
+      "imageFocus": "An aerial view of a coastal city with rising water levels"
+    },
+    "expected": {
+      "requiredFields": ["title", "subtitle", "byline", "emotional_register", "recommended_sequence", "photo_needed"]
+    }
+  },
+  {
+    "input": {
+      "topic": "The case for walking cities",
+      "slideContent": "Car-free urban cores produce 40% more retail revenue per square foot than car-dependent ones",
+      "imageFocus": "A bustling European pedestrian street with cafe terraces"
+    },
+    "expected": {
+      "requiredFields": ["title", "subtitle", "byline", "emotional_register", "recommended_sequence", "photo_needed"]
+    }
+  }
+]

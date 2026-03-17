@@ -37,8 +37,7 @@ api/_lib/styles/{id}/
   evals.json             — Eval pairs (populate from production)
 ```
 
-Active styles: `dark-museum`, `nyt-opinion`, `sic-toile`, `radial-departure` (cover-only), `editorial-minimal` (conditional)
-Stub: `dispatch`
+Active styles: `dark-museum`, `nyt-opinion`, `sic-toile`, `radial-departure` (cover-only), `editorial-minimal` (conditional), `dispatch` (cover-only, 4 pathways)
 
 ## Build & Dev
 
@@ -109,7 +108,8 @@ All images returned as JPEG (not PNG).
 | `api/_lib/pipeline/styleLoader.ts` | Dynamic import from /styles/{id}/config.js, caches |
 | `api/_lib/pipeline/generationLogger.ts` | Fire-and-forget Supabase insert |
 | `api/_lib/pipeline/zoomBurstPrompt.ts` | Shared zoom-burst photo prompt (Radial Departure + Editorial Minimal) |
-| `api/_lib/pipeline/evalRunner.ts` | Skeleton: reads evals.json, runs Stage 1, compares output |
+| `api/_lib/pipeline/evalRunner.ts` | Reads evals.json, runs Stage 1, compares output fields |
+| `api/evals/run.ts` | GET endpoint: run evals per style or all styles |
 | `api/_lib/supabase.ts` | Server-side Supabase client (SERVICE_ROLE_KEY) |
 
 ## Per-Theme Assembly Functions
@@ -122,7 +122,7 @@ Each theme has its own carousel assembly function on the frontend:
 
 Routing is in `CoverVariants/index.tsx` → `assembleCarouselForTheme()`.
 
-## Active Themes (5)
+## Active Themes (6)
 
 | Theme | Format | Slides | Image Strategy |
 |-------|--------|--------|---------------|
@@ -131,6 +131,7 @@ Routing is in `CoverVariants/index.tsx` → `assembleCarouselForTheme()`.
 | sic_toile | long_form | 14 | Per-slide images |
 | radial_departure | short_form | 7 | Cover-only, CSS crops for body |
 | editorial_minimal | short_form | 5-7 | Conditional (photo if sequence includes D/E/F/G) |
+| dispatch | short_form | 10 | Cover-only (Phase 2A), 4 pathways |
 
 ## Editor Features
 
@@ -139,6 +140,15 @@ Routing is in `CoverVariants/index.tsx` → `assembleCarouselForTheme()`.
 - **Slide Navigator**: Left panel with slide thumbnails, reorder/duplicate/delete.
 - **Canvas**: 1200×1500 center preview with zoom controls.
 
+## Dispatch Style Pack
+
+Dispatch is a brand cover card style inspired by Quartr's earnings card aesthetic. Phase 2A (cover-only) is active.
+
+- **4 Creative Pathways**: name-archaeology, experience-capture, symbol-literalization, product-elevation
+- **Color Engine**: Pre-determined sync function `deriveDispatchColors(brandHex, pathway)` in `colorEngine.ts` — no API calls
+- **Phase 2B (deferred)**: Content slides, typed router, 4-question input, custom assembly function
+
 ## Known Gaps
 
-None. All pipeline migrations complete.
+- **Frontend canvas hardcoded**: Editor, export, overlayCompositor, cartoucheRenderer hardcode 1200×1500 — should read from style pack tokens
+- **Dispatch Phase 2B**: Content slides, typed slide router, 4-question input system, custom `assembleDispatchCarousel()` — deferred to separate session
