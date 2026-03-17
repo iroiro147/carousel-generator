@@ -827,9 +827,222 @@ function ConfirmDialog({
   )
 }
 
-// ─── Properties Panel (right panel — Design tab) ─────────────────────────────
+// ─── Properties Panel (right panel — Design + Info tabs) ─────────────────────
 
 function PropertiesPanel({
+  slides,
+  format,
+  themeId,
+}: {
+  slides: Slide[]
+  format: CarouselFormat
+  themeId: ThemeId
+}) {
+  const [activeTab, setActiveTab] = useState<'design' | 'info'>('design')
+  const selectedSlideIndex = useCarouselStore((s) => s.selectedSlideIndex)
+  const carousel = useCarouselStore((s) => s.carousel)
+
+  const currentSlide = slides[selectedSlideIndex]
+  if (!currentSlide) return null
+
+  const hasVisualDecision = !!(carousel?.visual_decision)
+
+  return (
+    <div className="bg-white border-l border-border flex flex-col overflow-hidden">
+      {/* Tab header */}
+      <div className="px-4 py-2 border-b border-border flex items-center gap-0">
+        <button
+          className={`text-[11px] font-medium px-3 py-1.5 rounded-md transition-colors ${
+            activeTab === 'design'
+              ? 'bg-zinc-100 text-zinc-800'
+              : 'text-zinc-400 hover:text-zinc-600'
+          }`}
+          onClick={() => setActiveTab('design')}
+        >
+          Design
+        </button>
+        <button
+          className={`text-[11px] font-medium px-3 py-1.5 rounded-md transition-colors ${
+            activeTab === 'info'
+              ? 'bg-zinc-100 text-zinc-800'
+              : 'text-zinc-400 hover:text-zinc-600'
+          }`}
+          onClick={() => setActiveTab('info')}
+        >
+          Info {hasVisualDecision && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-accent inline-block" />}
+        </button>
+        <span className="ml-auto text-[10px] text-muted">
+          {selectedSlideIndex + 1}/{slides.length}
+        </span>
+      </div>
+
+      {activeTab === 'design' ? (
+        <DesignTab slides={slides} format={format} themeId={themeId} />
+      ) : (
+        <InfoTab />
+      )}
+    </div>
+  )
+}
+
+// ─── "Why this image?" Info Tab ──────────────────────────────────────────────
+
+function InfoTab() {
+  const carousel = useCarouselStore((s) => s.carousel)
+
+  if (!carousel) return null
+
+  const decision = carousel.visual_decision
+  const prompt = carousel.stage2_prompt
+  const provider = carousel.image_provider
+
+  if (!decision && !prompt) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-6">
+        <p className="text-xs text-zinc-400 text-center leading-relaxed">
+          No pipeline data available.<br />
+          Generate a carousel to see image reasoning.
+        </p>
+      </div>
+    )
+  }
+
+  // Human-readable labels for visual decision fields
+  const FIELD_LABELS: Record<string, string> = {
+    conceptAnalysis: 'Concept Analysis',
+    focusMapping: 'Focus Mapping',
+    strategy: 'Strategy',
+    artifacts: 'Artifacts',
+    layoutStyle: 'Layout Style',
+    positionFocus: 'Position Focus',
+    lightingAccent: 'Lighting Accent',
+    primary_artifact: 'Primary Artifact',
+    physical_condition: 'Physical Condition',
+    material_class: 'Material Class',
+    era_nuance: 'Era / Nuance',
+    label: 'Artifact Label',
+    illustration_mode: 'Illustration Mode',
+    subject_description: 'Subject',
+    concept_analysis: 'Concept Analysis',
+    signature_hex: 'Signature Color',
+    full_scene_description: 'Scene Description',
+    scene_domain: 'Scene Domain',
+    density: 'Density Level',
+    figure_count: 'Figure Count',
+    burst_highlight: 'Burst Highlight',
+    vanishing_point_subject: 'Vanishing Point Subject',
+    camera_position: 'Camera Position',
+    emotional_temperature: 'Emotional Temperature',
+    time_of_day: 'Time of Day',
+    pov_description: 'POV Description',
+    recommended_sequence: 'Slide Sequence',
+    photo_needed: 'Photo Needed',
+    emotional_register: 'Emotional Register',
+    title: 'Title',
+    subtitle: 'Subtitle',
+    byline: 'Byline',
+  }
+
+  // Filter out rawXml and empty values
+  const decisionEntries = decision
+    ? Object.entries(decision).filter(([key, val]) => {
+        if (key === 'rawXml') return false
+        if (val === null || val === undefined || val === '') return false
+        return true
+      })
+    : []
+
+  return (
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Section: Why this image? */}
+      <div>
+        <h3 className="text-[11px] font-semibold text-zinc-800 uppercase tracking-wider mb-3">
+          Why this image?
+        </h3>
+        <p className="text-[11px] text-zinc-500 leading-relaxed mb-3">
+          Stage 1 (Gemini Flash) analysed your brief and made these creative decisions before generating the image.
+        </p>
+      </div>
+
+      {/* Visual decision fields */}
+      {decisionEntries.map(([key, val]) => {
+        const label = FIELD_LABELS[key] ?? key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+
+        // Handle different value types
+        let displayValue: string
+        if (Array.isArray(val)) {
+          displayValue = val.join(' → ')
+        } else if (typeof val === 'object' && val !== null) {
+          displayValue = JSON.stringify(val, null, 2)
+        } else {
+          displayValue = String(val)
+        }
+
+        // Color swatch for hex values
+        const isHex = typeof val === 'string' && /^#[0-9a-fA-F]{6}$/i.test(val)
+
+        return (
+          <div key={key} className="border-b border-zinc-100 pb-2.5 last:border-0">
+            <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider block mb-0.5">
+              {label}
+            </span>
+            <div className="flex items-start gap-2">
+              {isHex && (
+                <span
+                  className="w-4 h-4 rounded border border-zinc-200 flex-shrink-0 mt-0.5"
+                  style={{ backgroundColor: val as string }}
+                />
+              )}
+              <span className="text-xs text-zinc-700 leading-relaxed break-words">
+                {displayValue}
+              </span>
+            </div>
+          </div>
+        )
+      })}
+
+      {/* Provider info */}
+      {provider && (
+        <div className="pt-2 border-t border-zinc-100">
+          <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider block mb-0.5">
+            Image Provider
+          </span>
+          <span className="text-xs text-zinc-700">{provider}</span>
+        </div>
+      )}
+
+      {/* Stage 2 prompt (collapsible) */}
+      {prompt && <PromptAccordion prompt={prompt} />}
+    </div>
+  )
+}
+
+function PromptAccordion({ prompt }: { prompt: string }) {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <div className="pt-2 border-t border-zinc-100">
+      <button
+        className="w-full flex items-center justify-between text-left"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">
+          Stage 2 Prompt
+        </span>
+        <span className="text-zinc-400 text-xs">{expanded ? '−' : '+'}</span>
+      </button>
+      {expanded && (
+        <pre className="mt-2 p-2.5 bg-zinc-50 rounded-lg text-[10px] text-zinc-600 leading-relaxed whitespace-pre-wrap break-words max-h-[300px] overflow-y-auto border border-zinc-100">
+          {prompt}
+        </pre>
+      )}
+    </div>
+  )
+}
+
+// ─── Design Tab (extracted from old PropertiesPanel) ─────────────────────────
+
+function DesignTab({
   slides,
   format,
   themeId,
@@ -976,177 +1189,166 @@ function PropertiesPanel({
   }
 
   return (
-    <div className="bg-white border-l border-border flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-        <h2 className="text-xs font-semibold text-muted uppercase tracking-wider">Design</h2>
-        <span className="text-[10px] text-muted">
-          {selectedSlideIndex + 1}/{slides.length}
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Archetype info */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted">
+          {getSlideLabel(currentSlide.archetype, format)}
         </span>
+        <span className="text-[10px] text-zinc-400">{currentSlide.content_type}</span>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Archetype info */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted">
-            {getSlideLabel(currentSlide.archetype, format)}
-          </span>
-          <span className="text-[10px] text-zinc-400">{currentSlide.content_type}</span>
+      {currentSlide.needs_review && (
+        <div className="px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-[11px] text-amber-700">
+          Needs review
         </div>
+      )}
 
-        {currentSlide.needs_review && (
-          <div className="px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-[11px] text-amber-700">
-            Needs review
-          </div>
-        )}
+      {/* ─── Short-form Quote Slide ──────────────────── */}
+      {isShortForm && isQuoteSlide && !isCoverSlide && (
+        <>
+          <FieldLabel label="Pull quote">
+            <textarea
+              className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[120px]"
+              value={currentSlide.quote_text ?? ''}
+              onChange={(e) => handleFieldChange('quote_text', e.target.value)}
+            />
+          </FieldLabel>
 
-        {/* ─── Short-form Quote Slide ──────────────────── */}
-        {isShortForm && isQuoteSlide && !isCoverSlide && (
-          <>
-            <FieldLabel label="Pull quote">
-              <textarea
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[120px]"
-                value={currentSlide.quote_text ?? ''}
-                onChange={(e) => handleFieldChange('quote_text', e.target.value)}
-              />
-            </FieldLabel>
+          <FieldLabel label="Byline">
+            <input
+              className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:border-accent"
+              value={currentSlide.byline ?? ''}
+              onChange={(e) => handleFieldChange('byline', e.target.value)}
+            />
+          </FieldLabel>
 
-            <FieldLabel label="Byline">
+          <FieldLabel label="Signature color">
+            <div className="flex items-center gap-2">
               <input
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:border-accent"
-                value={currentSlide.byline ?? ''}
-                onChange={(e) => handleFieldChange('byline', e.target.value)}
+                type="color"
+                value={currentSlide.signature_color ?? '#C2185B'}
+                onChange={(e) => handleSignatureColorChange(e.target.value)}
+                className="w-8 h-8 rounded border border-border cursor-pointer"
               />
-            </FieldLabel>
-
-            <FieldLabel label="Signature color">
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  value={currentSlide.signature_color ?? '#C2185B'}
-                  onChange={(e) => handleSignatureColorChange(e.target.value)}
-                  className="w-8 h-8 rounded border border-border cursor-pointer"
-                />
-                <input
-                  className="flex-1 text-xs font-mono border border-border rounded px-2 py-1.5 focus:outline-none focus:border-accent uppercase"
-                  value={currentSlide.signature_color ?? '#C2185B'}
-                  onChange={(e) => {
-                    const v = e.target.value
-                    if (/^#[0-9a-fA-F]{6}$/.test(v)) handleSignatureColorChange(v)
-                  }}
-                />
-              </div>
-              {lowContrast && (
-                <p className="text-[10px] text-amber-600 mt-1">
-                  ⚠ Low contrast ({contrastRatio?.toFixed(1)}:1) — text may be hard to read
-                </p>
-              )}
-            </FieldLabel>
-
-            <ActionButton
-              label="Regenerate quote"
-              loading={regenerating}
-              onClick={handleRegenerateText}
-            />
-          </>
-        )}
-
-        {/* ─── Short-form Cover Slide ──────────────────── */}
-        {isShortForm && isCoverSlide && (
-          <>
-            <FieldLabel label="Headline">
-              <textarea
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[80px]"
-                value={currentSlide.headline}
-                onChange={(e) => handleFieldChange('headline', e.target.value)}
-              />
-            </FieldLabel>
-
-            {!showCoverConfirm ? (
-              <ActionButton
-                label="Regenerate cover"
-                loading={regenerating}
-                onClick={() => setShowCoverConfirm(true)}
-              />
-            ) : (
-              <ConfirmDialog
-                message="Regenerating the cover will update the colour on all quote slides."
-                confirmLabel="Regenerate"
-                cancelLabel="Cancel"
-                onConfirm={handleRegenerateCover}
-                onCancel={() => setShowCoverConfirm(false)}
-              />
-            )}
-          </>
-        )}
-
-        {/* ─── Long-form Slide ─────────────────────────── */}
-        {!isShortForm && (
-          <>
-            <FieldLabel label="Headline">
-              <textarea
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[80px]"
-                value={currentSlide.headline}
-                onChange={(e) => handleFieldChange('headline', e.target.value)}
-              />
-            </FieldLabel>
-
-            <FieldLabel label="Body text">
-              <textarea
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[100px]"
-                value={currentSlide.body_text ?? ''}
-                onChange={(e) => handleFieldChange('body_text', e.target.value)}
-              />
-            </FieldLabel>
-
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted">Font size</span>
-              <span className="text-zinc-600 font-mono">{currentSlide.headline_size}px</span>
-            </div>
-
-            {/* Edit confirm dialog */}
-            {showEditConfirm && (
-              <ConfirmDialog
-                message="This slide has been manually edited. Regenerate and discard your changes?"
-                onConfirm={doRegenerate}
-                onCancel={() => setShowEditConfirm(false)}
-              />
-            )}
-
-            <ActionButton
-              label="Regenerate text"
-              loading={regenerating}
-              onClick={handleRegenerateText}
-            />
-
-            {hasImage && (
-              <ActionButton
-                label="Regenerate image"
-                loading={false}
-                onClick={() => {
-                  // Image regeneration wired in future task
+              <input
+                className="flex-1 text-xs font-mono border border-border rounded px-2 py-1.5 focus:outline-none focus:border-accent uppercase"
+                value={currentSlide.signature_color ?? '#C2185B'}
+                onChange={(e) => {
+                  const v = e.target.value
+                  if (/^#[0-9a-fA-F]{6}$/.test(v)) handleSignatureColorChange(v)
                 }}
-                secondary
               />
+            </div>
+            {lowContrast && (
+              <p className="text-[10px] text-amber-600 mt-1">
+                ⚠ Low contrast ({contrastRatio?.toFixed(1)}:1) — text may be hard to read
+              </p>
             )}
-          </>
-        )}
+          </FieldLabel>
 
-        {/* Error display */}
-        {regenError && (
-          <p className="text-[11px] text-red-600 px-1">{regenError}</p>
-        )}
-
-        {/* Edit confirm dialog for short-form */}
-        {isShortForm && isQuoteSlide && !isCoverSlide && showEditConfirm && (
-          <ConfirmDialog
-            message="This slide has been manually edited. Regenerate and discard your changes?"
-            onConfirm={doRegenerate}
-            onCancel={() => setShowEditConfirm(false)}
+          <ActionButton
+            label="Regenerate quote"
+            loading={regenerating}
+            onClick={handleRegenerateText}
           />
-        )}
-      </div>
+        </>
+      )}
+
+      {/* ─── Short-form Cover Slide ──────────────────── */}
+      {isShortForm && isCoverSlide && (
+        <>
+          <FieldLabel label="Headline">
+            <textarea
+              className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[80px]"
+              value={currentSlide.headline}
+              onChange={(e) => handleFieldChange('headline', e.target.value)}
+            />
+          </FieldLabel>
+
+          {!showCoverConfirm ? (
+            <ActionButton
+              label="Regenerate cover"
+              loading={regenerating}
+              onClick={() => setShowCoverConfirm(true)}
+            />
+          ) : (
+            <ConfirmDialog
+              message="Regenerating the cover will update the colour on all quote slides."
+              confirmLabel="Regenerate"
+              cancelLabel="Cancel"
+              onConfirm={handleRegenerateCover}
+              onCancel={() => setShowCoverConfirm(false)}
+            />
+          )}
+        </>
+      )}
+
+      {/* ─── Long-form Slide ─────────────────────────── */}
+      {!isShortForm && (
+        <>
+          <FieldLabel label="Headline">
+            <textarea
+              className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[80px]"
+              value={currentSlide.headline}
+              onChange={(e) => handleFieldChange('headline', e.target.value)}
+            />
+          </FieldLabel>
+
+          <FieldLabel label="Body text">
+            <textarea
+              className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-accent min-h-[100px]"
+              value={currentSlide.body_text ?? ''}
+              onChange={(e) => handleFieldChange('body_text', e.target.value)}
+            />
+          </FieldLabel>
+
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted">Font size</span>
+            <span className="text-zinc-600 font-mono">{currentSlide.headline_size}px</span>
+          </div>
+
+          {/* Edit confirm dialog */}
+          {showEditConfirm && (
+            <ConfirmDialog
+              message="This slide has been manually edited. Regenerate and discard your changes?"
+              onConfirm={doRegenerate}
+              onCancel={() => setShowEditConfirm(false)}
+            />
+          )}
+
+          <ActionButton
+            label="Regenerate text"
+            loading={regenerating}
+            onClick={handleRegenerateText}
+          />
+
+          {hasImage && (
+            <ActionButton
+              label="Regenerate image"
+              loading={false}
+              onClick={() => {
+                // Image regeneration wired in future task
+              }}
+              secondary
+            />
+          )}
+        </>
+      )}
+
+      {/* Error display */}
+      {regenError && (
+        <p className="text-[11px] text-red-600 px-1">{regenError}</p>
+      )}
+
+      {/* Edit confirm dialog for short-form */}
+      {isShortForm && isQuoteSlide && !isCoverSlide && showEditConfirm && (
+        <ConfirmDialog
+          message="This slide has been manually edited. Regenerate and discard your changes?"
+          onConfirm={doRegenerate}
+          onCancel={() => setShowEditConfirm(false)}
+        />
+      )}
     </div>
   )
 }

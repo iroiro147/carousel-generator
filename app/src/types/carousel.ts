@@ -6,7 +6,7 @@ export interface Carousel {
   brief_id: string
   theme_id: ThemeId
   format: CarouselFormat
-  slide_count: 3 | 4 | 14
+  slide_count: number
   archetype_system: 'nyt_archetypes' | 'standard_archetypes'
 
   // Short-form only
@@ -18,6 +18,11 @@ export interface Carousel {
   slides: Slide[]
   cover_variants?: CoverVariant[]
   selected_variant_id?: string
+
+  // Pipeline metadata (from selected cover variant)
+  visual_decision?: Record<string, unknown> | null
+  stage2_prompt?: string | null
+  image_provider?: string | null
 }
 
 export type ArgumentType =

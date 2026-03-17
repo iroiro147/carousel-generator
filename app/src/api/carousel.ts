@@ -122,6 +122,9 @@ export async function assembleLongFormCarousel(
     archetype_system: 'standard_archetypes',
     slides,
     selected_variant_id: selectedVariant.variant_id,
+    visual_decision: selectedVariant.visual_decision ?? null,
+    stage2_prompt: selectedVariant.cover_slide.image_prompt ?? null,
+    image_provider: selectedVariant.provider ?? null,
   }
 
   return carousel

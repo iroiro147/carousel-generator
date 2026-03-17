@@ -281,7 +281,7 @@ export const useCarouselStore = create<CarouselStore>((set, get) => ({
       const slides = [...state.carousel.slides]
       slides.splice(2, 0, evidence)
       slides.forEach((s, i) => (s.slide_index = i))
-      return { carousel: { ...state.carousel, slides, slide_count: 4 as 4 } }
+      return { carousel: { ...state.carousel, slides, slide_count: 4 } }
     }),
 
   removeEvidenceSlide: () =>
@@ -297,7 +297,7 @@ export const useCarouselStore = create<CarouselStore>((set, get) => ({
       slides.forEach((s, i) => (s.slide_index = i))
       const newIndex = Math.min(state.selectedSlideIndex, slides.length - 1)
       return {
-        carousel: { ...state.carousel, slides, slide_count: 3 as 3 },
+        carousel: { ...state.carousel, slides, slide_count: 3 },
         selectedSlideIndex: newIndex,
       }
     }),
