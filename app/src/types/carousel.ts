@@ -53,6 +53,9 @@ export interface Slide {
   illustration_mode?: string | null
   signature_color?: string | null
 
+  // Editorial Minimal fields
+  slide_type?: string | null
+
   // Shared text fields
   headline: string
   headline_size: number

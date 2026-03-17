@@ -8,6 +8,7 @@ import { assembleShortFormCarousel } from '../../api/carouselShortForm'
 import type { Brief } from '../../types/brief'
 import type { CoverVariant, ImageModel } from '../../types/variant'
 import type { ThemeId } from '../../types/theme'
+import { isShortForm } from '../../themes'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Run {
@@ -436,7 +437,7 @@ export default function CoverVariants() {
     }, 250)
 
     try {
-      const carousel = themeId === 'nyt_opinion'
+      const carousel = isShortForm(themeId)
         ? await assembleShortFormCarousel(brief as Brief, selectedVariant)
         : await assembleLongFormCarousel(brief as Brief, themeId, selectedVariant)
       clearInterval(progressInterval)

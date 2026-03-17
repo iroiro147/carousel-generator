@@ -461,6 +461,14 @@ function SlidePreview({
     return <NYTQuotePreview slide={slide} slideIndex={slideIndex} />
   }
 
+  if (themeId === 'radial_departure') {
+    return <RadialDeparturePreview slide={slide} slideIndex={slideIndex} />
+  }
+
+  if (themeId === 'editorial_minimal') {
+    return <EditorialMinimalPreview slide={slide} slideIndex={slideIndex} />
+  }
+
   return (
     <div className="w-full h-full bg-zinc-200 flex items-center justify-center">
       <p className="text-zinc-500 text-sm">Preview unavailable</p>
@@ -651,6 +659,134 @@ function NYTQuotePreview({ slide, slideIndex }: { slide: Slide; slideIndex: numb
           }}
         />
       )}
+    </div>
+  )
+}
+
+// ─── Radial Departure Preview ───────────────────────────────────────────────
+
+function RadialDeparturePreview({ slide, slideIndex }: { slide: Slide; slideIndex: number }) {
+  const isCover = slideIndex === 0
+
+  return (
+    <div
+      className="w-full h-full flex flex-col justify-end relative overflow-hidden"
+      style={{ backgroundColor: '#1A1A1A' }}
+    >
+      {slide.image_url && (
+        <div className="absolute inset-0">
+          <img src={slide.image_url} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0" style={{
+            background: isCover
+              ? 'radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.6) 80%)'
+              : 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%)',
+          }} />
+        </div>
+      )}
+
+      <div className="relative z-10 p-[89px] flex flex-col gap-4">
+        <EditableText
+          value={slide.headline}
+          field="headline"
+          slideIndex={slideIndex}
+          className="leading-[1.05]"
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 800,
+            fontSize: slide.headline_size ?? 72,
+            color: '#FFFFFF',
+            textTransform: 'uppercase' as const,
+          }}
+        />
+        {slide.body_text && (
+          <EditableText
+            value={slide.body_text}
+            field="body_text"
+            slideIndex={slideIndex}
+            className="leading-relaxed"
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 300,
+              fontSize: 28,
+              color: '#CCCCCC',
+            }}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Editorial Minimal Preview ──────────────────────────────────────────────
+
+function EditorialMinimalPreview({ slide, slideIndex }: { slide: Slide; slideIndex: number }) {
+  // Determine slide type from archetype or content_type
+  const slideType = slide.slide_type ?? 'A'
+  const bgColors: Record<string, string> = {
+    A: '#FFFFFF', B: '#1A1A1A', C: '#1669D3',
+    D: '#EBEBEB', E: '#3D3D28', F: '#1A1A1A', G: '#1A1A1A',
+  }
+  const textColors: Record<string, string> = {
+    A: '#2A2A2A', B: '#FFFFFF', C: '#FFFFFF',
+    D: '#2A2A2A', E: '#FFFFFF', F: '#EEFF88', G: '#FFFFFF',
+  }
+  const bg = bgColors[slideType] ?? '#FFFFFF'
+  const textColor = textColors[slideType] ?? '#2A2A2A'
+  const hasPhoto = ['D', 'E', 'F', 'G'].includes(slideType)
+  const useSerif = ['E', 'G'].includes(slideType)
+
+  return (
+    <div
+      className="w-full h-full flex flex-col relative overflow-hidden"
+      style={{ backgroundColor: bg }}
+    >
+      {hasPhoto && slide.image_url && (
+        <div className={slideType === 'E' ? 'absolute bottom-0 left-0 right-0 h-[52%]' : 'absolute inset-0'}>
+          <img src={slide.image_url} alt="" className="w-full h-full object-cover" />
+          {(slideType === 'F' || slideType === 'G') && (
+            <div className="absolute inset-0" style={{
+              background: slideType === 'F'
+                ? 'rgba(0,0,0,0.35)'
+                : 'linear-gradient(to bottom, transparent 55%, rgba(26,26,26,0.7) 70%, #1A1A1A 82%)',
+            }} />
+          )}
+        </div>
+      )}
+
+      <div className={`relative z-10 flex flex-col gap-4 ${
+        slideType === 'E' ? 'p-[89px] h-[48%] justify-center' :
+        slideType === 'G' ? 'p-[89px] mt-auto' :
+        'p-[89px] justify-center flex-1'
+      }`}>
+        <EditableText
+          value={slide.headline}
+          field="headline"
+          slideIndex={slideIndex}
+          className="leading-[1.05]"
+          style={{
+            fontFamily: useSerif ? "'EB Garamond', serif" : "'DM Sans', sans-serif",
+            fontWeight: slideType === 'F' ? 800 : useSerif ? 400 : 300,
+            fontSize: slide.headline_size ?? (slideType === 'F' ? 96 : slideType === 'D' ? 52 : 76),
+            color: textColor,
+            textTransform: slideType === 'F' ? 'uppercase' as const : 'none' as const,
+          }}
+        />
+        {slide.body_text && slideType !== 'F' && (
+          <EditableText
+            value={slide.body_text}
+            field="body_text"
+            slideIndex={slideIndex}
+            className="leading-relaxed"
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              fontSize: 38,
+              color: textColor,
+              opacity: 0.8,
+            }}
+          />
+        )}
+      </div>
     </div>
   )
 }
