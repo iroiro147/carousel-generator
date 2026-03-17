@@ -394,8 +394,8 @@ function SlideCanvas({
       ref={containerRef}
       className="relative flex items-center justify-center overflow-hidden"
       style={{
-        background: '#f7f8fa',
-        backgroundImage: 'radial-gradient(#d4d4d8 1px, transparent 1px)',
+        background: 'var(--color-surface, #f7f8fa)',
+        backgroundImage: 'radial-gradient(var(--color-border, #d4d4d8) 1px, transparent 1px)',
         backgroundSize: '24px 24px',
       }}
     >
@@ -456,17 +456,17 @@ function SlidePreview({
 
   if (themeId === 'nyt_opinion') {
     if (slide.content_type === 'illustration') {
-      return <NYTCoverPreview slide={slide} slideIndex={slideIndex} />
+      return <NYTCoverPreview slide={slide} themeId={themeId} slideIndex={slideIndex} />
     }
-    return <NYTQuotePreview slide={slide} slideIndex={slideIndex} />
+    return <NYTQuotePreview slide={slide} themeId={themeId} slideIndex={slideIndex} />
   }
 
   if (themeId === 'radial_departure') {
-    return <RadialDeparturePreview slide={slide} slideIndex={slideIndex} />
+    return <RadialDeparturePreview slide={slide} themeId={themeId} slideIndex={slideIndex} />
   }
 
   if (themeId === 'editorial_minimal') {
-    return <EditorialMinimalPreview slide={slide} slideIndex={slideIndex} />
+    return <EditorialMinimalPreview slide={slide} themeId={themeId} slideIndex={slideIndex} />
   }
 
   return (
@@ -542,12 +542,14 @@ function DarkMuseumPreview({ slide, themeId, slideIndex }: { slide: Slide; theme
 // ─── SIC Toile Preview (placeholder) ─────────────────────────────────────────
 
 function CartouchePreview({ slide, themeId, slideIndex }: { slide: Slide; themeId: ThemeId; slideIndex: number }) {
-  const strokeColor = '#2A2ECD'
+  const theme = getTheme(themeId) as Record<string, any>
+  const colors = theme.colors ?? {}
+  const strokeColor = colors.indigo_primary ?? '#2A2ECD'
 
   return (
     <div
       className="w-full h-full flex flex-col items-center justify-center gap-6"
-      style={{ backgroundColor: '#F5F0E8' }}
+      style={{ backgroundColor: colors.bg ?? '#F5F0E8' }}
     >
       <p style={{ color: strokeColor, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: "'DM Sans', sans-serif" }}>
         Cartouche preview
@@ -590,8 +592,12 @@ function CartouchePreview({ slide, themeId, slideIndex }: { slide: Slide; themeI
 
 // ─── NYT Opinion Cover Preview ───────────────────────────────────────────────
 
-function NYTCoverPreview({ slide, slideIndex }: { slide: Slide; slideIndex: number }) {
-  const sigColor = slide.signature_color ?? '#C2185B'
+function NYTCoverPreview({ slide, themeId, slideIndex }: { slide: Slide; themeId: ThemeId; slideIndex: number }) {
+  const theme = getTheme(themeId) as Record<string, any>
+  const constants = theme.color_system?.constants ?? {}
+  const fallbackSig = constants.fallback_signature ?? '#C2185B'
+  const textOnDark = constants.text_on_dark ?? '#FFFFFF'
+  const sigColor = slide.signature_color ?? fallbackSig
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden" style={{ backgroundColor: sigColor }}>
@@ -615,7 +621,7 @@ function NYTCoverPreview({ slide, slideIndex }: { slide: Slide; slideIndex: numb
             fontFamily: "'Lora', serif",
             fontWeight: 700,
             fontSize: slide.headline_size ?? 56,
-            color: '#FFFFFF',
+            color: textOnDark,
           }}
         />
       </div>
@@ -625,8 +631,12 @@ function NYTCoverPreview({ slide, slideIndex }: { slide: Slide; slideIndex: numb
 
 // ─── NYT Opinion Quote Preview ───────────────────────────────────────────────
 
-function NYTQuotePreview({ slide, slideIndex }: { slide: Slide; slideIndex: number }) {
-  const sigColor = slide.signature_color ?? '#C2185B'
+function NYTQuotePreview({ slide, themeId, slideIndex }: { slide: Slide; themeId: ThemeId; slideIndex: number }) {
+  const theme = getTheme(themeId) as Record<string, any>
+  const constants = theme.color_system?.constants ?? {}
+  const fallbackSig = constants.fallback_signature ?? '#C2185B'
+  const textOnDark = constants.text_on_dark ?? '#FFFFFF'
+  const sigColor = slide.signature_color ?? fallbackSig
 
   return (
     <div
@@ -642,7 +652,7 @@ function NYTQuotePreview({ slide, slideIndex }: { slide: Slide; slideIndex: numb
           fontFamily: "'Lora', serif",
           fontWeight: 400,
           fontSize: 44,
-          color: '#FFFFFF',
+          color: textOnDark,
         }}
       />
       {slide.byline && (
@@ -655,7 +665,7 @@ function NYTQuotePreview({ slide, slideIndex }: { slide: Slide; slideIndex: numb
             fontFamily: "'Libre Franklin', sans-serif",
             fontWeight: 400,
             fontSize: 18,
-            color: 'rgba(255,255,255,0.72)',
+            color: `rgba(255,255,255,0.72)`,
           }}
         />
       )}
@@ -665,13 +675,17 @@ function NYTQuotePreview({ slide, slideIndex }: { slide: Slide; slideIndex: numb
 
 // ─── Radial Departure Preview ───────────────────────────────────────────────
 
-function RadialDeparturePreview({ slide, slideIndex }: { slide: Slide; slideIndex: number }) {
+function RadialDeparturePreview({ slide, themeId, slideIndex }: { slide: Slide; themeId: ThemeId; slideIndex: number }) {
+  const theme = getTheme(themeId) as Record<string, any>
+  const constants = theme.color_system?.constants ?? {}
+  const textPrimary = constants.text_primary ?? '#FFFFFF'
+  const textSecondary = constants.text_secondary ?? '#CCCCCC'
   const isCover = slideIndex === 0
 
   return (
     <div
       className="w-full h-full flex flex-col justify-end relative overflow-hidden"
-      style={{ backgroundColor: '#1A1A1A' }}
+      style={{ backgroundColor: slide.flat_color_bg ?? '#1A1A1A' }}
     >
       {slide.image_url && (
         <div className="absolute inset-0">
@@ -694,7 +708,7 @@ function RadialDeparturePreview({ slide, slideIndex }: { slide: Slide; slideInde
             fontFamily: "'DM Sans', sans-serif",
             fontWeight: 800,
             fontSize: slide.headline_size ?? 72,
-            color: '#FFFFFF',
+            color: textPrimary,
             textTransform: 'uppercase' as const,
           }}
         />
@@ -708,7 +722,7 @@ function RadialDeparturePreview({ slide, slideIndex }: { slide: Slide; slideInde
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 300,
               fontSize: 28,
-              color: '#CCCCCC',
+              color: textSecondary,
             }}
           />
         )}
@@ -719,19 +733,14 @@ function RadialDeparturePreview({ slide, slideIndex }: { slide: Slide; slideInde
 
 // ─── Editorial Minimal Preview ──────────────────────────────────────────────
 
-function EditorialMinimalPreview({ slide, slideIndex }: { slide: Slide; slideIndex: number }) {
+function EditorialMinimalPreview({ slide, themeId, slideIndex }: { slide: Slide; themeId: ThemeId; slideIndex: number }) {
+  const theme = getTheme(themeId) as Record<string, any>
+  const slideTypes = theme.slide_types ?? {}
   // Determine slide type from archetype or content_type
   const slideType = slide.slide_type ?? 'A'
-  const bgColors: Record<string, string> = {
-    A: '#FFFFFF', B: '#1A1A1A', C: '#1669D3',
-    D: '#EBEBEB', E: '#3D3D28', F: '#1A1A1A', G: '#1A1A1A',
-  }
-  const textColors: Record<string, string> = {
-    A: '#2A2A2A', B: '#FFFFFF', C: '#FFFFFF',
-    D: '#2A2A2A', E: '#FFFFFF', F: '#EEFF88', G: '#FFFFFF',
-  }
-  const bg = bgColors[slideType] ?? '#FFFFFF'
-  const textColor = textColors[slideType] ?? '#2A2A2A'
+  const typeConfig = slideTypes[slideType] ?? {}
+  const bg = typeConfig.background ?? typeConfig.header_color ?? '#FFFFFF'
+  const textColor = typeConfig.title_color ?? '#2A2A2A'
   const hasPhoto = ['D', 'E', 'F', 'G'].includes(slideType)
   const useSerif = ['E', 'G'].includes(slideType)
 
@@ -747,7 +756,7 @@ function EditorialMinimalPreview({ slide, slideIndex }: { slide: Slide; slideInd
             <div className="absolute inset-0" style={{
               background: slideType === 'F'
                 ? 'rgba(0,0,0,0.35)'
-                : 'linear-gradient(to bottom, transparent 55%, rgba(26,26,26,0.7) 70%, #1A1A1A 82%)',
+                : (slideTypes.G?.gradient ?? 'linear-gradient(to bottom, transparent 55%, rgba(26,26,26,0.7) 70%, #1A1A1A 82%)'),
             }} />
           )}
         </div>
@@ -1135,6 +1144,12 @@ function DesignTab({
   const brief = useBriefStore((s) => s.brief)
   const currentSlide = slides[selectedSlideIndex]
 
+  // Theme-derived color constants
+  const theme = getTheme(themeId) as Record<string, any>
+  const nytConstants = theme.color_system?.constants ?? {}
+  const fallbackSig = nytConstants.fallback_signature ?? '#C2185B'
+  const nytTextOnColor = nytConstants.text_on_color ?? '#1A1A1A'
+
   const [regenerating, setRegenerating] = useState(false)
   const [showEditConfirm, setShowEditConfirm] = useState(false)
   const [showCoverConfirm, setShowCoverConfirm] = useState(false)
@@ -1202,7 +1217,7 @@ function DesignTab({
       )
 
       // Derive new signature color
-      let newColor = currentSlide.signature_color ?? '#C2185B'
+      let newColor = currentSlide.signature_color ?? fallbackSig
       try {
         const colorResult = await deriveSignatureColor(result.image_url)
         newColor = colorResult.signature_color
@@ -1247,7 +1262,7 @@ function DesignTab({
   }
 
   const contrastRatio = currentSlide.signature_color
-    ? calculateContrast('#1A1A1A', currentSlide.signature_color)
+    ? calculateContrast(nytTextOnColor, currentSlide.signature_color)
     : null
   const lowContrast = contrastRatio !== null && contrastRatio < 4.5
 
@@ -1304,13 +1319,13 @@ function DesignTab({
             <div className="flex items-center gap-2">
               <input
                 type="color"
-                value={currentSlide.signature_color ?? '#C2185B'}
+                value={currentSlide.signature_color ?? fallbackSig}
                 onChange={(e) => handleSignatureColorChange(e.target.value)}
                 className="w-8 h-8 rounded border border-border cursor-pointer"
               />
               <input
                 className="flex-1 text-xs font-mono border border-border rounded px-2 py-1.5 focus:outline-none focus:border-accent uppercase"
-                value={currentSlide.signature_color ?? '#C2185B'}
+                value={currentSlide.signature_color ?? fallbackSig}
                 onChange={(e) => {
                   const v = e.target.value
                   if (/^#[0-9a-fA-F]{6}$/.test(v)) handleSignatureColorChange(v)

@@ -5,6 +5,11 @@
 const CANVAS_W = 1200
 const CANVAS_H = 1500
 
+// SIC Toile token colors — single source for all cartouche rendering
+const SIC_CREAM = '#F5F0E8'       // Background
+const SIC_TEXT_PRIMARY = '#1A1A1A' // Headline text in cartouche (near-black for engraving contrast)
+const SIC_TEXT_BODY = '#3A3A3A'    // Body text (slightly lighter)
+
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 export type CartoucheStyle =
@@ -287,7 +292,7 @@ function drawCartoucheHeadline(
 
   ctx.save()
   ctx.font = `900 ${fontSize}px 'Playfair Display', serif`
-  ctx.fillStyle = '#1A1A1A'
+  ctx.fillStyle = SIC_TEXT_PRIMARY
   ctx.textAlign = 'center'
 
   const text = headline.toUpperCase()
@@ -334,7 +339,7 @@ function drawCartoucheBodyText(
 
   ctx.save()
   ctx.font = `400 ${fontSize}px 'DM Sans', sans-serif`
-  ctx.fillStyle = '#3A3A3A'
+  ctx.fillStyle = SIC_TEXT_BODY
   ctx.textAlign = 'center'
 
   const centerX = pos.x + dims.width / 2
@@ -461,7 +466,7 @@ export async function compositeSICToileSlide(
   const ctx = canvas.getContext('2d')!
 
   // Layer 1: Cream background
-  ctx.fillStyle = '#F5F0E8'
+  ctx.fillStyle = SIC_CREAM
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H)
 
   // Layer 2: Engraving illustration

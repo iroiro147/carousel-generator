@@ -18,7 +18,8 @@
       "text_on_dark": "#FFFFFF",
       "byline_on_color": "#1A1A1A",
       "logo_on_color": "#1A1A1A",
-      "logo_on_dark": "#FFFFFF"
+      "logo_on_dark": "#FFFFFF",
+      "fallback_signature": "#C2185B"
     },
     "signature_hue_examples": {
       "_note": "These are observed examples from real NYT Opinion carousels — not a fixed routing table. Use as reference for what colors are appropriate.",

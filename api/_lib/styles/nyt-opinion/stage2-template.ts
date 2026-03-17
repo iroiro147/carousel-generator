@@ -4,10 +4,11 @@
 
 import type { VisualDecision, Tokens } from '../../pipeline/types.js'
 
-export function buildStage2Prompt(decision: VisualDecision, _tokens: Tokens): string {
+export function buildStage2Prompt(decision: VisualDecision, tokens: Tokens): string {
   const mode = decision.illustration_mode as string
   const subject = decision.subject_description as string
-  const signatureHex = (decision.signature_hex as string) ?? '#CD5C45'
+  const fallbackSig = (tokens.colors as Record<string, string>)?.fallback_signature ?? '#CD5C45'
+  const signatureHex = (decision.signature_hex as string) ?? fallbackSig
 
   switch (mode) {
     case 'editorial_cartoon':

@@ -69,7 +69,7 @@ export default function Section3_Brand({
           />
           <input
             type="color"
-            value={/^#[0-9A-Fa-f]{6}$/.test(brandColor) ? brandColor : '#0561e2'}
+            value={/^#[0-9A-Fa-f]{6}$/.test(brandColor) ? brandColor : '#0561e2'} /* matches --color-accent */
             onChange={e => handlePickerChange(e.target.value)}
             className="w-10 h-10 rounded-lg border border-border cursor-pointer p-0.5"
           />

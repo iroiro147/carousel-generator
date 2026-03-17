@@ -2,6 +2,12 @@ import type { Brief } from '../types/brief'
 import type { Carousel, Slide } from '../types/carousel'
 import type { CoverVariant } from '../types/variant'
 import { deriveSignatureColor } from '../engine/colorSystem'
+import { getTheme } from '../themes'
+
+// NYT Opinion theme fallback colors for when color derivation fails
+const nytTheme = getTheme('nyt_opinion') as Record<string, any>
+const NYT_FALLBACK_SIG = nytTheme.color_system?.constants?.fallback_signature ?? '#C2185B'
+const NYT_FALLBACK_TONAL = '#5A8FD1' // tonal variant of fallback — no equivalent in theme yet
 
 // ─── Slide builders ─────────────────────────────────────────────────────────
 
@@ -106,8 +112,8 @@ export async function assembleShortFormCarousel(
 
   // Step 2: Derive signature color from selected variant's illustration
   const illustrationUrl = selectedVariant.cover_slide.illustration_url
-  let signatureColor = '#4A7FC1' // Fallback
-  let tonalVariant = '#5A8FD1'
+  let signatureColor = NYT_FALLBACK_SIG
+  let tonalVariant = NYT_FALLBACK_TONAL
   let colorSource: 'derived' | 'fallback' = 'fallback'
 
   if (illustrationUrl) {

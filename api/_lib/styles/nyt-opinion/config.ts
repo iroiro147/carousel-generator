@@ -27,6 +27,9 @@ function loadTokens(): Tokens {
   return JSON.parse(readFileSync(join(styleDir, 'tokens.json'), 'utf-8'))
 }
 
+const tokens = loadTokens()
+const FALLBACK_SIGNATURE = (tokens.colors as Record<string, string>)?.fallback_signature ?? '#CD5C45'
+
 // ─── Angles ──────────────────────────────────────────────────────────────────
 
 const angles: AngleDefinition[] = [
@@ -93,7 +96,7 @@ function parseVisualDecision(xmlString: string): VisualDecision {
     subject_description: subjectDescription,
     concept_analysis: conceptAnalysis,
     metaphor_rationale: metaphorRationale,
-    signature_hex: isValidHex(signatureHex) ? signatureHex : '#CD5C45',
+    signature_hex: isValidHex(signatureHex) ? signatureHex : FALLBACK_SIGNATURE,
     color_rationale: colorRationale,
     cover_format: coverFormat,
     illustration_zone: illustrationZone,
@@ -156,7 +159,7 @@ const nytOpinion: StylePack = {
   validateVisualDecision,
   buildStage2Prompt,
 
-  tokens: loadTokens(),
+  tokens,
 }
 
 export default nytOpinion

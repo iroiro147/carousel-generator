@@ -4,6 +4,7 @@
 
 const CANVAS_W = 1200
 const CANVAS_H = 1500
+const TEXT_ON_DARK = '#FFFFFF' // NYT Opinion: white text over photo overlays
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -227,7 +228,7 @@ function drawDialogue(
   }
 
   ctx.save()
-  ctx.fillStyle = '#FFFFFF'
+  ctx.fillStyle = TEXT_ON_DARK
   ctx.shadowColor = 'rgba(0,0,0,0.6)'
   ctx.shadowBlur = 12
 
@@ -289,7 +290,7 @@ function drawHeadline(
 
   ctx.save()
   ctx.font = `700 ${fontSize}px 'Lora', serif`
-  ctx.fillStyle = '#FFFFFF'
+  ctx.fillStyle = TEXT_ON_DARK
   ctx.textAlign = getTextAlign(pattern)
   ctx.shadowColor = 'rgba(0,0,0,0.4)'
   ctx.shadowBlur = 8

@@ -5,7 +5,7 @@
 import type { VisualDecision, Tokens } from '../../pipeline/types.js'
 import { buildZoomBurstPrompt } from '../../pipeline/zoomBurstPrompt.js'
 
-export function buildStage2Prompt(decision: VisualDecision, _tokens: Tokens): string {
+export function buildStage2Prompt(decision: VisualDecision, tokens: Tokens): string {
   const subject = (decision.vanishing_point_subject as string) ?? 'urban corridor'
   const cameraPosition = (decision.camera_position as string) ?? 'walker_pov'
   const timeOfDay = (decision.time_of_day as string) ?? 'blue_hour'
@@ -14,6 +14,7 @@ export function buildStage2Prompt(decision: VisualDecision, _tokens: Tokens): st
   const overlayOpacity = (decision.overlay_opacity as number) ?? 0.25
 
   const palette = decision.palette as Record<string, string> | undefined
+  const fb = (tokens.fallback_palette as Record<string, string>) ?? {}
 
   return buildZoomBurstPrompt({
     subject,
@@ -24,9 +25,9 @@ export function buildStage2Prompt(decision: VisualDecision, _tokens: Tokens): st
     overlayOpacity,
     slideType: 'cover',
     palette: palette ? {
-      primary_dark: palette.primary_dark ?? '#050f1a',
-      midtone: palette.midtone ?? '#0a2a4a',
-      burst_highlight: palette.burst_highlight ?? '#88e0ff',
+      primary_dark: palette.primary_dark ?? fb.primary_dark ?? '#050f1a',
+      midtone: palette.midtone ?? fb.midtone ?? '#0a2a4a',
+      burst_highlight: palette.burst_highlight ?? fb.burst_highlight ?? '#88e0ff',
     } : undefined,
   })
 }
