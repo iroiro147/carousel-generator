@@ -28,6 +28,7 @@ function buildNYTCoverSlide(
     headline: variant.cover_slide.headline,
     headline_size: 76,
     signature_color: signatureColor,
+    headline_band_hex: (variant.visual_decision as Record<string, unknown> | undefined)?.headline_band_hex as string ?? null,
     headline_edited: false,
     body_text_edited: false,
   }

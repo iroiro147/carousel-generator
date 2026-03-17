@@ -1,32 +1,60 @@
 [
   {
     "input": {
-      "topic": "The loneliness epidemic among young men",
-      "slideContent": "Social media promised connection but delivered isolation at scale",
-      "imageFocus": "A solitary figure standing in an empty stadium"
+      "topic": "The case against remote work",
+      "slideContent": "Informal knowledge transfer is dying — the hallway conversation, the overheard phone call, the lunch table debate. These were never optional. They were the infrastructure of institutional learning.",
+      "imageFocus": "A systemic failure in how knowledge moves through organizations"
     },
     "expected": {
-      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "metaphor_rationale", "signature_hex", "color_rationale"]
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "mode_rationale", "metaphor_rationale", "signature_hex", "color_rationale", "cover_format", "headline_band_hex", "crop_instruction"],
+      "illustration_mode": "ink_gouache",
+      "cover_format": "full_bleed"
     }
   },
   {
     "input": {
-      "topic": "Why remote work is not going back",
-      "slideContent": "The office was a 20th-century solution to a coordination problem that software now solves better",
-      "imageFocus": "An empty corporate office building with lights still on"
+      "topic": "The dangerous allure of cryptocurrency",
+      "slideContent": "Crypto promised decentralization but delivered a new priesthood. The blockchain is a cathedral built by people who claim to hate cathedrals.",
+      "imageFocus": "The seductive danger of an object that promises freedom but delivers captivity"
     },
     "expected": {
-      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "metaphor_rationale", "signature_hex", "color_rationale"]
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "mode_rationale", "metaphor_rationale", "signature_hex", "color_rationale", "cover_format", "headline_band_hex", "crop_instruction"],
+      "illustration_mode": "conceptual_photography",
+      "cover_format": "full_bleed"
+    }
+  },
+  {
+    "input": {
+      "topic": "The human cost of the war on science",
+      "slideContent": "Science funding is being dismantled not by argument but by attrition. Labs close quietly. Grants expire without renewal. The instruments of discovery gather dust.",
+      "imageFocus": "A physical object that embodies the abandonment of scientific institutions"
+    },
+    "expected": {
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "mode_rationale", "metaphor_rationale", "signature_hex", "color_rationale", "cover_format", "headline_band_hex", "crop_instruction"],
+      "illustration_mode": "object_photography",
+      "cover_format": "two_part_split"
+    }
+  },
+  {
+    "input": {
+      "topic": "Why Gen Z isn't dating",
+      "slideContent": "Screens replaced human connection not by blocking it but by simulating it so convincingly that the real thing feels redundant. The swipe is easier than the approach.",
+      "imageFocus": "The isolation of a young person surrounded by digital connection but cut off from human contact"
+    },
+    "expected": {
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "mode_rationale", "metaphor_rationale", "signature_hex", "color_rationale", "cover_format", "headline_band_hex", "crop_instruction"],
+      "illustration_mode": "cinematic_render",
+      "cover_format": "two_part_split"
     }
   },
   {
     "input": {
       "topic": "The moral case for universal basic income",
-      "slideContent": "Automation will displace 40% of jobs by 2035 — society must choose between mass poverty and redistribution",
-      "imageFocus": "Hands reaching upward through a floor of coins"
+      "slideContent": "Automation will displace 40% of jobs by 2035 — society must choose between mass poverty and redistribution. The question is not whether we can afford UBI, but whether we can afford not to.",
+      "imageFocus": "The tension between abundance and deprivation in an automated economy"
     },
     "expected": {
-      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "metaphor_rationale", "signature_hex", "color_rationale"]
+      "requiredFields": ["illustration_mode", "subject_description", "concept_analysis", "mode_rationale", "metaphor_rationale", "signature_hex", "color_rationale", "cover_format", "headline_band_hex", "crop_instruction"]
     }
   }
 ]

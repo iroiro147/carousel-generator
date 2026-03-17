@@ -611,7 +611,7 @@ function NYTCoverPreview({ slide, themeId, slideIndex }: { slide: Slide; themeId
         )}
       </div>
 
-      <div className="px-[89px] py-12" style={{ backgroundColor: sigColor }}>
+      <div className="px-[89px] py-12" style={{ backgroundColor: slide.headline_band_hex ?? sigColor }}>
         <EditableText
           value={slide.headline}
           field="headline"
